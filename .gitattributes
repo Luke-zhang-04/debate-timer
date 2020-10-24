@@ -1,6 +1,6 @@
 # Docs are detectable
-docs/ linguist-documentation=false
-docs/ linguist-detectable=true
+docs/* linguist-documentation=false
+docs/* linguist-detectable=true
 
 # Enforce Unix newlines
 * text=auto eol=lf
