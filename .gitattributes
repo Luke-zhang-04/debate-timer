@@ -1,0 +1,5 @@
+# Docs are detectable
+docs/ linguist-documentation=false
+
+# Enforce Unix newlines
+* text=auto eol=lf
