@@ -32,7 +32,7 @@ const handleCmd = (message: Message): void => {
     } else if (message.content.split(" ")[0] === "!kill") {
         timer.kill(message.channel, message.content.split(" ")[1])
     } else {
-        message.channel.send(`Sorry, the command \`${message.content.slice(1)}\` is not recognized`)
+        message.channel.send(`Sorry, the command \`${message.content.slice(1)}\` is not recognized. Type \`!help\ for help.`)
     }
 }
 

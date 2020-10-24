@@ -10,6 +10,10 @@
  * @returns string
  */
 export default (): string => `**Debate Timer Bot**
+
+This project is open source. You can contribute at https://github.com/Luke-zhang-04/debate-timer
+For just a timer, you can go to https://luke-zhang-04.github.io/debate-timer/.
+
 > **!help**
 > Get some help
 
