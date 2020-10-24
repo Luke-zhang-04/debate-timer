@@ -1,0 +1,54 @@
+/*!
+ * Debate Timer
+ * Copyright 2020 Luke Zhang
+ * Author Luke Zhang luke-zhang-04.github.io/
+ * License MIT
+ */
+
+* {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color: #f4f4f4;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+body {
+  background-color: #373737;
+}
+
+.header {
+  margin-top: 25vh;
+}
+
+.header,
+.time,
+.status {
+  text-align: center;
+}
+
+.header {
+  font-size: 7.5vw;
+}
+
+.time {
+  font-size: 5vw;
+}
+
+.status {
+  font-size: 2.5vw;
+}
+
+.copyright {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.copyright p {
+  font-size: 1vw;
+  margin-top: 0.25rem;
+  text-align: center;
+}

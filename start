@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Compiling..."
+./node_modules/.bin/tsc -p .
+
+if [ "$1" = "--dev" ]||[ "$1" = "-d" ]; then
+    echo "Starting up!"
+    ./node_modules/.bin/nodemon --watch lib lib
+else
+    echo "Starting up!"
+    node lib
+fi

@@ -1,0 +1,27 @@
+{
+  "name": "debate-timer",
+  "version": "1.0.0",
+  "description": "BP Debate timer Discord Bot",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Luke Zhang",
+  "license": "MIT",
+  "dependencies": {
+    "@types/dotenv": "^8.2.0",
+    "bad-words": "^3.0.3",
+    "discord.js": "^12.4.0",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/bad-words": "^3.0.0",
+    "@types/node": "^14.14.2",
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "eslint": "^7.11.0",
+    "eslint-config-recommended": "^4.1.0",
+    "eslint-plugin-prefer-arrow": "^1.2.2",
+    "nodemon": "^2.0.6",
+    "typescript": "^4.0.3"
+  }
+}
