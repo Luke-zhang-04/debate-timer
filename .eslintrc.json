@@ -109,7 +109,7 @@
         "id-length": ["error", {"exceptions": ["_"]}],
         "id-match": "error",
         "implicit-arrow-linebreak": "error",
-        "indent": "error",
+        "indent": ["error", 4, {"SwitchCase": 1}],
         "indent-legacy": "off",
         "init-declarations": "off",
         "jsx-quotes": "error",

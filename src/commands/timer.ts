@@ -141,14 +141,13 @@ export const kill = (channel: Channel, id?: string): void => {
     } else if (num < 0.75) {
         channel.send(`Sending hitman for timer with id ${id}`)
     } else {
-        channel.send(`Destroying leftist: Timer ${id} with FACTS and LOGIC`)
+        channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
     }
 
     for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
         if (timer[0].toString() === id) { // If id matches, execute the `kill()` function
             timer[1]()
-
-            Reflect.deleteProperty(timers, index) // Delete this timer from the array
+            timers.splice(index, 1) // Delete this timer from the array
 
             return
         }
@@ -226,6 +225,14 @@ export const start = async (message: Message): Promise<void> => {
 
     if (user !== undefined) {
         muteUser(message.guild, user)
+    }
+
+    for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
+        if (timer[0].toString() === id) { // If id matches, delete
+            timers.splice(index, 1) // Delete this timer from the array
+
+            return
+        }
     }
 }
 
