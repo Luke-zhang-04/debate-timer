@@ -10,6 +10,7 @@ const minute = 60
  /**
  * Turns seconds into human readable time
  * E.g `formatTime(90)` -> `"1:30"`
+ * Stolen from Discord bot source code
  * @param {number} secs - seconds to format
  * @returns {string} the formatted time
  */
@@ -61,15 +62,42 @@ class Timer extends DeStagnate.Component {
         this._intervalId = id
     }
 
+    speechStatus = () => {
+        if (
+            this.state.time <= 30 ||
+            this.state.time >= 270 && this.state.time < 300
+        ) {
+            return this.createElement("p", {class: "time"}, "Protected Time")
+        } else if (this.state.time >= 300) {
+            return this.createElement("p", {class: "time"}, "Times up!")
+        }
+    }
+
+    time = () => [
+        this.createElement("p", {class: "time"}, formatTime(this.state.time)),
+        this.createElement("p", {class: "status"},
+            this.state.paused ? "Paused" : "",
+        ),
+        this.speechStatus(),
+    ]
+
+    reset = () => {
+        clearInterval(this._intervalId)
+        this.setState({
+            paused: true,
+            time: 0,
+        })
+    }
+
     render = () => {
-        const createElement = this.createElement
+        const createElement = this.createElement,
+            content = this.state.time === 0 && this.state.paused
+                ? [createElement("p", {class: "time"}, "Space to pause/start. r to restart.")]
+                : this.time()
 
         return [
-            createElement("h1", {class: "header"},"Debate Timer"),
-            createElement("p", {class: "time"}, formatTime(this.state.time)),
-            createElement("p", {class: "status"},
-                this.state.paused ? "Paused" : "",
-            ),
+            createElement("h1", {class: "header"}, "Debate Timer"),
+            ...content,
         ]
     }
 
@@ -82,5 +110,7 @@ timer.mount()
 document.addEventListener("keydown", (event) => {
     if (event.key === " ") {
         timer.spacebar()
+    } else if (event.key === "r") {
+        timer.reset()
     }
 })
