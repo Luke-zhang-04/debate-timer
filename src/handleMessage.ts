@@ -101,7 +101,7 @@ export default (message: Message): void => {
 
             message.channel.send(`The configured command cooldown is ${config.commandCooldown}s. Since this bot is hosted on either some crappy server or Luke's laptop, there needs to be a cooldown. The cooldown time can be changed in the configuration file.`)
         } else if (
-            config.shouldDetectProfanity &&
+            config.shoulddetectProfanity &&
             filter.isProfane(message.content)
         ) { // Swear word detected
             const number = Math.random()

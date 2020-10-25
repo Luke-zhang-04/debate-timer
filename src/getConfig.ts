@@ -17,7 +17,7 @@ type FullConfig = {
     maxMotions: number,
     serverIconUrl: string,
     botIconUrl: string,
-    shouldDetectProfanity?: boolean,
+    shoulddetectProfanity?: boolean,
 }
 
 type InputConfig = {
@@ -28,7 +28,7 @@ type InputConfig = {
     maxMotions?: number,
     serverIconUrl?: string,
     botIconUrl?: string,
-    shouldDetectProfanity?: boolean,
+    shoulddetectProfanity?: boolean,
 }
 
 const defaultConfig: FullConfig = {
@@ -59,8 +59,8 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         typeof obj.botIconUrl === "string" ||
         obj.botIconUrl === undefined
     ) && (
-        typeof obj.shouldDetectProfanity === "boolean" ||
-        obj.shouldDetectProfanity === undefined
+        typeof obj.shoulddetectProfanity === "boolean" ||
+        obj.shoulddetectProfanity === undefined
     )
 )
 
@@ -93,7 +93,7 @@ export const {
     maxMotions,
     serverIconUrl,
     botIconUrl,
-    shouldDetectProfanity,
+    shoulddetectProfanity,
 } = fullConfig as FullConfig
 
 export default fullConfig as FullConfig
