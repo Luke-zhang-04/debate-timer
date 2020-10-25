@@ -9,11 +9,6 @@
     "name": "Luke Zhang",
     "url": "https://luke-zhang-04.github.io/"
   },
-  "maintainers": [
-    {
-      "name": "Ridwan Alam"
-    }
-  ],
   "license": "MIT",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
