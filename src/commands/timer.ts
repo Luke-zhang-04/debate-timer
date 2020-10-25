@@ -129,7 +129,7 @@ export const kill = (channel: Channel, id?: string): void => {
 
         return
     } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
-        channel.send(`Could not parse ${id} as a number. Learn to count.`)
+        channel.send(`Could not parse \`${id}\` as a number. Learn to count.`)
 
         return
     }
