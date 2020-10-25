@@ -10,29 +10,31 @@ import {readFileSync} from "fs"
 import yaml from "yaml"
 
 type FullConfig = {
-    [key: string]: string | number | undefined,
+    [key: string]: string | number | boolean | undefined,
     prefix: string,
     maxTimers: number,
-    minCommandTimeGap: number,
+    commandCooldown: number,
     maxMotions: number,
     serverIconUrl: string,
     botIconUrl: string,
+    shouldDetectProfanity?: boolean,
 }
 
 type InputConfig = {
-    [key: string]: string | number | undefined,
+    [key: string]: string | number | boolean | undefined,
     prefix?: string,
     maxTimers?: number,
-    minCommandTimeGap?: number,
+    commandCooldown?: number,
     maxMotions?: number,
     serverIconUrl?: string,
     botIconUrl?: string,
+    shouldDetectProfanity?: boolean,
 }
 
 const defaultConfig: FullConfig = {
     prefix: "!",
     maxTimers: 10,
-    minCommandTimeGap: 3,
+    commandCooldown: 1,
     maxMotions: 20,
     serverIconUrl:
         "https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256",
@@ -44,22 +46,21 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
     (
         typeof obj.prefix === "string" ||
         obj.prefix === undefined
-    ) &&
-    (
+    ) && (
         typeof obj.maxTimers === "number" ||
         obj.maxTimers === undefined
-    ) &&
-    (
+    ) && (
         typeof obj.maxCommandTimeGap === "number" ||
         obj.maxCommandTimeGap === undefined
-    ) &&
-    (
+    ) && (
         typeof obj.serverIconUrl === "string" ||
         obj.serverIconUrl === undefined
-    ) &&
-    (
+    ) && (
         typeof obj.botIconUrl === "string" ||
         obj.botIconUrl === undefined
+    ) && (
+        typeof obj.shouldDetectProfanity === "boolean" ||
+        obj.shouldDetectProfanity === undefined
     )
 )
 
@@ -85,15 +86,14 @@ for (const [key, val] of Object.entries(defaultConfig)) {
     }
 }
 
-console.log(fullConfig)
-
 export const {
     prefix,
     maxTimers,
-    minCommandTimeGap,
+    commandCooldown,
     maxMotions,
     serverIconUrl,
     botIconUrl,
+    shouldDetectProfanity,
 } = fullConfig as FullConfig
 
 export default fullConfig as FullConfig

@@ -60,6 +60,8 @@ This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
 For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
 
+The configured prefix is \`${prefix}\`
+
 > :book: **\`${prefix}help [command?]\`**
 > Get some help
 > Parameters:

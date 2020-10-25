@@ -33,4 +33,11 @@ client.once("ready", () => {
     })
 })
 
-client.on("message", (msg) => handleMessage(msg))
+client.on("message", (message) => {
+    try {
+        handleMessage(message)
+    } catch (err) {
+        console.error(err)
+        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}`)
+    }
+})
