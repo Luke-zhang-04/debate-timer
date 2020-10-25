@@ -8,6 +8,7 @@
 import Discord from "discord.js"
 import dotenv from "dotenv"
 import handleMessage from "./handleMessage"
+import {prefix} from "./getConfig"
 
 dotenv.config()
 
@@ -27,7 +28,7 @@ client.once("ready", () => {
     client.user?.setPresence({
         status: "online",
         activity: {
-            name: "for a !command",
+            name: `for a ${prefix}command`,
             type: "WATCHING",
         },
     })
