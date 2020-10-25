@@ -7,6 +7,7 @@
 
 import type {Message} from "discord.js"
 
+// Object with all the manual entries
 const manual: {[key: string]: string} = {
     bruh: `> **\`!bruh\`**
 > Otis.`,
@@ -51,7 +52,8 @@ const manual: {[key: string]: string} = {
 > Similar to \`makePartners\`, 8 debater names are required.`,
 }
 
-const fullMsg = `**Debate Timer Bot**
+// Default help message
+const defaultMsg = `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
@@ -95,7 +97,7 @@ export default (message: Message) => {
     const arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
-        message.channel.send(fullMsg)
+        message.channel.send(defaultMsg)
     } else if (arg in manual) {
         message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg]}`)
     } else if (arg.slice(1) in manual) {
