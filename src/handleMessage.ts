@@ -7,6 +7,7 @@
 import Filter from "bad-words"
 import {Message} from "discord.js"
 import {client} from "."
+import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import teamGen from "./commands/teamGen"
@@ -36,13 +37,13 @@ const handleCmd = async (message: Message): Promise<void> => {
             help(message)
             break
         case "bruh":
-            message.channel.send("", {files: ["https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256"]})
+            message.channel.send("", {files: [config.serverIconUrl]})
             break
         case "coinflip":
             message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!")
             break
         case "epic":
-            message.channel.send("", {files: ["https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256"]})
+            message.channel.send("", {files: [config.botIconUrl]})
             break
         case "start":
             timer.start(message)
@@ -71,7 +72,7 @@ const handleCmd = async (message: Message): Promise<void> => {
             motion.getRandomMotions(message)
             break
         case "ping":
-            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`);
+            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
             break
         default:
             message.channel.send(`:confused: The command \`${message.content.slice(1)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`!help\` for help.`)
@@ -87,7 +88,7 @@ const handleCmd = async (message: Message): Promise<void> => {
 export default (message: Message): void => {
     try {
         if (!message.author.bot) {
-            if (message.content[0] === "!") {
+            if (message.content[0] === config.prefix) {
                 handleCmd(message)
             } else if (filter.isProfane(message.content)) { // Swear word detected
                 const number = Math.random()

@@ -7,6 +7,7 @@
 
 import {GoogleSpreadsheet} from "google-spreadsheet"
 import type {Message} from "discord.js"
+import {maxMotions} from "../getConfig"
 
 // Google spreadsheet from hellomotions
 const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY")
@@ -74,9 +75,9 @@ export const getRandomMotions = async (
         message.channel.send(`:1234: Could not parse \`${message.content.split(" ")[1]}\` as a number. Learn to count.`)
 
         return
-    } else if (amt > 20) {
-        message.channel.send(`:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you 20 motions.`)
-        amt = 20
+    } else if (amt > maxMotions) {
+        message.channel.send(`:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you ${maxMotions} motions.`)
+        amt = maxMotions
     } else if (amt < 0) {
         message.channel.send(`:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).\nBruh.`)
         return
