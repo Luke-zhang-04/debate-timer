@@ -38,6 +38,9 @@ const handleCmd = async (message: Message): Promise<void> => {
         case "bruh":
             message.channel.send("", {files: ["https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256"]})
             break
+        case "coinflip":
+            message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!")
+            break
         case "epic":
             message.channel.send("", {files: ["https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256"]})
             break
