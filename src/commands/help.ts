@@ -17,11 +17,22 @@ const manual: {[key: string]: string} = {
 > Parameters:
 >     \`[@mention?]\` - optional - @mention for current speaker
 > Will ping \`[@mention]\` for important times if included
-> Will also mute \`[@mention]\` after 5:15`,
+> Will also mute \`[@mention]\` after 5:15
+> E.g \`!start @debate-timer\``,
     kill: `> **\`!kill [id]\`**
 > Kills a timer with id of \`[id]\`
 > Parameters:
->     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.`,
+>     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+> E.g \`!kill 254\``,
+    getMotion: `> **\`getMotion\`**
+> Gets a random motion from the hellomotions spreadsheet
+> <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
+    getMotions: `> **\`getMotions [count?]\`**
+> Gets multiple motions from the hellomotions spreadsheet
+> <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>
+> Parameters:
+>     \`[count?]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than 20.
+> E.g \`!getMotions 6\``,
     makeTeams: `> **\`!makeTeams\`**
 > Makes random teams with \`Team A\` \`Team B\` \`Team C\` and \`Team D\``,
     makePartners: `> **\`!makePartners [debater1] [debater2] ... [debater8]\`**
@@ -31,10 +42,11 @@ const manual: {[key: string]: string} = {
 >      \`[debater2]\` - required - @mention of debater 2
 >      ...
 >      \`[debater8]\` - required - @mention of debater 8
-> A total of 8 debaters are required`,
+> A total of 8 debaters are required
+> E.g \`!makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8\``,
     makeRound: `> **\`!makeRound [debater1] [debater2] ... [debater8]\`**
-> Functionally equivalent to \`makePartners\`, except it runs \`makeTeams\` after.
-> 8 debater @mentions are still required.`
+> Creates random teams, random partners, and chooses a random motion
+> Similar to \`makePartners\`, 8 debater names are required.`,
 }
 
 const fullMsg = `**Debate Timer Bot**
@@ -46,15 +58,21 @@ For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
 > **\`!help [command?]\`**
 > Get some help
 > Parameters:
->     [command?] - optional - name of command to get more detailed help with
+>     [command?] - optional - name of command to get more detailed help with. Doesn't have to include \`!\`.
+> E.g !help getMotion
+> E.g !man !start
 
 > **\`!man [command?]\`**
+> Stands for manual
 > Functionally equivalent to \`help\`
 
+**Commands:**
 > **\`!bruh\`**
 > **\`!epic\`**
 > **\`!start [@mention?]\`**
 > **\`!kill [id]\`**
+> **\`getMotion\`**
+> **\`getMotions [count?]\`**
 > **\`!makeTeams\`**
 > **\`!makePartners [debater1] [debater2] ... [debater8]\`**
 > **\`!makeRound\`**
