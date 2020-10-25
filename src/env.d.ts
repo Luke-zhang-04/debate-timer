@@ -7,6 +7,7 @@
 
 declare namespace NodeJS {
     interface ProcessEnv {
-        AUTHTOKEN: string,
+        AUTHTOKEN: string, // Authentication Token
+        APIKEY: string, // Google sheets API key
     }
 }

@@ -9,15 +9,19 @@
     "name": "Luke Zhang",
     "url": "https://luke-zhang-04.github.io/"
   },
-  "maintainers": [{
-    "name": "Ridwan Alam"
-  }],
+  "maintainers": [
+    {
+      "name": "Ridwan Alam"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
+    "@types/google-spreadsheet": "^3.0.2",
     "bad-words": "^3.0.3",
     "discord.js": "^12.4.0",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "google-spreadsheet": "^3.0.13"
   },
   "devDependencies": {
     "@types/bad-words": "^3.0.0",

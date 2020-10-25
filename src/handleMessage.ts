@@ -7,6 +7,7 @@
 import Filter from "bad-words"
 import {Message} from "discord.js"
 import help from "./commands/help"
+import motion from "./commands/randomMotion"
 import teamGen from "./commands/teamGen"
 import timer from "./commands/timer"
 
@@ -21,7 +22,7 @@ filter.addWords("dipshit", "dumbass")
  * @param message - message object
  * @returns void
  */
-const handleCmd = (message: Message): void => {
+const handleCmd = async (message: Message): Promise<void> => {
     const [cmd] = message.content.slice(1).split(" ")
 
     switch (cmd) {
@@ -52,8 +53,18 @@ const handleCmd = (message: Message): void => {
             teamGen.randomPartners(message)
             break
         case "makeRound":
-            // eslint-disable-next-line
-            teamGen.randomPartners(message) && teamGen.randomTeams(message.channel)
+            /* eslint-disable */
+            teamGen.randomPartners(message) &&
+            teamGen.randomTeams(message.channel)
+            /* eslint-disable */
+            message.channel.send(await motion.getRandomMotion())
+
+            break
+        case "getMotion":
+            message.channel.send(await motion.getRandomMotion())
+            break
+        case "getMotions":
+            motion.getRandomMotions(message)
             break
         default:
             message.channel.send(`The command \`${message.content.slice(1)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`!help\` for help.`)
@@ -80,7 +91,7 @@ export default (message: Message): void => {
                 } else if (number <= 0.7) {
                     message.channel.send(`Does your asshole get jealous of all the shit that comes out of your mouth <@${author}>?`)
                 } else if (number <= 0.8) {
-                    message.channel.send(`Don't fucking swear <@${author}>!`)
+                    message.channel.send(`Don't fucking swear <@${author}> :angry:.`)
                 } else {
                     message.channel.send(`<@${author}>`, {files: ["https://stayhipp.com/wp-content/uploads/2019/02/you-better-watch.jpg"]})
                 }
