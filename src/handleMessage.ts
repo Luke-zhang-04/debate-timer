@@ -59,13 +59,13 @@ const handleCmd = async (message: Message): Promise<void> => {
         case "makeRound":
             /* eslint-disable */
             teamGen.randomPartners(message) &&
-            teamGen.randomTeams(message.channel)
-            /* eslint-disable */
-            message.channel.send(await motion.getRandomMotion())
+            teamGen.randomTeams(message.channel) &&
+            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
+            /* eslint-enable */
 
             break
         case "getMotion":
-            message.channel.send(await motion.getRandomMotion())
+            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
             break
         case "getMotions":
             motion.getRandomMotions(message)
@@ -106,6 +106,6 @@ export default (message: Message): void => {
         }
     } catch (err) {
         console.error(err)
-        message.channel.send(`Sorry, this bot has died (crashed) due to an unexpected error ${err}`)
+        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}`)
     }
 }

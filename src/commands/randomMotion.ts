@@ -53,16 +53,16 @@ export const getRandomMotions = async (
     let amt = Number(message.content.split(" ")[1] ?? 5)
 
     if (isNaN(amt)) {
-        message.channel.send(`Could not parse \`${message.content.split(" ")[1]}\` as a number. Learn to count.`)
+        message.channel.send(`:1234: Could not parse \`${message.content.split(" ")[1]}\` as a number. Learn to count.`)
 
         return
     }
 
     if (amt > 20) {
-        message.channel.send(`Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you 20 motions.`)
+        message.channel.send(`:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you 20 motions.`)
         amt = 20
     } else if (amt < 0) {
-        message.channel.send(`Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).\nBruh.`)
+        message.channel.send(`:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).\nBruh.`)
         return
     }
 
@@ -85,7 +85,7 @@ export const getRandomMotions = async (
         }
     })
 
-    message.channel.send(`**Generated random motions**: ${motionsString}`)
+    message.channel.send(`:speaking_head: **Generated random motions**: ${motionsString}`)
 }
 
 export default {

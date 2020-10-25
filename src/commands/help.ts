@@ -10,6 +10,8 @@ import type {Message} from "discord.js"
 const manual: {[key: string]: string} = {
     bruh: `> **\`!bruh\`**
 > Otis.`,
+    coinflip: `> **\`!coinflip\`**
+> Flip a coin`,
     epic: `> **\`!epic\`**
 > Shen Bapiro.`,
     start: `> **\`!start [@mention?]\`**
@@ -55,24 +57,31 @@ This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
 For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
 
-> **\`!help [command?]\`**
+> :book: **\`!help [command?]\`**
 > Get some help
 > Parameters:
 >     [command?] - optional - name of command to get more detailed help with. Doesn't have to include \`!\`.
 > E.g !help getMotion
 > E.g !man !start
 
-> **\`!man [command?]\`**
+> :book: **\`!man [command?]\`**
 > Stands for manual
 > Functionally equivalent to \`help\`
 
 **Commands:**
 > **\`!bruh\`**
+> **\`!coinfilp\`**
 > **\`!epic\`**
+
+> :timer:
 > **\`!start [@mention?]\`**
 > **\`!kill [id]\`**
+
+> :newspaper:
 > **\`getMotion\`**
 > **\`getMotions [count?]\`**
+
+> :speaking_head:
 > **\`!makeTeams\`**
 > **\`!makePartners [debater1] [debater2] ... [debater8]\`**
 > **\`!makeRound\`**
@@ -88,10 +97,10 @@ export default (message: Message) => {
     if (arg === undefined) {
         message.channel.send(fullMsg)
     } else if (arg in manual) {
-        message.channel.send(`**Debate Timer Bot**\n${manual[arg]}`)
+        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg]}`)
     } else if (arg.slice(1) in manual) {
-        message.channel.send(`**Debate Timer Bot**\n${manual[arg.slice(1)]}`)
+        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg.slice(1)]}`)
     } else {
-        message.channel.send(`No manual entry for ${arg}`)
+        message.channel.send(`:book: No manual entry for ${arg}`)
     }
 }

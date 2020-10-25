@@ -125,11 +125,11 @@ export const kill = (channel: Channel, id?: string): void => {
     const numericId = Number(id)
 
     if (id === undefined) { // Id was never provided. Terminate.
-        channel.send("Argument [id] not provided. For help using this command, run the `!help` command.")
+        channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
 
         return
     } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
-        channel.send(`Could not parse \`${id}\` as a number. Learn to count.`)
+        channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
 
         return
     }
@@ -153,7 +153,7 @@ export const kill = (channel: Channel, id?: string): void => {
         }
     }
 
-    channel.send(`Could not find timer with id ${id}`)
+    channel.send(`:confused: Could not find timer with id ${id}`)
 }
 
 /* eslint max-lines-per-function: ["error", {"max":50, "skipComments": true, "skipBlankLines": true}] */
@@ -166,7 +166,7 @@ export const start = async (message: Message): Promise<void> => {
     const user = message.mentions.users.first() // Mentioned user
     const uid = user?.id // Id of aforementioned user
 
-    await message.channel.send(`Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
+    await message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
     let time = 0, // Delta time in seconds
         id: NodeJS.Timeout | null = null // Interval id
@@ -221,7 +221,7 @@ export const start = async (message: Message): Promise<void> => {
         ])
     })
 
-    msg.edit(`Speech Finished!`)
+    msg.edit(`:white_check_mark: Speech Finished!`)
 
     if (user !== undefined) {
         muteUser(message.guild, user)

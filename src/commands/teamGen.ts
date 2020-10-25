@@ -50,7 +50,7 @@ const shuffle = <T>(array: T[], cycles = 1) => {
  * @param channel - channel object to send messages to
  * @returns void
  */
-export const randomTeams = (channel: Channel): void => {
+export const randomTeams = (channel: Channel): true => {
     const teams = [
         "Team-A",
         "Team-B",
@@ -66,7 +66,9 @@ export const randomTeams = (channel: Channel): void => {
         teamString += `\n> **${basePositions[index]}**: ${team}`
     }
 
-    channel.send(`**Generated random teams**: ${teamString}`)
+    channel.send(`:speaking_head: **Generated random teams**: ${teamString}`)
+
+    return true
 }
 
 /**
@@ -78,7 +80,7 @@ export const randomPartners = (message: Message): boolean => {
     const invocation = message.content.split(" ")
 
     if (invocation.length !== 9) {
-        message.channel.send(`8 @mentions required, but ${invocation.length - 1} were found. Learn to count.`)
+        message.channel.send(`:1234: 8 @mentions required, but ${invocation.length - 1} were found. Learn to count.`)
 
         return false
     }
@@ -97,7 +99,7 @@ export const randomPartners = (message: Message): boolean => {
         }
     }
 
-    message.channel.send(`**Generated random partners**: ${partnersString}`)
+    message.channel.send(`:speaking_head: **Generated random partners**: ${partnersString}`)
 
     return true
 }
