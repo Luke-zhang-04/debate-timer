@@ -6,6 +6,7 @@
  */
 import Filter from "bad-words"
 import {Message} from "discord.js"
+import {client} from "."
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import teamGen from "./commands/teamGen"
@@ -66,8 +67,11 @@ const handleCmd = async (message: Message): Promise<void> => {
         case "getMotions":
             motion.getRandomMotions(message)
             break
+        case "ping":
+            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`);
+            break
         default:
-            message.channel.send(`The command \`${message.content.slice(1)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`!help\` for help.`)
+            message.channel.send(`:confused: The command \`${message.content.slice(1)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`!help\` for help.`)
             break
     }
 }

@@ -11,7 +11,7 @@ import handleMessage from "./handleMessage"
 
 dotenv.config()
 
-const client = new Discord.Client()
+export const client = new Discord.Client()
 
 client.login(process.env.AUTHTOKEN)
 
