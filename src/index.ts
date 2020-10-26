@@ -36,6 +36,12 @@ client.once("ready", () => {
 
 client.on("message", (message) => {
     try {
+        if (message.content.includes(`${prefix}ping`)) {
+            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
+
+            return
+        }
+
         handleMessage(message)
     } catch (err) {
         console.error(err)

@@ -418,6 +418,16 @@
             "env": {
                 "browser": true
             }
+        },
+        {
+            "files": ["./test/*"],
+            "env": {
+                "mocha": true
+            },
+            "rules": {
+                "max-lines-per-function": "off",
+                "@typescript-eslint/explicit-module-boundary-types": "off"
+            }
         }
     ]
 }

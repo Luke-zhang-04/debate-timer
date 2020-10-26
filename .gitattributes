@@ -4,3 +4,6 @@ docs/* linguist-detectable=true
 
 # Enforce Unix newlines
 * text=auto eol=lf
+
+# Tests utilities are undetectable
+test/utils/* linguist-detectable=false

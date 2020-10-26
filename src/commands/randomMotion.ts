@@ -99,13 +99,15 @@ export const getRandomMotions = async (
     }
 
     // Wait for Promises to resolve, then add them to motionsString
-    await Promise.all(motions).then((motions) => {
+    const promise = await Promise.all(motions).then((motions) => {
         for (const [index, motion] of motions.entries()) {
             motionsString += `\n\n${index + 1}. ${motion}`
         }
     })
 
     message.channel.send(`:speaking_head: **Got random motions**: ${motionsString}`)
+
+    return promise
 }
 
 export default {

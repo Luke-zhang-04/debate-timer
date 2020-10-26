@@ -6,7 +6,6 @@
  */
 import Filter from "bad-words"
 import {Message} from "discord.js"
-import {client} from "."
 import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
@@ -25,7 +24,6 @@ interface Commands {
     makeRound: ()=> unknown,
     getMotion: ()=> unknown,
     getMotions: ()=> unknown,
-    ping: ()=> unknown,
 }
 
 // Swear words filter
@@ -61,17 +59,17 @@ const handleCmd = (message: Message): void => {
         },
         getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
         getMotions: () => motion.getRandomMotions(message),
-        ping: () => message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     }
 
     switch (cmd) {
         case undefined || "":
             message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
-            break
+
+            return
 
         case "man":
             commands.help()
-            
+
             return
 
         default: break
@@ -99,7 +97,10 @@ export default (message: Message): void => {
         if (message.content.startsWith(config.prefix)) {
             const timeGap = config.commandCooldown * 1000
 
-            if (Date.now() - lastCommand >= timeGap) { // Time gap reached
+            if (
+                process.env.NODE_ENV === "test" ||
+                Date.now() - lastCommand >= timeGap
+            ) { // Time gap reached
                 handleCmd(message)
                 lastCommand = Date.now()
 

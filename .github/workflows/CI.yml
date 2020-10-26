@@ -1,0 +1,34 @@
+name: Node.js CI
+
+on: [push, pull_request]
+
+jobs:
+  "Build and test":
+    name: build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: ["12.x", "14.x"]
+
+    name: Node ${{ matrix.node }} CI
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        name: Setup node ${{ matrix.node }}
+        with:
+          node-version: ${{ matrix.node }}
+          registry-url: "https://registry.npmjs.org"
+
+      - name: install deps
+        run: yarn install --frozen-lockfile
+
+      - name: lint
+        run: ./node_modules/.bin/eslint src/*.ts
+
+      - name: build
+        run: ./node_modules/.bin/tsc
+
+      - name: test
+        run: yarn test
