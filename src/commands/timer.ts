@@ -12,6 +12,7 @@ import type {
     TextChannel,
     User
 } from "discord.js"
+import {maxTimers} from "../getConfig"
 
 type Channel = TextChannel | DMChannel | NewsChannel
 
@@ -163,6 +164,12 @@ export const kill = (channel: Channel, id?: string): void => {
  * @returns Promise<void>
  */
 export const start = async (message: Message): Promise<void> => {
+    if (timers.length >= maxTimers) {
+        message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. Since this bot is hosted on either some crappy server or Luke's laptop, running too many concurrent tasks isn't a great idea. The max timer count can be changed in the configuration file.`)
+
+        return
+    }
+
     const user = message.mentions.users.first() // Mentioned user
     const uid = user?.id // Id of aforementioned user
 
