@@ -78,6 +78,9 @@ The configured prefix is \`${prefix}\`
 > **\`${prefix}coinfilp\`**
 > **\`${prefix}epic\`**
 
+> :computer:
+> **\`ping\`**
+
 > :timer:
 > **\`${prefix}start [@mention?]\`**
 > **\`${prefix}kill [id]\`**
