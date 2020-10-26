@@ -13,6 +13,20 @@ import motion from "./commands/randomMotion"
 import teamGen from "./commands/teamGen"
 import timer from "./commands/timer"
 
+interface Commands {
+    help: ()=> unknown,
+    bruh: ()=> unknown,
+    coinflip: ()=> unknown,
+    epic: ()=> unknown,
+    start: ()=> unknown,
+    kill: ()=> unknown,
+    makeTeams: ()=> unknown,
+    makePartners: ()=> unknown,
+    makeRound: ()=> unknown,
+    getMotion: ()=> unknown,
+    getMotions: ()=> unknown,
+    ping: ()=> unknown,
+}
 
 // Swear words filter
 const filter = new Filter()
@@ -26,59 +40,52 @@ let lastCommand = 0
  * @param message - message object
  * @returns void
  */
-const handleCmd = async (message: Message): Promise<void> => {
+const handleCmd = (message: Message): void => {
     const {prefix} = config
     const [cmd] = message.content.slice(prefix.length).split(" ")
-
-    switch (cmd) {
-        case undefined || "":
-            message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
-            break
-        case "help" || "man":
-            help(message)
-            break
-        case "bruh":
-            message.channel.send("", {files: [config.serverIconUrl]})
-            break
-        case "coinflip":
-            message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!")
-            break
-        case "epic":
-            message.channel.send("", {files: [config.botIconUrl]})
-            break
-        case "start":
-            timer.start(message)
-            break
-        case "kill":
-            timer.kill(message.channel, message.content.split(" ")[1])
-            break
-        case "makeTeams":
-            teamGen.randomTeams(message.channel)
-            break
-        case "makePartners":
-            teamGen.randomPartners(message)
-            break
-        case "makeRound":
+    const commands: Commands = {
+        help: () => help(message),
+        bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
+        coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+        epic: () => message.channel.send("", {files: [config.botIconUrl]}),
+        start: () => timer.start(message),
+        kill: () => timer.kill(message.channel, message.content.split(" ")[1]),
+        makeTeams: () => teamGen.randomTeams(message.channel),
+        makePartners: () => teamGen.randomPartners(message),
+        makeRound: async () => {
             /* eslint-disable */
             teamGen.randomPartners(message) &&
             teamGen.randomTeams(message.channel) &&
             message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
             /* eslint-enable */
-
-            break
-        case "getMotion":
-            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
-            break
-        case "getMotions":
-            motion.getRandomMotions(message)
-            break
-        case "ping":
-            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
-            break
-        default:
-            message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
-            break
+        },
+        getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
+        getMotions: () => motion.getRandomMotions(message),
+        ping: () => message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     }
+
+    switch (cmd) {
+        case undefined || "":
+            message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
+            break
+
+        case "man":
+            commands.help()
+            
+            return
+
+        default: break
+    }
+
+    for (const [key, command] of Object.entries(commands)) {
+        if (cmd === key) {
+            (command as ()=> unknown)()
+
+            return
+        }
+    }
+
+    message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
 }
 
 /* eslint-disable */
