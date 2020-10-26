@@ -124,3 +124,4 @@ dist
 .env.test.local
 .env.production.local
 lib/
+cli/*.js

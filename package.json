@@ -4,7 +4,8 @@
   "description": "BP Debate timer Discord Bot",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000"
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000",
+    "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json"
   },
   "keywords": [],
   "author": {
@@ -18,6 +19,7 @@
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.0.13",
     "nice-try": "^2.1.0",
+    "prompts": "^2.4.0",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
@@ -26,6 +28,7 @@
     "@types/google-spreadsheet": "^3.0.2",
     "@types/nice-try": "^2.1.0",
     "@types/node": "^14.14.2",
+    "@types/prompts": "^2.0.9",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
