@@ -164,7 +164,7 @@ export const kill = (channel: Channel, id?: string): void => {
  * @returns Promise<void>
  */
 export const start = async (message: Message): Promise<void> => {
-    if (timers.length >= maxTimers) {
+    if (timers.length >= maxTimers) { // Max number of timers reached
         message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. Since this bot is hosted on either some crappy server or Luke's laptop, running too many concurrent tasks isn't a great idea. The max timer count can be changed in the configuration file.`)
 
         return

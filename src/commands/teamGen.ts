@@ -77,20 +77,21 @@ export const randomTeams = (channel: Channel): true => {
  * @returns boolean - id successful
  */
 export const randomPartners = (message: Message): boolean => {
-    const invocation = message.content.split(" ")
+    const invocation = message.content.split(" ") // Invokation message
 
-    if (invocation.length !== 9) {
+    if (invocation.length !== 9) { // Mention count
         message.channel.send(`:1234: 8 @mentions required, but ${invocation.length - 1} were found. Learn to count.`)
 
         return false
     }
 
-    const debaters = invocation.splice(1)
+    const debaters = invocation.splice(1) // Array of debaters
 
     shuffle(debaters, 4)
 
     let partnersString = ""
 
+    // Add debaters to a string and then send it
     for (const [index, debater] of debaters.entries()) {
         if (index % 2 === 0) {
             partnersString += `\n> **${baseTeams[index / 2]}**: ${debater}, `
@@ -101,7 +102,7 @@ export const randomPartners = (message: Message): boolean => {
 
     message.channel.send(`:speaking_head: **Generated random partners**: ${partnersString}`)
 
-    return true
+    return true // Return true for success for makeRound
 }
 
 export default {
