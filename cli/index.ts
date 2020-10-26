@@ -46,11 +46,18 @@ const connected = new Promise((resolve) => {
             } else if (command === "help") {
                 console.log("Help for CLI:\nUse $ for a command\nType anything to send it to a channel\n$channel [channelname] changes your text channel\n$exit exits the CLI")
             } else if (command.split(" ")[0] === "channel") {
-                console.log(`Changing channels to ${command.split(" ")[1]}`)
-                channel = client.channels.cache.find((_channel) => (
+                console.log(`Changing channels to "${command.split(" ")[1]}"`)
+                const targetChannel = client.channels.cache.find((_channel) => (
                     (_channel as Discord.TextChannel).name === command.split(" ")[1]
-                )) as Discord.TextChannel
-                console.log("Changed channel")
+                )) as Discord.TextChannel | undefined
+
+                if (targetChannel === undefined) {
+                    console.log(`Channel not found: ${command.split(" ")[1]}`)
+                } else{
+                    channel = targetChannel
+
+                    console.log("Changed channel")
+                }
             } else {
                 console.log(`Unknown command ${command.split(" ")[0]}`)
             }
