@@ -105,7 +105,7 @@ export const getRandomMotions = async (
         }
     })
 
-    message.channel.send(`:speaking_head: **Generated random motions**: ${motionsString}`)
+    message.channel.send(`:speaking_head: **Got random motions**: ${motionsString}`)
 }
 
 export default {
