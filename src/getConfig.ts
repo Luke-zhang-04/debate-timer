@@ -80,7 +80,7 @@ let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) ?? ""
 
 // If that doesn't work, try .yaml instead
 if (inputConfigFile === "") {
-    inputConfigFile = niceTry(() => readFileSync("config.ymal").toString()) ?? "{}"
+    inputConfigFile = niceTry(() => readFileSync("config.yaml").toString()) ?? "{}"
 }
 
 // Parse the yaml config
