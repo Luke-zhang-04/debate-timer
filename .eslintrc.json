@@ -426,7 +426,8 @@
             },
             "rules": {
                 "max-lines-per-function": "off",
-                "@typescript-eslint/explicit-module-boundary-types": "off"
+                "@typescript-eslint/explicit-module-boundary-types": "off",
+                "no-async-promise-executor": "off"
             }
         }
     ]
