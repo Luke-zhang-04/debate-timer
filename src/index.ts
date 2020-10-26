@@ -45,6 +45,6 @@ client.on("message", (message) => {
         handleMessage(message)
     } catch (err) {
         console.error(err)
-        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}`)
+        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.`)
     }
 })
