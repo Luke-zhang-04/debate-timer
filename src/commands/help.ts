@@ -80,6 +80,7 @@ The configured prefix is \`${prefix}\`
 
 > :computer:
 > **\`ping\`**
+> **\`systemInfo\`**
 
 > :timer:
 > **\`${prefix}start [@mention?]\`**

@@ -9,6 +9,7 @@ import {Message} from "discord.js"
 import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
+import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 import timer from "./commands/timer"
 
@@ -24,6 +25,7 @@ interface Commands {
     makeRound: ()=> unknown,
     getMotion: ()=> unknown,
     getMotions: ()=> unknown,
+    systemInfo: ()=> unknown,
 }
 
 // Swear words filter
@@ -59,6 +61,7 @@ const handleCmd = (message: Message): void => {
         },
         getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
         getMotions: () => motion.getRandomMotions(message),
+        systemInfo: async () => message.channel.send(await systemInfo()),
     }
 
     switch (cmd) {
