@@ -22,9 +22,9 @@ class Message {
 
     constructor (content, options) {
         this.content = content
-        this.files = options?.files
+        this.files = options ? options.files : undefined
 
-        if (options?.author) {
+        if (options && options.author) {
             this.author = options.author
         }
 
