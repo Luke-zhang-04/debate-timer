@@ -1,8 +1,9 @@
 /**
- * Debate Timer
+ * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @license MIT
+ * @version 1.0.0
+ * @license BSD-3-Clause
  */
 
 const minute = 60

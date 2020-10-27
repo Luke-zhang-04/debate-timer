@@ -1,6 +1,6 @@
-name: Node.js CI
+name: Node.js CI (skip Google Sheets API)
 
-on: [pull_request]
+on: [push]
 
 jobs:
   test:
@@ -30,4 +30,4 @@ jobs:
         run: ./node_modules/.bin/tsc
 
       - name: test
-        run: yarn test
+        run: NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --no-googlesheets

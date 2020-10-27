@@ -12,7 +12,7 @@
     "name": "Luke Zhang",
     "url": "https://luke-zhang-04.github.io/"
   },
-  "license": "MIT",
+  "license": "BSD-3-Clause",
   "dependencies": {
     "bad-words": "^3.0.3",
     "discord.js": "^12.4.0",

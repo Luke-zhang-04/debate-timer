@@ -2,7 +2,8 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @license MIT
+ * @version 1.0.0
+ * @license BSD-3-Clause
  * @file lets you send messages on the bots behalf
  */
 
@@ -12,6 +13,8 @@ import prompts from "prompts"
 
 dotenv.config()
 
+console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
+
 export const client = new Discord.Client()
 
 client.login(process.env.AUTHTOKEN)
@@ -20,7 +23,7 @@ const connected = new Promise((resolve) => {
     client.once("ready", resolve)
 });
 
-/* eslint-disable no-await-in-loop, no-constant-condition */
+/* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
 (async (): Promise<void> => {
     await connected
@@ -28,43 +31,42 @@ const connected = new Promise((resolve) => {
 
     let channel = client.channels.cache.find((_channel) => (
         (_channel as Discord.TextChannel).name === "spam"
-    )) as Discord.TextChannel
+    )) as Discord.TextChannel,
+        shouldcontinueRunning = true
 
-    while (true) {
+    while (shouldcontinueRunning) {
         const response = await prompts({
             type: "text",
             name: "text",
-            message: `debate-timer-bot ${Math.round(client.ws.ping)} #${channel.name} ->`,
+            message: `debate-timer-bot ${Math.round(client.ws.ping)}ms #${channel.name} ->`,
         })
 
-        if ((response.text as string)[0] === "$") {
-            const command = (response.text as string).slice(1)
+        const command = (response.text as string)
 
-            if (command === "exit") {
-                console.log("Exiting . . . goodbye!")
-                break
-            } else if (command === "help") {
-                console.log("Help for CLI:\nUse $ for a command\nType anything to send it to a channel\n$channel [channelname] changes your text channel\n$exit exits the CLI")
-            } else if (command.split(" ")[0] === "channel") {
-                console.log(`Changing channels to "${command.split(" ")[1]}"`)
-                const targetChannel = client.channels.cache.find((_channel) => (
-                    (_channel as Discord.TextChannel).name === command.split(" ")[1]
-                )) as Discord.TextChannel | undefined
+        if (command === "exit") {
+            console.log("Exiting . . . goodbye!")
+            shouldcontinueRunning = false
+        } else if (command === "help") {
+            console.log("Help for CLI:\n\"send [msg]\" sends a message to a channel.\n\"cc [channelname]\" changes your text channel\n\"exit\" exits the CLI")
+        } else if (command.split(" ")[0] === "cc") {
+            console.log(`Changing channels to "${command.split(" ")[1]}"`)
+            const targetChannel = client.channels.cache.find((_channel) => (
+                (_channel as Discord.TextChannel).name === command.split(" ")[1]
+            )) as Discord.TextChannel | undefined
 
-                if (targetChannel === undefined) {
-                    console.log(`Channel not found: ${command.split(" ")[1]}`)
-                } else{
-                    channel = targetChannel
-
-                    console.log("Changed channel")
-                }
+            if (targetChannel === undefined) {
+                console.log(`Channel not found: ${command.split(" ")[1]}`)
             } else {
-                console.log(`Unknown command ${command.split(" ")[0]}`)
+                channel = targetChannel
+
+                console.log("Changed channel")
             }
-        } else if (response.text) {
-            console.log(`Sending "${response.text}" . . .`)
-            await channel.send(response.text)
+        } else if (command.split(" ")[0] === "send") {
+            console.log(`Sending "${command.slice(5)}" . . .`)
+            await channel.send(command.slice(5))
             console.log("Sent")
+        } else if (command !== "") {
+            console.log(`Unknown command "${command.split(" ")[0]}"`)
         }
     }
 

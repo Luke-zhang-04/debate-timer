@@ -2,12 +2,15 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @license MIT
+ * @version 1.0.0
+ * @license BSD-3-Clause
  */
 
 const {Message} = require("./utils/mockDiscord")
 const assert = require("assert")
 const handleMessage = require("../lib/handleMessage")
+const {hostname} = require("os")
+const systemInfo = require("../lib/commands/systemInfo")
 const testHelpers = require("./utils/helpers")
 
 
@@ -56,5 +59,11 @@ module.exports = () => {
         const returnMsg = message.newMessage.content
 
         testHelpers.includes(returnMsg, "is not recognized")
+    })
+
+    it("Should output accurate system info", async () => {
+        const info = systemInfo.default()
+
+        testHelpers.includes(await info, hostname())
     })
 }
