@@ -27,5 +27,17 @@ jobs:
       - name: build cli
         run: ./node_modules/.bin/tsc -p tsconfig.cli.json
 
-      - name: commit to release branch
-        run: ./scripts/release
+      - name: Commit files
+        run: |
+          git config --local user.email "luke.zhang2004dev@gmail.com"
+          git config --local user.name "Luke-zhang-04"
+          git add --force lib
+          git add --force cli/
+          rm -rfv ./test .eslintignore .eslintrc.json tsconfig.json tsconfig.cli.json yarn.lock docs assets
+          git commit -am "Release for version 1.0.0"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "release"
+          force: true
