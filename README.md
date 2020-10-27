@@ -35,4 +35,7 @@ Note that these values are sensitive and should not be shown publicly
 Run
 ```bash
 node .
+
+# To run it in the background
+node . & disown
 ```
