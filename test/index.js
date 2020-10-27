@@ -14,6 +14,15 @@ const timerTest = require("./timer.js")
 
 describe("Help functions", helpTest)
 describe("Miscellaneous functions", miscTest)
-describe("Random motion", randomMotionTest)
+
+if (
+    !process.argv.includes("--skip-googlesheets") &&
+    !process.argv.includes("--no-googlesheets")
+) {
+    describe("Random motion", randomMotionTest)
+} else {
+    it("SKIPPING GOOGLE SHEETS API TESTING")
+}
+
 describe("Team Generation functions", teamGenTest)
 describe("Timer functions", timerTest)
