@@ -28,7 +28,7 @@ fi
 
 echo "Installing . . ."
 
-if [ ! -d lib ]; then
+if [ ! -d lib ]||[ ! -f cli/index.js ]; then
     "$pkgMan" || exit 1
 
     npx tsc -p tsconfig.json || exit 1
