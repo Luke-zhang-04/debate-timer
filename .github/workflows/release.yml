@@ -1,8 +1,10 @@
-name: Node.js CI
+name: Release
 
 on:
   release:
     types: [created]
+  push:
+    branchs: [master]
 
 jobs:
   test:
