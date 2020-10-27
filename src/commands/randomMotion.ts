@@ -16,7 +16,7 @@ const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY"
 // We use this promise so we can tell when the document it loaded
 const docDidLoad = new Promise(async (resolve, reject) => {
     try {
-        doc.useApiKey("AIzaSyC47H9Aak3mC7a28FoAqNtN24ttte5Z270")
+        doc.useApiKey(process.env.APIKEY)
         await doc.loadInfo()
 
         return resolve()
