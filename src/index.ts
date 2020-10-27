@@ -3,7 +3,7 @@
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
  * @version 1.0.0
- * @license MIT
+ * @license BSD-3-Clause
  */
 
 import Discord from "discord.js"
@@ -12,6 +12,8 @@ import handleMessage from "./handleMessage"
 import {prefix} from "./getConfig"
 
 dotenv.config()
+
+console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
 
 export const client = new Discord.Client()
 

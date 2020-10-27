@@ -3,7 +3,7 @@
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
  * @version 1.0.0
- * @license MIT
+ * @license BSD-3-Clause
  */
 
 class Message {
