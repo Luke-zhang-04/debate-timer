@@ -2,11 +2,12 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.0
+ * @version 1.0.0
  * @license BSD-3-Clause
  */
 
 import type {Message} from "discord.js"
+import fs from "fs/promises"
 import {prefix} from "../getConfig"
 
 // Object with all the manual entries
@@ -54,14 +55,19 @@ const manual: {[key: string]: string} = {
 > Similar to \`makePartners\`, 8 debater names are required.`,
 }
 
+const packageInfo = (async () =>  JSON.parse(
+    (await fs.readFile("package.json")).toString(),
+))()
+
 // Default help message
-const defaultMsg = `**Debate Timer Bot**
+const defaultMsg = async (): Promise<string> => `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
 For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
 
 The configured prefix is \`${prefix}\`
+This bot is in version ${(await packageInfo).version}
 
 > :book: **\`${prefix}help [command?]\`**
 > Get some help
@@ -101,11 +107,11 @@ The configured prefix is \`${prefix}\`
  * Help command invoked with !help
  * @returns string
  */
-export default (message: Message) => {
+export default async (message: Message) => {
     const arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
-        message.channel.send(defaultMsg)
+        message.channel.send(await defaultMsg())
     } else if (arg in manual) {
         message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg]}`)
     } else if (arg.slice(1) in manual) {

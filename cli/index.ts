@@ -9,6 +9,7 @@
 
 import Discord from "discord.js"
 import dotenv from "dotenv"
+import fs from "fs/promises"
 import prompts from "prompts"
 
 dotenv.config()
@@ -29,10 +30,16 @@ const connected = new Promise((resolve) => {
     await connected
     console.log("Connected to client")
 
+    const {version} = JSON.parse(
+        (await fs.readFile("package.json")).toString(),
+    )
+
     let channel = client.channels.cache.find((_channel) => (
         (_channel as Discord.TextChannel).name === "spam"
     )) as Discord.TextChannel,
         shouldcontinueRunning = true
+
+    console.log(`\nCLI Version ${version}\n`)
 
     while (shouldcontinueRunning) {
         const response = await prompts({
