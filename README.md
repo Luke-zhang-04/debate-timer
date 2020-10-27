@@ -10,3 +10,29 @@ A discord bot and web timer
 [Web timer](https://luke-zhang-04.github.io/debate-timer/)
 
 ![Screenshot](./assets/screenshot.png)
+
+## Using the bot
+
+Clone the latest version from git like so
+```bash
+git clone --single-branch --branch release https://github.com/Luke-zhang-04/debate-timer.git && cd debate-timer
+```
+
+Install dependencies
+```bash
+./install.sh
+
+# Or
+sh install.sh
+```
+
+Get credentials
+- You need to put a [Google Sheets API key](https://developers.google.com/sheets/api/quickstart/js#step_1_turn_on_the) in your .env file for the value APIKEY
+- You need to put your [Discord auth token](https://github.com/Tyrrrz/DiscordChatExporter/wiki/Obtaining-Token-and-Channel-IDs) in your .env file for the value AUTHTOKEN
+
+Note that these values are sensitive and should not be shown publicly
+
+Run
+```bash
+node .
+```
