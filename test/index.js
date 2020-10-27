@@ -11,6 +11,8 @@ const miscTest = require("./misc.js")
 const teamGenTest = require("./teamGen.js")
 const timerTest = require("./timer.js")
 
+require("dotenv").config()
+
 describe("Help functions", helpTest)
 describe("Miscellaneous functions", miscTest)
 
