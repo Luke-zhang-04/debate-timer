@@ -1,0 +1,17 @@
+#!/bin/sh
+
+version="$(grep version package.json | awk '{print $2}' | tr -d \" | tr -d ,)"
+
+# Config git
+git config --local user.email "luke.zhang2004dev@gmail.com"
+git config --local user.name "Luke-zhang-04"
+
+# Add JS files for distribution
+git add --force lib
+git add --force cli/
+
+# Remove unecessary files
+rm -rfv ./test .github assets docs test .editorconfig .eslintignore .eslintrc.json .gitattributes tsconfig.json tsconfig.cli.json yarn.lock
+
+# Commit
+git commit -am "Release for version $version"
