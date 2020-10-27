@@ -1,0 +1,31 @@
+name: Node.js CI
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    name: Release
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        name: Setup Nodejs
+        with:
+          node-version: 12.x
+          registry-url: "https://registry.npmjs.org"
+
+      - name: install deps
+        run: yarn install --frozen-lockfile
+
+      - name: build bot
+        run: ./node_modules/.bin/tsc -p tsconfig.json
+
+      - name: build cli
+        run: ./node_modules/.bin/tsc -p tsconfig.cli.json
+
+      - name: commit to release branch
+        run: ./scripts/release

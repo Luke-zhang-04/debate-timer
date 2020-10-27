@@ -8,9 +8,10 @@
 
 const helpTest = require("./help.js")
 const miscTest = require("./misc.js")
-const randomMotionTest = require("./randomMotion.js")
 const teamGenTest = require("./teamGen.js")
 const timerTest = require("./timer.js")
+
+require("dotenv").config()
 
 describe("Help functions", helpTest)
 describe("Miscellaneous functions", miscTest)
@@ -19,6 +20,8 @@ if (
     !process.argv.includes("--skip-googlesheets") &&
     !process.argv.includes("--no-googlesheets")
 ) {
+    const randomMotionTest = require("./randomMotion.js")
+
     describe("Random motion", randomMotionTest)
 } else {
     it("SKIPPING GOOGLE SHEETS API TESTING")
