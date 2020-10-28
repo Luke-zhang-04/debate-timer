@@ -5,6 +5,7 @@
  * @version 1.1.0
  * @license BSD-3-Clause
  */
+
 import type {
     DMChannel,
     Guild,
