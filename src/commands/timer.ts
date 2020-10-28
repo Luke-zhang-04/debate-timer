@@ -23,7 +23,7 @@ type Channel = TextChannel | DMChannel | NewsChannel
  * This keeps track of running timers
  * To kill a timer, the kill() function should be called
  */
-const timers: [id: number, kill: ()=> void][] = []
+const timers: [id: number, kill: (shouldmute: boolean)=> void][] = []
 
 const minute = 60
 
@@ -124,7 +124,11 @@ const muteUser = async (guild: Guild | null, user: User): Promise<void> => {
  * @param id - user id - could be undefined, but shouldn't be
  * @returns void
  */
-export const kill = (channel: Channel, id?: string): void => {
+export const kill = (
+    channel: Channel,
+    id?: string,
+    shouldmute?: boolean,
+): void => {
     const numericId = Number(id)
 
     if (id === undefined) { // Id was never provided. Terminate.
@@ -149,7 +153,7 @@ export const kill = (channel: Channel, id?: string): void => {
 
     for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
         if (timer[0].toString() === id) { // If id matches, execute the `kill()` function
-            timer[1]()
+            timer[1](Boolean(shouldmute))
             timers.splice(index, 1) // Delete this timer from the array
 
             return
@@ -178,7 +182,8 @@ export const start = async (message: Message): Promise<void> => {
     await message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
     let time = 0, // Delta time in seconds
-        id: NodeJS.Timeout | null = null // Interval id
+        id: NodeJS.Timeout | null = null, // Interval id
+        shouldmute = true // If use should be muted after speech
 
     /**
      * Keep track of this message, as we're going to consantly edit it and
@@ -221,9 +226,11 @@ export const start = async (message: Message): Promise<void> => {
         // Push the id and kill function to the timers array
         timers.push([
             Number(`${id}`),
-            (): void => {
+            (shouldmuteUser: boolean): void => {
                 clearInterval(Number(`${id}`))
                 resolve()
+
+                shouldmute = shouldmuteUser
 
                 message.channel.send(`Killed timer with id ${id}.`)
             },
@@ -232,7 +239,7 @@ export const start = async (message: Message): Promise<void> => {
 
     msg.edit(`:white_check_mark: Speech Finished!`)
 
-    if (user !== undefined) {
+    if (user !== undefined && shouldmute) {
         muteUser(message.guild, user)
     }
 

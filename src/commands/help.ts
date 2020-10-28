@@ -25,10 +25,11 @@ const manual: {[key: string]: string} = {
 > Will ping \`[@mention]\` for important times if included
 > Will also mute \`[@mention]\` after 5:15
 > E.g \`${prefix}start @debate-timer\``,
-    kill: `> **\`${prefix}kill [id]\`**
+    kill: `> **\`${prefix}kill [id] [shouldMute? = noMute | mute | undefined]\`**
 > Kills a timer with id of \`[id]\`
 > Parameters:
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>     \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
 > E.g \`${prefix}kill 254\``,
     getMotion: `> **\`getMotion\`**
 > Gets a random motion from the hellomotions spreadsheet
@@ -89,7 +90,7 @@ This bot is in version ${version}
 
 > :timer:
 > **\`${prefix}start [@mention?]\`**
-> **\`${prefix}kill [id]\`**
+> **\`${prefix}kill [id] [shouldMute?]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**

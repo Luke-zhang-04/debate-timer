@@ -36,6 +36,7 @@ filter.addWords("dipshit", "dumbass")
 
 let lastCommand = 0
 
+/* eslint max-lines-per-function: ["error", {"max": 50, "skipComments": true, "skipBlankLines": true}] */
 /**
  * Handle a command (starts with !)
  * @param message - message object
@@ -50,7 +51,12 @@ const handleCmd = (message: Message): void => {
         coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
         epic: () => message.channel.send("", {files: [config.botIconUrl]}),
         start: () => timer.start(message),
-        kill: () => timer.kill(message.channel, message.content.split(" ")[1]),
+        kill: () => {
+            const shouldmute = message.content.split(" ")[2] === undefined ||
+                message.content.split(" ")[2] === "mute"
+
+            timer.kill(message.channel, message.content.split(" ")[1], shouldmute)
+        },
         makeTeams: () => teamGen.randomTeams(message.channel),
         makePartners: () => teamGen.randomPartners(message),
         makeRound: async () => {
