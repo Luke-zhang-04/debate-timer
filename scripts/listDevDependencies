@@ -1,0 +1,13 @@
+#!/bin/node
+/* eslint-disable */
+
+const fs = require("fs");
+
+const {devDependencies} = JSON.parse(fs.readFileSync("package.json").toString())
+let output = ""
+
+for (const dep of Object.keys(devDependencies)) {
+    output += `${dep.replace(/'/gui, "")} `
+}
+
+console.log(output)
