@@ -27,7 +27,7 @@ jobs:
         run: ./node_modules/.bin/eslint src/*.ts
 
       - name: build
-        run: ./node_modules/.bin/tsc
+        run: ./scripts/compile
 
       - name: test
         run: NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --no-googlesheets

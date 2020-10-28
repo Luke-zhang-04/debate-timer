@@ -22,10 +22,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: build bot
-        run: ./node_modules/.bin/tsc -p tsconfig.json
-
-      - name: build cli
-        run: ./node_modules/.bin/tsc -p tsconfig.cli.json
+        run: ./scripts/compile
 
       - name: Commit files
         run: ./scripts/release
