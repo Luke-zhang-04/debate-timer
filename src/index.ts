@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.0.0
+ * @version 1.1.0
  * @license BSD-3-Clause
  */
 
@@ -20,13 +20,12 @@ export const client = new Discord.Client()
 client.login(process.env.AUTHTOKEN)
 
 client.once("ready", () => {
-    console.log("Timer bot is online!")
-
     const channel = client.channels.cache.find((_channel) => (
         (_channel as Discord.TextChannel).name === "spam"
     )) as Discord.TextChannel
 
     channel.send("Timer bot is online!")
+    console.log("Timer bot is online!")
 
     client.user?.setPresence({
         status: "online",
@@ -39,13 +38,14 @@ client.once("ready", () => {
 
 client.on("message", (message) => {
     try {
-        if (message.content.includes(`${prefix}ping`)) {
+        // Any commands that need the client object should go here (some exceptions)
+        if (message.content === `${prefix}ping`) {
             message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
 
             return
         }
 
-        handleMessage(message)
+        handleMessage(message, client)
     } catch (err) {
         console.error(err)
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.`)

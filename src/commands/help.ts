@@ -7,6 +7,7 @@
  */
 
 import type {Message} from "discord.js"
+import fs from "fs"
 import {prefix} from "../getConfig"
 
 // Object with all the manual entries
@@ -24,10 +25,11 @@ const manual: {[key: string]: string} = {
 > Will ping \`[@mention]\` for important times if included
 > Will also mute \`[@mention]\` after 5:15
 > E.g \`${prefix}start @debate-timer\``,
-    kill: `> **\`${prefix}kill [id]\`**
+    kill: `> **\`${prefix}kill [id] [shouldMute? = noMute | mute | undefined]\`**
 > Kills a timer with id of \`[id]\`
 > Parameters:
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>     \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
 > E.g \`${prefix}kill 254\``,
     getMotion: `> **\`getMotion\`**
 > Gets a random motion from the hellomotions spreadsheet
@@ -52,7 +54,15 @@ const manual: {[key: string]: string} = {
     makeRound: `> **\`${prefix}makeRound [debater1] [debater2] ... [debater8]\`**
 > Creates random teams, random partners, and chooses a random motion
 > Similar to \`makePartners\`, 8 debater names are required.`,
+    poll: `> **\`${prefix}poll\`**
+> Creates a poll for debating and spectating
+> Only one poll can run at a time
+> Creating a new poll will erase the data in any other polls`,
+    getPoll: `> **\`${prefix}getPoll\`**
+> Gets data from current poll. If no poll has been made, data will be empty.`,
 }
+
+const {version} = JSON.parse(fs.readFileSync("package.json").toString())
 
 // Default help message
 const defaultMsg = `**Debate Timer Bot**
@@ -62,6 +72,7 @@ You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
 For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
 
 The configured prefix is \`${prefix}\`
+This bot is in version ${version}
 
 > :book: **\`${prefix}help [command?]\`**
 > Get some help
@@ -85,7 +96,7 @@ The configured prefix is \`${prefix}\`
 
 > :timer:
 > **\`${prefix}start [@mention?]\`**
-> **\`${prefix}kill [id]\`**
+> **\`${prefix}kill [id] [shouldMute?]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**
@@ -95,6 +106,10 @@ The configured prefix is \`${prefix}\`
 > **\`${prefix}makeTeams\`**
 > **\`${prefix}makePartners [debater1] [debater2] ... [debater8]\`**
 > **\`${prefix}makeRound\`**
+
+> :bar_chart:
+> **\`${prefix}poll\`**
+> **\`${prefix}getPoll\`**
 `
 
 /**

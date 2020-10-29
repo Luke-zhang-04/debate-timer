@@ -22,19 +22,14 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: build bot
-        run: ./node_modules/.bin/tsc -p tsconfig.json
-
-      - name: build cli
-        run: ./node_modules/.bin/tsc -p tsconfig.cli.json
+        run: ./scripts/compile
 
       - name: Commit files
-        run: |
-          git config --local user.email "luke.zhang2004dev@gmail.com"
-          git config --local user.name "Luke-zhang-04"
-          git add --force lib
-          git add --force cli/
-          rm -rfv ./test .eslintignore .eslintrc.json tsconfig.json tsconfig.cli.json yarn.lock docs assets
-          git commit -am "Release for version 1.0.0"
+        run: ./scripts/release
+
+      - name: Remove scripts
+        run: rm -rfv scripts
+
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
