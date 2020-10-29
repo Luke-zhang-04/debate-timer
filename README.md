@@ -11,6 +11,11 @@ A discord bot and web timer
 
 ![Screenshot](./assets/screenshot.png)
 
+## NodeJS Versions
+This bot only works on Node JS >= 12. This is because Discord JS only supports Node >= 12. Therefore, we don't test for, nor support Node JS 10 or 8.
+
+When installing Node JS for the first time with a package manager such as Yum or dnf, it may install Node 10. Make sure you install Node 12.
+
 ## Using the bot
 
 Clone the latest version from git like so
