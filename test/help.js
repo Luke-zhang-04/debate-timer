@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.0.0
+ * @version 1.1.0
  * @license BSD-3-Clause
  */
 
@@ -137,6 +137,26 @@ module.exports = () => {
         testHelpers.includes(returnMsg, "random teams")
         testHelpers.includes(returnMsg, "random partners")
         testHelpers.includes(returnMsg, "random motion")
+    })
+
+    it("Should have a manual entry for poll", () => {
+        const message = new Message("!help poll")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Creates a poll")
+    })
+
+    it("Should have a manual entry for getPoll", () => {
+        const message = new Message("!help getPoll")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Gets data from current poll")
     })
 
     it("Should not have a manual entry for unknown command", () => {

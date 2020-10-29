@@ -21,3 +21,15 @@ botIconUrl:
 
 # Profanity detection lol. Default true
 shoulddetectProfanity: true
+
+# Emoji config for polls
+# Do not include :colons: around the emoji name
+# ID is only required for custo emojis
+# ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
+emojis:
+  debating:
+    name: emoji_1
+    id: "762110857550757888"
+  spectating:
+    name: emoji_2
+    id: "762112564787675156"

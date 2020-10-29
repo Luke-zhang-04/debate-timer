@@ -1,0 +1,11 @@
+#!/bin/sh
+
+./node_modules/.bin/tsc -p . || exit 1 &
+./node_modules/.bin/tsc -p tsconfig.cli.json || exit 1 &
+
+wait
+
+./node_modules/.bin/babel lib --out-dir lib || exit 1 &
+./node_modules/.bin/babel cli/index.js -o cli/index.js || exit 1 &
+
+wait
