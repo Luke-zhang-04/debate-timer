@@ -1,7 +1,7 @@
 #!/bin/bash
 
 pkgInstall="yarn"
-pkgRemove="yarn remove"
+pkgMan="yarn"
 removeDevDependencies="y"
 removeSources="y"
 validResponseValues=("y" "N")
@@ -10,7 +10,7 @@ echo "Performing checks . . ."
 
 if [[ ! "$(yarn -v)" ]]; then
     pkgInstall="npm i"
-    pkgRemove="npm uninstall"
+    pkgMan="npm"
 fi
 
 if [[ ! "$(npm -v)" ]]; then
@@ -68,12 +68,16 @@ cleanIntall() {
     fi
 
     if [[ "$removeDevDependencies" == "y" ]]; then
-        "$pkgRemove" $(./scripts/listDevDependencies) # Have to do it like this for some reason
+        if [[ "$pkgMan" == "yarn" ]]; then
+            yarn remove $(./scripts/listDevDependencies) # Have to do it like this for some reason
+        else
+            npm uninstall $(./scripts/listDevDependencies)
+        fi
     fi
 }
 
 if [ ! -d lib ]||[ ! -f cli/index.js ]; then
-    cleanIntall
+    cleanIntall || exit 1
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
 
