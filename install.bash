@@ -60,10 +60,11 @@ cleanIntall() {
 
     "$pkgInstall" || exit 1
 
+    echo "Successfully installed dependencies. Building bot."
     ./scripts/compile || exit 1
 
     if [[ "$removeSources" == "y" ]]; then
-        rm -rfv scr
+        rm -rfv src
         rm -rv cli/index.ts
     fi
 
