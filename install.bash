@@ -51,7 +51,7 @@ cleanIntall() {
     read -r removeSources
 
     if [[ "$removeSources" == "" ]]; then
-        removeDevDependencies="y"
+        removeSources="y"
     elif [[ ! "${validResponseValues[*]}" =~ $removeSources ]]; then
         echo "Unknown response. Response should either be y, N, or nothing"
 
@@ -82,7 +82,23 @@ if [ ! -d lib ]||[ ! -f cli/index.js ]; then
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
 
+    printf "Remove source files after install? [y/N] "
+    read -r removeSources
+
+    if [[ "$removeSources" == "" ]]; then
+        removeSources="y"
+    elif [[ ! "${validResponseValues[*]}" =~ $removeSources ]]; then
+        echo "Unknown response. Response should either be y, N, or nothing"
+
+        exit 1
+    fi
+
     "$pkgInstall" --production || exit 1
+
+    if [[ "$removeSources" == "y" ]]; then
+        rm -rfv src
+        rm -rv cli/index.ts
+    fi
 fi
 
 if [ ! -f .env ]; then
