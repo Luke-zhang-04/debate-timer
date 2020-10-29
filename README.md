@@ -20,10 +20,10 @@ git clone --single-branch --branch release https://github.com/Luke-zhang-04/deba
 
 Install dependencies
 ```bash
-./install.sh
+./install.bash
 
 # Or
-sh install.sh
+bash install.bash
 ```
 
 Get credentials
