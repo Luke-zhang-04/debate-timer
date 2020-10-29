@@ -54,6 +54,12 @@ const manual: {[key: string]: string} = {
     makeRound: `> **\`${prefix}makeRound [debater1] [debater2] ... [debater8]\`**
 > Creates random teams, random partners, and chooses a random motion
 > Similar to \`makePartners\`, 8 debater names are required.`,
+    poll: `> **\`${prefix}poll\`**
+> Creates a poll for debating and spectating
+> Only one poll can run at a time
+> Creating a new poll will erase the data in any other polls`,
+    getPoll: `> **\`${prefix}getPoll\`**
+> Gets data from current poll. If no poll has been made, data will be empty.`,
 }
 
 const {version} = JSON.parse(fs.readFileSync("package.json").toString())
@@ -100,6 +106,10 @@ This bot is in version ${version}
 > **\`${prefix}makeTeams\`**
 > **\`${prefix}makePartners [debater1] [debater2] ... [debater8]\`**
 > **\`${prefix}makeRound\`**
+
+> :bar_chart:
+> **\`${prefix}poll\`**
+> **\`${prefix}getPoll\`**
 `
 
 /**

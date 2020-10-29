@@ -6,6 +6,32 @@
  * @license BSD-3-Clause
  */
 
+class Reaction {
+
+    emoji
+
+    message
+
+    constructor (emoji, message) {
+        this.emoji = emoji
+        this.message = message
+    }
+
+    fetch = () => ({
+        emoji: {
+            name: this.emoji,
+        },
+        users: {
+            cache: this.message.reactedUsers.filter((val) => (
+                val[1] === this.emoji ? [val[0]] : false
+            )),
+        },
+    })
+
+}
+
+let messageId = 0
+
 class Message {
 
     content
@@ -16,6 +42,10 @@ class Message {
 
     mentions
 
+    id
+
+    reactedUsers = []
+
     author = {
         bot: false,
         id: "Tester",
@@ -24,6 +54,9 @@ class Message {
     constructor (content, options) {
         this.content = content
         this.files = options ? options.files : undefined
+        this.id = messageId
+
+        messageId++
 
         if (options && options.author) {
             this.author = options.author
@@ -33,9 +66,9 @@ class Message {
             this.mentions = {
                 users: {
                     first: () => ({
-                        id: "Tester"
-                    })
-                }
+                        id: "Tester",
+                    }),
+                },
             }
         }
     }
@@ -52,8 +85,27 @@ class Message {
         this.content = val
     }
 
+    react = async (username, emoji, client) => {
+        this.reactedUsers.push([username, emoji])
+
+        if (client.functions.messageReactionAdd !== undefined) {
+            await client.functions.messageReactionAdd(new Reaction(emoji, this))
+        }
+    }
+
+}
+
+class Client {
+
+    functions = {}
+
+    on = (key, func) => {
+        this.functions[key] = func
+    }
+
 }
 
 module.exports = {
     Message,
+    Client,
 }

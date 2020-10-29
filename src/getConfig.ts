@@ -12,7 +12,6 @@ import yaml from "yaml"
 
 // Full configuration object
 type FullConfig = {
-    [key: string]: string | number | boolean,
     prefix: string,
     maxTimers: number,
     commandCooldown: number,
@@ -20,11 +19,21 @@ type FullConfig = {
     serverIconUrl: string,
     botIconUrl: string,
     shoulddetectProfanity: boolean,
+    emojis: {
+        debating: {
+            name: string,
+            id?: string,
+        },
+        spectating: {
+            name: string,
+            id?: string,
+        },
+    },
 }
 
 // Configuration with optional options that are passed in
 type InputConfig = {
-    [key: string]: string | number | boolean | undefined,
+    [key: string]: unknown,
     prefix?: string,
     maxTimers?: number,
     commandCooldown?: number,
@@ -32,6 +41,16 @@ type InputConfig = {
     serverIconUrl?: string,
     botIconUrl?: string,
     shoulddetectProfanity?: boolean,
+    emojis?: {
+        debating: {
+            name: string,
+            id?: string,
+        },
+        spectating: {
+            name: string,
+            id?: string,
+        },
+    },
 }
 
 // Default configuration values
@@ -45,6 +64,14 @@ const defaultConfig: FullConfig = {
     botIconUrl:
         "https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256",
     shoulddetectProfanity: true,
+    emojis: {
+        debating: {
+            name: "speaking_head",
+        },
+        spectating: {
+            name: "eyes",
+        },
+    },
 }
 
 /**
@@ -73,6 +100,9 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
     ) && (
         typeof obj.shoulddetectProfanity === "boolean" ||
         obj.shoulddetectProfanity === undefined
+    ) && (
+        typeof obj.emojis === "object" ||
+        typeof obj.emojis === undefined
     )
 )
 
@@ -115,6 +145,7 @@ export const {
     serverIconUrl,
     botIconUrl,
     shoulddetectProfanity,
+    emojis,
 } = fullConfig as FullConfig
 
 export default fullConfig as FullConfig

@@ -5,11 +5,13 @@
  * @version 1.1.0
  * @license BSD-3-Clause
  */
+
+import {Client, Message} from "discord.js"
 import Filter from "bad-words"
-import {Message} from "discord.js"
 import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
+import poll from "./commands/poll"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 import timer from "./commands/timer"
@@ -27,6 +29,8 @@ interface Commands {
     getMotion: ()=> unknown,
     getMotions: ()=> unknown,
     systemInfo: ()=> unknown,
+    poll: ()=> unknown,
+    getPoll: ()=> unknown,
 }
 
 // Swear words filter
@@ -42,7 +46,7 @@ let lastCommand = 0
  * @param message - message object
  * @returns void
  */
-const handleCmd = (message: Message): void => {
+const handleCmd = (message: Message, client: Client): void => {
     const {prefix} = config
     const [cmd] = message.content.slice(prefix.length).split(" ")
     const commands: Commands = {
@@ -69,6 +73,8 @@ const handleCmd = (message: Message): void => {
         getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
         getMotions: () => motion.getRandomMotions(message),
         systemInfo: async () => message.channel.send(await systemInfo()),
+        poll: () => poll.makePoll(message, client),
+        getPoll: () => poll.getPoll(message.channel),
     }
 
     switch (cmd) {
@@ -102,7 +108,7 @@ const handleCmd = (message: Message): void => {
  * @param message - message object
  * @returns void
  */
-export default (message: Message): void => {
+export default (message: Message, client: Client): void => {
     if (!message.author.bot) {
         if (message.content.startsWith(config.prefix)) {
             const timeGap = config.commandCooldown * 1000
@@ -111,7 +117,7 @@ export default (message: Message): void => {
                 process.env.NODE_ENV === "test" ||
                 Date.now() - lastCommand >= timeGap
             ) { // Time gap reached
-                handleCmd(message)
+                handleCmd(message, client)
                 lastCommand = Date.now()
 
                 return

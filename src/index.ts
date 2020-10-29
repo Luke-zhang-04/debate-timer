@@ -38,13 +38,14 @@ client.once("ready", () => {
 
 client.on("message", (message) => {
     try {
-        if (message.content.includes(`${prefix}ping`)) {
+        // Any commands that need the client object should go here (some exceptions)
+        if (message.content === `${prefix}ping`) {
             message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
 
             return
         }
 
-        handleMessage(message)
+        handleMessage(message, client)
     } catch (err) {
         console.error(err)
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.`)
