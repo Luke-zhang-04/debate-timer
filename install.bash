@@ -85,7 +85,7 @@ cleanIntall() {
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash package.json tsconfig.cli.json tsconfig.json yarn.lock
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git
     fi
 }
 
