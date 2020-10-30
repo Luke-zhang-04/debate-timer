@@ -10,6 +10,8 @@ import type {Message} from "discord.js"
 import fs from "fs"
 import {prefix} from "../getConfig"
 
+/* eslint-disable no-sync */
+
 // Object with all the manual entries
 const manual: {[key: string]: string} = {
     bruh: `> **\`${prefix}bruh\`**
@@ -116,7 +118,7 @@ This bot is in version ${version}
  * Help command invoked with !help
  * @returns string
  */
-export default (message: Message) => {
+export default (message: Message): void => {
     const arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
