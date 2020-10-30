@@ -19,7 +19,7 @@ if (!process.env.APIKEY) {
 const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY")
 
 // We use this promise so we can tell when the document it loaded
-const docDidLoad = async (): Promise<void> => {
+const docDidLoad = (async (): Promise<void> => {
     try {
         doc.useApiKey(process.env.APIKEY)
         await doc.loadInfo()
@@ -28,7 +28,7 @@ const docDidLoad = async (): Promise<void> => {
     } catch (err) {
         console.error(err)
     }
-}
+})()
 
 /**
  * Get a random integer between min and max
