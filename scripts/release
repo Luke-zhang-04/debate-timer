@@ -11,7 +11,7 @@ git add --force lib
 git add --force cli/
 
 # Remove unecessary files
-rm -rfv ./test .github assets docs test .editorconfig .eslintignore .eslintrc.json .gitattributes tsconfig.json tsconfig.cli.json yarn.lock
+rm -rfv ./test .github assets docs test .editorconfig .eslintignore .eslintrc.json .gitattributes tsconfig.json tsconfig.cli.json yarn.lock src cli/index.ts
 
 # Commit
 git commit -am "Release for version $version"

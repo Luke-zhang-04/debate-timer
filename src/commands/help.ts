@@ -2,13 +2,15 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
 import type {Message} from "discord.js"
 import fs from "fs"
 import {prefix} from "../getConfig"
+
+/* eslint-disable no-sync */
 
 // Object with all the manual entries
 const manual: {[key: string]: string} = {
@@ -60,6 +62,16 @@ const manual: {[key: string]: string} = {
 > Creating a new poll will erase the data in any other polls`,
     getPoll: `> **\`${prefix}getPoll\`**
 > Gets data from current poll. If no poll has been made, data will be empty.`,
+    play: `> **\`${prefix}play [id]\`**
+> Continues playing a timer with id of \`[id]\`
+> Parameters:
+>     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+> E.g \`${prefix}play 254\``,
+    pause: `> **\`${prefix}pause [id]\`**
+> Pauses a timer with id of \`[id]\`
+> Parameters:
+>     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+> E.g \`${prefix}pause 254\``,
 }
 
 const {version} = JSON.parse(fs.readFileSync("package.json").toString())
@@ -97,6 +109,8 @@ This bot is in version ${version}
 > :timer:
 > **\`${prefix}start [@mention?]\`**
 > **\`${prefix}kill [id] [shouldMute?]\`**
+> **\`${prefix}play [id]\`**
+> **\`${prefix}pause [id]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**
@@ -116,7 +130,7 @@ This bot is in version ${version}
  * Help command invoked with !help
  * @returns string
  */
-export default (message: Message) => {
+export default (message: Message): void => {
     const arg = message.content.split(" ")[1]
 
     if (arg === undefined) {

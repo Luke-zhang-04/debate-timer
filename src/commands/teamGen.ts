@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
@@ -34,14 +34,14 @@ const basePositions = [
  * @param cycles - number of shuffle cycles to go through
  * @returns void; shuffles in-place
  */
-const shuffle = <T>(array: T[], cycles = 1) => {
+const shuffle = <T>(array: T[], cycles = 1): void => {
     for (let _ = 0; _ < cycles; _++) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1))
-            const temp = array[i]
+        for (let index = array.length - 1; index > 0; index--) {
+            const randonIndex = Math.floor(Math.random() * (index + 1))
+            const temp = array[index]
 
-            array[i] = array[j]
-            array[j] = temp
+            array[index] = array[randonIndex]
+            array[randonIndex] = temp
         }
     }
 }

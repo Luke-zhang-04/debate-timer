@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
@@ -31,6 +31,8 @@ interface Commands {
     systemInfo: ()=> unknown,
     poll: ()=> unknown,
     getPoll: ()=> unknown,
+    pause: ()=> unknown,
+    play: ()=> unknown,
 }
 
 // Swear words filter
@@ -75,6 +77,12 @@ const handleCmd = (message: Message, client: Client): void => {
         systemInfo: async () => message.channel.send(await systemInfo()),
         poll: () => poll.makePoll(message, client),
         getPoll: () => poll.getPoll(message.channel),
+        pause: () => {
+            timer.playPause(message.channel, message.content.split(" ")[1], "pause")
+        },
+        play: () => {
+            timer.playPause(message.channel, message.content.split(" ")[1], "play")
+        }
     }
 
     switch (cmd) {

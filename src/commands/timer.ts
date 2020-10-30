@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
@@ -23,7 +23,11 @@ type Channel = TextChannel | DMChannel | NewsChannel
  * This keeps track of running timers
  * To kill a timer, the kill() function should be called
  */
-const timers: [id: number, kill: (shouldmute: boolean)=> void][] = []
+const timers: [
+    id: number,
+    kill: (shouldmute: boolean)=> void,
+    playPause: (playOrPause?: "play" | "pause")=> void,
+][] = []
 
 const minute = 60
 
@@ -118,10 +122,50 @@ const muteUser = async (guild: Guild | null, user: User): Promise<void> => {
     }
 }
 
+
+/**
+ * Pauses a timer with id
+ * @param message - message object to send message to
+ * @param id - timer id - could be undefined, but shouldn't be
+ * @returns void
+ */
+export const playPause = (
+    channel: Channel,
+    id?: string,
+    playOrPause?: "play" | "pause",
+): void => {
+    const numericId = Number(id)
+
+    if (id === undefined) { // Id was never provided. Terminate.
+        channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
+
+        return
+    } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
+        channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
+
+        return
+    }
+
+    channel.send(`Looking for timer with id ${id}`)
+
+    for (const timer of timers) { // Iterate through timers array (see top of file)
+        if (timer[0].toString() === id) { // If id matches, execute the `playOrPause()` function
+            timer[2](playOrPause)
+
+            channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
+
+            return
+        }
+    }
+
+    channel.send(`:confused: Could not find timer with id ${id}`)
+}
+
+
 /**
  * Kills a timer with id
  * @param message - message object to send message to
- * @param id - user id - could be undefined, but shouldn't be
+ * @param id - timer id - could be undefined, but shouldn't be
  * @returns void
  */
 export const kill = (
@@ -152,7 +196,7 @@ export const kill = (
     }
 
     for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
-        if (timer[0].toString() === id) { // If id matches, execute the `kill()` function
+        if (timer[0].toString() === id) { // If id matches, execute the `pause()` function
             timer[1](Boolean(shouldmute))
             timers.splice(index, 1) // Delete this timer from the array
 
@@ -163,7 +207,6 @@ export const kill = (
     channel.send(`:confused: Could not find timer with id ${id}`)
 }
 
-/* eslint max-lines-per-function: ["error", {"max":50, "skipComments": true, "skipBlankLines": true}] */
 /**
  * Start a new timer in background
  * @param message - message object
@@ -183,7 +226,8 @@ export const start = async (message: Message): Promise<void> => {
 
     let time = 0, // Delta time in seconds
         id: NodeJS.Timeout | null = null, // Interval id
-        shouldmute = true // If use should be muted after speech
+        shouldmute = true, // If use should be muted after speech
+        ispaused = false
 
     /**
      * Keep track of this message, as we're going to consantly edit it and
@@ -196,22 +240,31 @@ export const start = async (message: Message): Promise<void> => {
      * This is important because setInterval() is unreliable, and can lag
      * behind at any time if it wants
      */
-    const startTime = Date.now()
+    let startTime = Date.now()
 
     // Wait for timer to resolve with a Promise :)
     await new Promise((resolve) => {
         id = setInterval(() => { // Set the id of this interval
             // Subtract current time from start time and round to nearest second
-            time = Math.round((Date.now() - startTime) / 1000)
+            time = ispaused ? time : Math.round((Date.now() - startTime) / 1000)
 
-            msg.edit(`Current time: ${formatTime(time)}\nId: ${id ?? "unknown"}`)
+            if (ispaused) {
+                startTime += 5000
+            }
+
+            msg.edit(`Current time: ${formatTime(time)}\nId: ${id ?? "unknown"}${ispaused ? "\nPaused" : ""}`)
 
             notifySpeechStatus(message.channel, time, uid)
 
             // If speech surpasses 320 seconds (5 minutes 20 seconds)
-            if (time >= 320) {
+            if (time >= 320 || time > 900) {
                 if (id !== null) {
                     clearInterval(id) // Clear interval
+                }
+
+                if (time > 900) {
+                    shouldmute = false
+                    message.channel.send(`Timer with id ${id} has been paused or running for more than 15 minutes. This timer is now being killed.`)
                 }
 
                 return resolve() // Resolve promise
@@ -226,13 +279,18 @@ export const start = async (message: Message): Promise<void> => {
         // Push the id and kill function to the timers array
         timers.push([
             Number(`${id}`),
-            (shouldmuteUser: boolean): void => {
+            (shouldmuteUser: boolean): void => { // This function is for killing the timer
                 clearInterval(Number(`${id}`))
                 resolve()
 
                 shouldmute = shouldmuteUser
 
                 message.channel.send(`Killed timer with id ${id}.`)
+            },
+            (playOrPause?: "play" | "pause"): void => { // This function is for playing or pausing
+                ispaused = playOrPause === undefined
+                    ? !ispaused
+                    : playOrPause === "pause"
             },
         ])
     })
@@ -255,4 +313,5 @@ export const start = async (message: Message): Promise<void> => {
 export default {
     kill,
     start,
+    playPause,
 }

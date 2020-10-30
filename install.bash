@@ -4,6 +4,7 @@ pkgInstall="yarn"
 pkgMan="yarn"
 removeDevDependencies="y"
 removeSources="y"
+removeOthers="y"
 validResponseValues=("y" "N")
 
 echo "Performing checks . . ."
@@ -37,7 +38,6 @@ cleanIntall() {
     echo "Building from sources"
     printf "Remove development dependencies after install? [y/N] "
     read -r removeDevDependencies
-
     if [[ "$removeDevDependencies" == "" ]]; then
         removeDevDependencies="y"
     elif [[ ! "${validResponseValues[*]}" =~ $removeDevDependencies ]]; then
@@ -46,13 +46,21 @@ cleanIntall() {
         exit 1
     fi
 
-
     printf "Remove source files after install? [y/N] "
     read -r removeSources
-
     if [[ "$removeSources" == "" ]]; then
         removeSources="y"
     elif [[ ! "${validResponseValues[*]}" =~ $removeSources ]]; then
+        echo "Unknown response. Response should either be y, N, or nothing"
+
+        exit 1
+    fi
+
+    printf "Remove unecessary files after install? [y/N] "
+    read -r removeOthers
+    if [[ "$removeOthers" == "" ]]; then
+        removeOthers="y"
+    elif [[ ! "${validResponseValues[*]}" =~ $removeOthers ]]; then
         echo "Unknown response. Response should either be y, N, or nothing"
 
         exit 1
@@ -74,6 +82,10 @@ cleanIntall() {
         else
             npm uninstall $(./scripts/listDevDependencies)
         fi
+    fi
+
+    if [[ "$removeOthers" == "y" ]]; then
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash package.json tsconfig.cli.json tsconfig.json yarn.lock
     fi
 }
 

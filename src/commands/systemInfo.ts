@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
@@ -32,7 +32,7 @@ export default async (): Promise<string> => {
     const uname = await runCommand("uname -a") // Platform name
     const cpu = await runCommand("lscpu | grep -E \"name\" | tr -s \" \"") // CPU info
     const mem = await runCommand(
-        "cat /proc/meminfo | grep MemTotal | awk '$3==\"kB\"{$2=$2/1024^2;$3=\"GB\";} 1'"
+        "cat /proc/meminfo | grep MemTotal | awk '$3==\"kB\"{$2=$2/1024^2;$3=\"GB\";} 1'",
     )
 
     return `debate-timer-bot@${hostname()}\n\n${version}\n${cpu}${mem}\n${uname}`

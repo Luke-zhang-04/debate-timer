@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.1.1
+ * @version 1.2.0
  * @license BSD-3-Clause
  */
 
@@ -95,6 +95,24 @@ module.exports = () => {
         const returnMsg = message.newMessage.content
 
         testHelpers.includes(returnMsg, "Kills a timer")
+    })
+    it("Should have a manual entry for play", () => {
+        const message = new Message("!help play")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Continues playing a timer")
+    })
+    it("Should have a manual entry for pause", () => {
+        const message = new Message("!help pause")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Pauses a timer")
     })
 
     it("Should have a manual entry for getMotion", () => {
