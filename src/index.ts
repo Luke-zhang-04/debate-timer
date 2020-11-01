@@ -5,9 +5,11 @@
  * @version 1.2.0
  * @license BSD-3-Clause
  */
-
+import {hostname, userInfo} from "os"
+import DatePlus from "@luke-zhang-04/dateplus"
 import Discord from "discord.js"
 import dotenv from "dotenv"
+import fs from "fs/promises"
 import handleMessage from "./handleMessage"
 import {prefix} from "./getConfig"
 
@@ -36,7 +38,7 @@ client.once("ready", () => {
     })
 })
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
     try {
         // Any commands that need the client object should go here (some exceptions)
         if (message.content === `${prefix}ping`) {
@@ -47,7 +49,25 @@ client.on("message", (message) => {
 
         handleMessage(message, client)
     } catch (err) {
+        const date = new Date()
+        const formattedDate = DatePlus.addZeros(
+            `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`
+        )
+        const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        const prevContents = await (async () => {
+            try {
+                return (await fs.readFile("bot.error.log")).toString()
+            } catch {
+                return ""
+            }
+        })()
+
         console.error(err)
-        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error ${err}.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.`)
+        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
+
+        await fs.writeFile(
+            "bot.error.log",
+            `${prevContents}${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}"\n`,
+        )
     }
 })
