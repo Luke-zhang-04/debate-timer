@@ -1,6 +1,5 @@
 # Docs are detectable
 docs/* linguist-documentation=false
-docs/* linguist-detectable=true
 
 # Docs lib is generated
 docs/js/* linguist-generated=true
