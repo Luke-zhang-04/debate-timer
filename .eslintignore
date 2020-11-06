@@ -6,5 +6,4 @@
 **/functions/lib/*
 **/*.d.ts
 /src/serviceWorker.ts
-gh-pages/
 lib/

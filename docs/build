@@ -1,0 +1,6 @@
+#!/bin/sh
+
+../node_modules/.bin/tsc -p ./tsconfig.json || exit 1
+
+cd .. || exit 1
+./node_modules/.bin/babel docs/lib --out-dir docs/lib --config-file ./.babelrc.js || exit 1

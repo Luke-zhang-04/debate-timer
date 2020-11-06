@@ -312,7 +312,7 @@
             "parserOptions": {
                 "ecmaVersion": 2020,
                 "sourceType": "module",
-                "project": ["./tsconfig.json", "./tsconfig.cli.json"]
+                "project": ["./tsconfig.json", "./tsconfig.cli.json", "./docs/tsconfig.json"]
             },
             "rules": {
                 "@typescript-eslint/array-type": "error",
