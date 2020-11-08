@@ -9,6 +9,7 @@
 import {Client, Message} from "discord.js"
 import Filter from "bad-words"
 import config from "./getConfig"
+import didyoumean from "didyoumean"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
@@ -16,24 +17,7 @@ import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 import timer from "./commands/timer"
 
-interface Commands {
-    help: ()=> unknown,
-    bruh: ()=> unknown,
-    coinflip: ()=> unknown,
-    epic: ()=> unknown,
-    start: ()=> unknown,
-    kill: ()=> unknown,
-    makeTeams: ()=> unknown,
-    makePartners: ()=> unknown,
-    makeRound: ()=> unknown,
-    getMotion: ()=> unknown,
-    getMotions: ()=> unknown,
-    systemInfo: ()=> unknown,
-    poll: ()=> unknown,
-    getPoll: ()=> unknown,
-    pause: ()=> unknown,
-    play: ()=> unknown,
-}
+type Commands = {[key: string]: (()=> unknown)}
 
 // Swear words filter
 const filter = new Filter()
@@ -53,6 +37,7 @@ const handleCmd = (message: Message, client: Client): void => {
     const [cmd] = message.content.slice(prefix.length).split(" ")
     const commands: Commands = {
         help: () => help(message),
+        man: () => help(message),
         bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
         coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
         epic: () => message.channel.send("", {files: [config.botIconUrl]}),
@@ -84,26 +69,25 @@ const handleCmd = (message: Message, client: Client): void => {
             timer.playPause(message.channel, message.content.split(" ")[1], "play")
         }
     }
+    const correctedCmd = didyoumean(cmd, Object.keys(commands))
 
     switch (cmd) {
-        case undefined || "":
+        case null || undefined || "":
             message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
             return
-
-        case "man":
-            commands.help()
-
-            return
-
-        default: break
     }
 
-    for (const [key, command] of Object.entries(commands)) {
-        if (cmd === key) {
-            (command as ()=> unknown)()
+    if  (correctedCmd !== null) {
+        for (const [key, command] of Object.entries(commands)) {
+            if (correctedCmd === key) {
+                if (correctedCmd !== cmd) {
+                    message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
+                }
+                command()
 
-            return
+                return
+            }
         }
     }
 

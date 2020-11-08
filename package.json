@@ -17,6 +17,7 @@
   "dependencies": {
     "@luke-zhang-04/dateplus": "^2.0.3",
     "bad-words": "^3.0.3",
+    "didyoumean": "^1.2.1",
     "discord.js": "^12.4.0",
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.0.13",
@@ -28,6 +29,7 @@
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
     "@types/bad-words": "^3.0.0",
+    "@types/didyoumean": "^1.2.0",
     "@types/dotenv": "^8.2.0",
     "@types/google-spreadsheet": "^3.0.2",
     "@types/nice-try": "^2.1.0",

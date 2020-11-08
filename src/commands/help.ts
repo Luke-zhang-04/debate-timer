@@ -7,6 +7,7 @@
  */
 
 import type {Message} from "discord.js"
+import didyoumean from "didyoumean"
 import fs from "fs"
 import {prefix} from "../getConfig"
 
@@ -131,15 +132,24 @@ This bot is in version ${version}
  * @returns string
  */
 export default (message: Message): void => {
-    const arg = message.content.split(" ")[1]
+    let arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
         message.channel.send(defaultMsg)
-    } else if (arg in manual) {
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg]}`)
-    } else if (arg.slice(1) in manual) {
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg.slice(1)]}`)
-    } else {
+
+        return
+    }
+
+    if (arg[0] == "!") { // Get rid of ! at beginning
+        arg = arg.slice(1)
+    }
+
+    const correctedArg = didyoumean(arg, Object.keys(manual))
+
+    if (correctedArg === null) {
         message.channel.send(`:book: No manual entry for ${arg}`)
+    } else if (correctedArg !== arg) {
+        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
+        message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
     }
 }
