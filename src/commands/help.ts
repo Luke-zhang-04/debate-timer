@@ -140,7 +140,7 @@ export default (message: Message): void => {
         return
     }
 
-    if (arg[0] == "!") { // Get rid of ! at beginning
+    if (arg[0] === "!") { // Get rid of ! at beginning
         arg = arg.slice(1)
     }
 
