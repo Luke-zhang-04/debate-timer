@@ -63,7 +63,9 @@ class Timer extends DeStagnate.Component<{}, State> {
     }
 
     public startTimer = (): void => {
-        const id = setInterval(() => this.setState({time: this.state.time + 1}), 1000)
+        const id = setInterval(() => {
+            this.setState({time: this.state.time + 1})
+        }, 1000)
 
         this._intervalId = Number(`${id}`)
     }
@@ -73,9 +75,9 @@ class Timer extends DeStagnate.Component<{}, State> {
             this.state.time <= 30 ||
             this.state.time >= 270 && this.state.time < 300
         ) {
-            return <p class="time">Protected Time</p>
+            return <p class="status">Protected Time</p>
         } else if (this.state.time >= 300) {
-            return <p class="time">Times up!</p>
+            return <p class="status">Times up!</p>
         }
     }
 
@@ -87,22 +89,20 @@ class Timer extends DeStagnate.Component<{}, State> {
         })
     }
 
-    public render = (): HTMLElement[] => {
+    public render = (): HTMLElement[] | HTMLElement => {
         if (this.state.time === 0 && this.state.paused) {
             return [
                 <h1 class="header">Debate Timer</h1>,
-                <p class="time">Space to pause/start. r to restart.</p>,
+                <p class="subheader">Space to pause/start. r to restart.</p>,
             ]
         }
 
-        const status = this.speechStatus(),
-            content: HTMLElement[] = [
-                <h1 class="header">Debate Timer</h1>,
-                <p class="time">{formatTime(this.state.time)}</p>,
-                <p class="status">{this.state.paused ? "Paused" : ""}</p>,
-            ]
-
-        status !== undefined && content.push(status as HTMLElement)
+        const status = this.speechStatus()
+        const content: HTMLElement = <div class="container">
+            <p class="time">{formatTime(this.state.time)}</p>
+            <p class="status">{this.state.paused ? "Paused" : ""}</p>
+            {status ? status : null}
+        </div>
 
         return content
     }
@@ -126,4 +126,3 @@ if (root) {
 } else {
     alert("Could not load timer. Something went wrong: #root not found x_x.")
 }
-
