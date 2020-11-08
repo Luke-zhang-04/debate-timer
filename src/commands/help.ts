@@ -148,8 +148,13 @@ export default (message: Message): void => {
 
     if (correctedArg === null) {
         message.channel.send(`:book: No manual entry for ${arg}`)
-    } else if (correctedArg !== arg) {
-        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
+
+        return
     }
+
+    if (correctedArg !== arg) {
+        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
+    }
+
+    message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
 }
