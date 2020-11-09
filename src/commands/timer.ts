@@ -14,6 +14,7 @@ import type {
     TextChannel,
     User
 } from "discord.js"
+import {formatTime, nextKey} from "./timerUtils"
 import {maxTimers} from "../getConfig"
 
 type Channel = TextChannel | DMChannel | NewsChannel
@@ -23,13 +24,11 @@ type Channel = TextChannel | DMChannel | NewsChannel
  * This keeps track of running timers
  * To kill a timer, the kill() function should be called
  */
-const timers: [
+const timers: {[key: number]: [
     id: number,
     kill: (shouldmute: boolean)=> void,
     playPause: (playOrPause?: "play" | "pause")=> void,
-][] = []
-
-const minute = 60
+], } = {}
 
 /**
  * How often the timer should update in seconds
@@ -37,29 +36,6 @@ const minute = 60
  * Anything smaller might cause issues
  */
 const interval = 5
-
-/**
- * Turns seconds into human readable time
- * E.g `formatTime(90)` -> `"1:30"`
- * @param secs - seconds to format
- * @returns the formatted time
- */
-const formatTime = (secs: number): string => {
-    const remainingSeconds = secs % minute // Get the remainder seconds
-    const minutes = (secs - remainingSeconds) / minute // Get the number of whole minutes
-
-    /**
-     * Add 0 to beginning if remainder seconds is less than 10
-     * E.g `"1:3"` -> `"1:03"`
-     */
-    const remainingSecondsStr = remainingSeconds < 10
-        ? `0${remainingSeconds}`
-        : remainingSeconds.toString()
-
-    return minutes > 0 // Return the seconds if no minutes have passed
-        ? `${minutes}:${remainingSecondsStr}`
-        : secs.toString()
-}
 
 /**
  * Checks if a number is within a range
@@ -148,17 +124,15 @@ export const playPause = (
 
     channel.send(`Looking for timer with id ${id}`)
 
-    for (const timer of timers) { // Iterate through timers array (see top of file)
-        if (timer[0].toString() === id) { // If id matches, execute the `playOrPause()` function
-            timer[2](playOrPause)
+    const timer = timers[numericId]
 
-            channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
+    if (timer === undefined) {
+        channel.send(`:confused: Could not find timer with id ${id}`)
+    } else {
+        timer[2](playOrPause)
 
-            return
-        }
+        channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
     }
-
-    channel.send(`:confused: Could not find timer with id ${id}`)
 }
 
 
@@ -195,16 +169,14 @@ export const kill = (
         channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
     }
 
-    for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
-        if (timer[0].toString() === id) { // If id matches, execute the `pause()` function
-            timer[1](Boolean(shouldmute))
-            timers.splice(index, 1) // Delete this timer from the array
+    const timer = timers[numericId]
 
-            return
-        }
+    if (timer === undefined) {
+        channel.send(`:confused: Could not find timer with id ${id}`)
+    } else {
+        timer[1](Boolean(shouldmute)) // Run the `kill()` function
+        Reflect.deleteProperty(timers, numericId) // Delete timer after killing
     }
-
-    channel.send(`:confused: Could not find timer with id ${id}`)
 }
 
 /**
@@ -213,7 +185,7 @@ export const kill = (
  * @returns Promise<void>
  */
 export const start = async (message: Message): Promise<void> => {
-    if (timers.length >= maxTimers) { // Max number of timers reached
+    if (Object.keys(timers).length >= maxTimers) { // Max number of timers reached
         message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. Since this bot is hosted on either some crappy server or Luke's laptop, running too many concurrent tasks isn't a great idea. The max timer count can be changed in the configuration file.`)
 
         return
@@ -226,6 +198,7 @@ export const start = async (message: Message): Promise<void> => {
 
     let time = 0, // Delta time in seconds
         id: NodeJS.Timeout | null = null, // Interval id
+        fakeId: number | undefined, // Number the user will see
         shouldmute = true, // If use should be muted after speech
         ispaused = false
 
@@ -252,7 +225,7 @@ export const start = async (message: Message): Promise<void> => {
                 startTime += 5000
             }
 
-            msg.edit(`Current time: ${formatTime(time)}\nId: ${id ?? "unknown"}${ispaused ? "\nPaused" : ""}`)
+            msg.edit(`Current time: ${formatTime(time)}\nId: ${fakeId ?? "unknown"}${ispaused ? "\nPaused" : ""}`)
 
             notifySpeechStatus(message.channel, time, uid)
 
@@ -273,26 +246,28 @@ export const start = async (message: Message): Promise<void> => {
             return undefined
         }, interval * 1000)
 
+        fakeId = nextKey(Object.keys(timers).map((num) => Number(num)))
+
         // Show timer id ASAP
-        msg.edit(`Current time: ${formatTime(time)}\nId: ${id ?? "unknown"}`)
+        msg.edit(`Current time: ${formatTime(time)}\nId: ${fakeId ?? "unknown"}`)
 
         // Push the id and kill function to the timers array
-        timers.push([
+        timers[fakeId] = [
             Number(`${id}`),
             (shouldmuteUser: boolean): void => { // This function is for killing the timer
                 clearInterval(Number(`${id}`))
-                resolve()
 
                 shouldmute = shouldmuteUser
 
-                message.channel.send(`Killed timer with id ${id}.`)
+                message.channel.send(`Killed timer with id ${fakeId}.`)
+                resolve()
             },
             (playOrPause?: "play" | "pause"): void => { // This function is for playing or pausing
                 ispaused = playOrPause === undefined
                     ? !ispaused
                     : playOrPause === "pause"
             },
-        ])
+        ]
     })
 
     msg.edit(`:white_check_mark: Speech Finished!`)
@@ -301,12 +276,8 @@ export const start = async (message: Message): Promise<void> => {
         muteUser(message.guild, user)
     }
 
-    for (const [index, timer] of timers.entries()) { // Iterate through timers array (see top of file)
-        if (timer[0].toString() === id) { // If id matches, delete
-            timers.splice(index, 1) // Delete this timer from the array
-
-            return
-        }
+    if (fakeId !== undefined) {
+        Reflect.deleteProperty(timers, fakeId)
     }
 }
 
