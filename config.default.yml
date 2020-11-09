@@ -1,0 +1,44 @@
+# Configuration
+
+# Cannot be empty, and cannot have a space
+prefix: "!" # Prefix for command. Default "!".
+
+maxTimers: 10 # Maximum number of concurrent timers. Default 10
+commandCooldown: 1 # Time gap between consecutive commands. Default 1
+maxMotions: 20 # Largest number of motions that can be fetched at once. Default 20
+
+# URL of your server icon image, or any other image works too.
+# This doesn't actually set your picture. It just dictates what
+# To display on the command for !bruh
+# Defaults to the GitHub logo
+serverIconUrl:
+  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
+
+# Url of your bot's icon image, or any other image works too.
+# This doesn't actually set your picture. It just dictates what
+# To display on the command for !epic
+# Defaults to the Discord logo
+botIconUrl:
+  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+
+# Profanity detection. Default true
+shoulddetectProfanity: true
+
+# Automatically commands with near matches. Default true.
+shoulduseFuzzyStringMatch: true
+
+# Admin role in your server. Defaults to just "admin".
+# If you have no admin role, you can leave this value as it's default
+adminRoleName: "admin"
+
+# Emoji config for polls
+# Do not include :colons: around the emoji name
+# ID is only required for custom emojis
+# ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
+emojis:
+  debating:
+    name: speaking_head
+    id: ""
+  spectating:
+    name: eyes
+    id: ""
