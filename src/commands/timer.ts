@@ -15,17 +15,17 @@ import type {
     TextChannel,
     User
 } from "discord.js"
+import {adminRoleName, maxTimers} from "../getConfig"
 import {formatTime, nextKey} from "./timerUtils"
-import {maxTimers, adminRoleName} from "../getConfig"
 
 type Channel = TextChannel | DMChannel | NewsChannel
 
-type Timer = [
+type Timer = {
     id: number,
     uid: string,
     kill: (shouldmute: boolean)=> void,
     playPause: (playOrPause?: "play" | "pause")=> void,
-]
+}
 
 type Timers = {[key: number]: Timer}
 
@@ -113,9 +113,9 @@ const isauthorizedToModifyTimer = (
     }
 
     const isadmin =
-        author.roles.cache.find(role => role.name === adminRoleName) !== null
+        author.roles.cache.find((role) => role.name === adminRoleName) !== null
 
-    return author.user.id === timer[1] || isadmin
+    return author.user.id === timer.uid || isadmin
 }
 
 
@@ -149,11 +149,11 @@ export const playPause = (
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
     } else if (isauthorizedToModifyTimer(member, timer)) {
-        timer[3](playOrPause)
+        timer.playPause(playOrPause)
 
         channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
     } else {
-        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer[1]}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
+        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer.uid}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
     }
 }
 
@@ -196,10 +196,10 @@ export const kill = (
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
     } else if (isauthorizedToModifyTimer(member, timer)) {
-        timer[2](Boolean(shouldmute)) // Run the `kill()` function
+        timer.kill(Boolean(shouldmute)) // Run the `kill()` function
         Reflect.deleteProperty(timers, numericId) // Delete timer after killing
     } else {
-        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer[1]}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
+        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer.uid}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
     }
 }
 
@@ -276,10 +276,11 @@ export const start = async (message: Message): Promise<void> => {
         msg.edit(`Current time: ${formatTime(time)}\nId: ${fakeId ?? "unknown"}`)
 
         // Push the id and kill function to the timers array
-        timers[fakeId] = [
-            Number(`${id}`),
-            message.author.id,
-            (shouldmuteUser: boolean): void => { // This function is for killing the timer
+        timers[fakeId] = {
+            id: Number(`${id}`),
+            uid: message.author.id,
+            // This function is for killing the timer
+            kill: (shouldmuteUser: boolean): void => {
                 clearInterval(Number(`${id}`))
 
                 shouldmute = shouldmuteUser
@@ -287,12 +288,13 @@ export const start = async (message: Message): Promise<void> => {
                 message.channel.send(`Killed timer with id ${fakeId}.`)
                 resolve()
             },
-            (playOrPause?: "play" | "pause"): void => { // This function is for playing or pausing
+            // This function is for playing or pausing
+            playPause: (playOrPause?: "play" | "pause"): void => {
                 ispaused = playOrPause === undefined
                     ? !ispaused
                     : playOrPause === "pause"
             },
-        ]
+        }
     })
 
     msg.edit(`:white_check_mark: Speech Finished!`)
