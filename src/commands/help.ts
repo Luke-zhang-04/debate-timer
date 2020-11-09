@@ -5,15 +5,14 @@
  * @version 1.2.1
  * @license BSD-3-Clause
  */
-
+import {prefix, shoulduseFuzzyStringMatch} from "../getConfig"
 import type {Message} from "discord.js"
 import didyoumean from "didyoumean"
 import fs from "fs"
-import {prefix} from "../getConfig"
 
 /* eslint-disable no-sync */
 
-// Object with all the manual entries
+// Object with all the mafullConfignual entries
 const manual: {[key: string]: string} = {
     bruh: `> **\`${prefix}bruh\`**
 > Otis.`,
@@ -144,7 +143,9 @@ export default (message: Message): void => {
         arg = arg.slice(1)
     }
 
-    const correctedArg = didyoumean(arg, Object.keys(manual))
+    const correctedArg = shoulduseFuzzyStringMatch
+        ? didyoumean(arg, Object.keys(manual))
+        : arg
 
     if (correctedArg === null) {
         message.channel.send(`:book: No manual entry for ${arg}`)

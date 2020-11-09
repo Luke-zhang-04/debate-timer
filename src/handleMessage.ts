@@ -69,7 +69,6 @@ const handleCmd = (message: Message, client: Client): void => {
             timer.playPause(message.channel, message.content.split(" ")[1], "play")
         }
     }
-    const correctedCmd = didyoumean(cmd, Object.keys(commands))
 
     switch (cmd) {
         case null || undefined || "":
@@ -77,6 +76,10 @@ const handleCmd = (message: Message, client: Client): void => {
 
             return
     }
+
+    const correctedCmd = config.shoulduseFuzzyStringMatch
+        ? didyoumean(cmd, Object.keys(commands))
+        : cmd
 
     if  (correctedCmd !== null) {
         for (const [key, command] of Object.entries(commands)) {

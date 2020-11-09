@@ -19,6 +19,7 @@ type FullConfig = {
     serverIconUrl: string,
     botIconUrl: string,
     shoulddetectProfanity: boolean,
+    shoulduseFuzzyStringMatch: boolean,
     emojis: {
         debating: {
             name: string,
@@ -41,6 +42,7 @@ type InputConfig = {
     serverIconUrl?: string,
     botIconUrl?: string,
     shoulddetectProfanity?: boolean,
+    shoulduseFuzzyStringMatch?: boolean,
     emojis?: {
         debating: {
             name: string,
@@ -64,6 +66,7 @@ const defaultConfig: FullConfig = {
     botIconUrl:
         "https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256",
     shoulddetectProfanity: true,
+    shoulduseFuzzyStringMatch: true,
     emojis: {
         debating: {
             name: "speaking_head",
@@ -100,6 +103,9 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
     ) && (
         typeof obj.shoulddetectProfanity === "boolean" ||
         obj.shoulddetectProfanity === undefined
+    ) && (
+        typeof obj.shoulduseFuzzyStringMatch == "boolean" ||
+        obj.shoulduseFuzzyStringMatch === undefined
     ) && (
         typeof obj.emojis === "object" ||
         typeof obj.emojis === undefined
@@ -145,6 +151,7 @@ export const {
     serverIconUrl,
     botIconUrl,
     shoulddetectProfanity,
+    shoulduseFuzzyStringMatch,
     emojis,
 } = fullConfig as FullConfig
 
