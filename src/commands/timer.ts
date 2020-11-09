@@ -224,20 +224,20 @@ export const start = async (message: Message): Promise<void> => {
         id: NodeJS.Timeout | null = null, // Interval id
         fakeId: number | undefined, // Number the user will see
         shouldmute = true, // If use should be muted after speech
-        ispaused = false
+        ispaused = false,
+
+        /**
+         * The starttime of this timer
+         * This is important because setInterval() is unreliable, and can lag
+         * behind at any time if it wants
+         */
+        startTime = Date.now()
 
     /**
      * Keep track of this message, as we're going to consantly edit it and
      * change it's time
      */
     const msg = await message.channel.send(`Current time: ${formatTime(time)}`)
-
-    /**
-     * The starttime of this timer
-     * This is important because setInterval() is unreliable, and can lag
-     * behind at any time if it wants
-     */
-    let startTime = Date.now()
 
     // Wait for timer to resolve with a Promise :)
     await new Promise((resolve) => {

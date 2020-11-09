@@ -74,7 +74,21 @@ const manual: {[key: string]: string} = {
 > E.g \`${prefix}pause 254\``,
 }
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString())
+type Package = {
+    name?: string,
+    version?: string,
+    description?: string,
+    main?: string,
+    scripts: {[key: string]: string},
+    keywords?: string[],
+    author?: string | {name: string, url: string, email?: string},
+    license?: string,
+    dependencies?: {[key: string]: string},
+    devDependencies?: {[key: string]: string},
+    engines?: {[key: string]: string},
+}
+
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
 // Default help message
 const defaultMsg = `**Debate Timer Bot**
