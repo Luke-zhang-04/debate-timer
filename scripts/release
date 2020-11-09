@@ -7,7 +7,7 @@ git config --local user.email "luke.zhang2004dev@gmail.com"
 git config --local user.name "Luke-zhang-04"
 
 # Add JS files for distribution
-git add --force lib
+git add --force bot.js
 git add --force cli/
 
 # Remove unecessary files
