@@ -67,7 +67,7 @@ client.on("message", async (message) => {
 
         await fs.writeFile(
             "bot.error.log",
-            `${prevContents}${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}"\n`,
+            `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}"\n${prevContents}`,
         )
     }
 })
