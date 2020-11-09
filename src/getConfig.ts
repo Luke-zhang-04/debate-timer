@@ -20,6 +20,7 @@ type FullConfig = {
     botIconUrl: string,
     shoulddetectProfanity: boolean,
     shoulduseFuzzyStringMatch: boolean,
+    adminRoleName: string,
     emojis: {
         debating: {
             name: string,
@@ -43,6 +44,7 @@ type InputConfig = {
     botIconUrl?: string,
     shoulddetectProfanity?: boolean,
     shoulduseFuzzyStringMatch?: boolean,
+    adminRoleName?: string,
     emojis?: {
         debating: {
             name: string,
@@ -67,6 +69,7 @@ const defaultConfig: FullConfig = {
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shoulddetectProfanity: true,
     shoulduseFuzzyStringMatch: true,
+    adminRoleName: "admin",
     emojis: {
         debating: {
             name: "speaking_head",
@@ -106,6 +109,9 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
     ) && (
         typeof obj.shoulduseFuzzyStringMatch == "boolean" ||
         obj.shoulduseFuzzyStringMatch === undefined
+    ) && (
+        typeof obj.adminRoleName === "string" ||
+        obj.adminRoleName === undefined
     ) && (
         typeof obj.emojis === "object" ||
         typeof obj.emojis === undefined
@@ -152,6 +158,7 @@ export const {
     botIconUrl,
     shoulddetectProfanity,
     shoulduseFuzzyStringMatch,
+    adminRoleName,
     emojis,
 } = fullConfig as FullConfig
 

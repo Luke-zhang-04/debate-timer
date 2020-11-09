@@ -27,6 +27,10 @@ shoulddetectProfanity: true
 # Automatically commands with near matches. Default true.
 shoulduseFuzzyStringMatch: true
 
+# Admin role in your server. Defaults to just "admin".
+# If you have no admin role, you can leave this value as it's default
+adminRoleName: "potato"
+
 # Emoji config for polls
 # Do not include :colons: around the emoji name
 # ID is only required for custom emojis

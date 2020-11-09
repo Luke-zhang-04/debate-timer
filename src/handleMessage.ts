@@ -46,7 +46,9 @@ const handleCmd = (message: Message, client: Client): void => {
             const shouldmute = message.content.split(" ")[2] === undefined ||
                 message.content.split(" ")[2] === "mute"
 
-            timer.kill(message.channel, message.content.split(" ")[1], shouldmute)
+            timer.kill(
+                message, message.content.split(" ")[1], shouldmute,
+            )
         },
         makeTeams: () => teamGen.randomTeams(message.channel),
         makePartners: () => teamGen.randomPartners(message),
@@ -63,10 +65,14 @@ const handleCmd = (message: Message, client: Client): void => {
         poll: () => poll.makePoll(message, client),
         getPoll: () => poll.getPoll(message.channel),
         pause: () => {
-            timer.playPause(message.channel, message.content.split(" ")[1], "pause")
+            timer.playPause(
+                message, message.content.split(" ")[1], "pause",
+            )
         },
         play: () => {
-            timer.playPause(message.channel, message.content.split(" ")[1], "play")
+            timer.playPause(
+                message, message.content.split(" ")[1], "play",
+            )
         }
     }
 

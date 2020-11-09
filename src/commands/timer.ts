@@ -9,26 +9,32 @@
 import type {
     DMChannel,
     Guild,
+    GuildMember,
     Message,
     NewsChannel,
     TextChannel,
     User
 } from "discord.js"
 import {formatTime, nextKey} from "./timerUtils"
-import {maxTimers} from "../getConfig"
+import {maxTimers, adminRoleName} from "../getConfig"
 
 type Channel = TextChannel | DMChannel | NewsChannel
+
+type Timer = [
+    id: number,
+    uid: string,
+    kill: (shouldmute: boolean)=> void,
+    playPause: (playOrPause?: "play" | "pause")=> void,
+]
+
+type Timers = {[key: number]: Timer}
 
 /**
  * Timers get pushed here
  * This keeps track of running timers
  * To kill a timer, the kill() function should be called
  */
-const timers: {[key: number]: [
-    id: number,
-    kill: (shouldmute: boolean)=> void,
-    playPause: (playOrPause?: "play" | "pause")=> void,
-], } = {}
+const timers: Timers = {}
 
 /**
  * How often the timer should update in seconds
@@ -98,15 +104,29 @@ const muteUser = async (guild: Guild | null, user: User): Promise<void> => {
     }
 }
 
+const isauthorizedToModifyTimer = (
+    author: GuildMember | null,
+    timer: Timer,
+): boolean => {
+    if (author === null) { // No author
+        return false
+    }
+
+    const isadmin =
+        author.roles.cache.find(role => role.name === adminRoleName) !== null
+
+    return author.user.id === timer[1] || isadmin
+}
+
 
 /**
  * Pauses a timer with id
- * @param message - message object to send message to
+ * @param param0 - message object with message info
  * @param id - timer id - could be undefined, but shouldn't be
  * @returns void
  */
 export const playPause = (
-    channel: Channel,
+    {member, channel}: Message,
     id?: string,
     playOrPause?: "play" | "pause",
 ): void => {
@@ -128,22 +148,24 @@ export const playPause = (
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
-    } else {
-        timer[2](playOrPause)
+    } else if (isauthorizedToModifyTimer(member, timer)) {
+        timer[3](playOrPause)
 
         channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
+    } else {
+        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer[1]}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
     }
 }
 
 
 /**
  * Kills a timer with id
- * @param message - message object to send message to
+ * @param param0 - message object with message info
  * @param id - timer id - could be undefined, but shouldn't be
  * @returns void
  */
 export const kill = (
-    channel: Channel,
+    {member, channel}: Message,
     id?: string,
     shouldmute?: boolean,
 ): void => {
@@ -173,9 +195,11 @@ export const kill = (
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
-    } else {
-        timer[1](Boolean(shouldmute)) // Run the `kill()` function
+    } else if (isauthorizedToModifyTimer(member, timer)) {
+        timer[2](Boolean(shouldmute)) // Run the `kill()` function
         Reflect.deleteProperty(timers, numericId) // Delete timer after killing
+    } else {
+        channel.send(`Sorry <@${member?.user.id}>, but you're not authorized to modify this protected timer. Only <@${timer[1]}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
     }
 }
 
@@ -254,6 +278,7 @@ export const start = async (message: Message): Promise<void> => {
         // Push the id and kill function to the timers array
         timers[fakeId] = [
             Number(`${id}`),
+            message.author.id,
             (shouldmuteUser: boolean): void => { // This function is for killing the timer
                 clearInterval(Number(`${id}`))
 

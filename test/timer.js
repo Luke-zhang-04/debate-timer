@@ -6,13 +6,21 @@
  * @license BSD-3-Clause
  */
 
-const {Message} = require("./utils/mockDiscord")
+const {Message, Member} = require("./utils/mockDiscord")
 const handleMessage = require("../lib/handleMessage")
 const testHelpers = require("./utils/helpers")
 
 module.exports = () => {
     context("Should start a timer properly", () => {
-        const message = new Message("!start @Tester")
+        const message = new Message(
+            "!start @Tester",
+            {
+                author: {
+                    bot: false,
+                    id: "user1"
+                }
+            },
+        )
 
         handleMessage.default(message)
 
@@ -47,9 +55,37 @@ module.exports = () => {
             }, 4600)
         })
 
-        it("Should kill the timer properly", (done) => {
+        it("Should not kill the timer if uauthorized", () => {
+            const message2 = new Message(
+                `!kill ${id}`,
+                {
+                    author: {
+                        bot: false,
+                        id: "user2"
+                    }
+                },
+                new Member([], "user2"),
+            )
+
+            handleMessage.default(message2)
+
+            const returnMsg2 = message2.newMessage.content
+
+            testHelpers.includes(returnMsg2, "not authorized")
+        })
+
+        it("Should kill the timer properly if authorized", (done) => {
             setTimeout(() => {
-                const message2 = new Message(`!kill ${id}`)
+                const message2 = new Message(
+                    `!kill ${id}`,
+                    {
+                        author: {
+                            bot: false,
+                            id: "user1"
+                        }
+                    },
+                    new Member([], "user1"),
+                )
 
                 handleMessage.default(message2)
 
@@ -62,7 +98,7 @@ module.exports = () => {
         })
     })
 
-    context("the kill command", () => {
+    context("Edge cases for the kill command", () => {
         it("Should send message if id is not provided", () => {
             const message = new Message("!kill")
 

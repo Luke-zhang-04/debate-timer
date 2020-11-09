@@ -38,6 +38,8 @@ class Message {
 
     newMessage
 
+    member
+
     files
 
     mentions
@@ -51,14 +53,15 @@ class Message {
         id: "Tester",
     }
 
-    constructor (content, options) {
+    constructor (content, options, member) {
         this.content = content
         this.files = options ? options.files : undefined
         this.id = messageId
+        this.member = member
 
         messageId++
 
-        if (options && options.author) {
+        if (options && options.author !== undefined) {
             this.author = options.author
         }
 
@@ -105,7 +108,45 @@ class Client {
 
 }
 
+class User {
+
+    id
+
+    constructor(id) {
+        this.id = id
+    }
+
+}
+
+class Member {
+
+    roles
+
+    user
+
+    constructor(roles, id) {
+        this.roles = {
+            roles,
+            cache: {
+                find: (func) => {
+                    for (const role of roles) {
+                        if (func(role) === true) {
+                            return true
+                        }
+                    }
+
+                    return null
+                }
+            }
+        }
+        this.user = new User(id)
+    }
+
+}
+
 module.exports = {
     Message,
     Client,
+    Member,
+    User,
 }
