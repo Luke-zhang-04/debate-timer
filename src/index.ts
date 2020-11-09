@@ -9,9 +9,33 @@ import {hostname, userInfo} from "os"
 import DatePlus from "@luke-zhang-04/dateplus"
 import Discord from "discord.js"
 import dotenv from "dotenv"
-import fs from "fs/promises"
+import fs from "fs"
 import handleMessage from "./handleMessage"
 import {prefix} from "./getConfig"
+
+const readFile = (path: string): Promise<string> => (
+    new Promise((resolve, reject) => {
+        fs.readFile(path, "utf-8", (err, data) => {
+            if (err) {
+                return reject(err)
+            }
+
+            return resolve(data)
+        })
+    })
+)
+
+const writeFile = (path: string, content: string): Promise<void> => (
+    new Promise((resolve, reject) => {
+        fs.writeFile(path, content, "utf-8", (err) => {
+            if (err) {
+                return reject(err)
+            }
+
+            return resolve()
+        })
+    })
+)
 
 dotenv.config()
 
@@ -56,7 +80,7 @@ client.on("message", async (message) => {
         const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
         const prevContents = await (async () => {
             try {
-                return (await fs.readFile("bot.error.log")).toString()
+                return await readFile("bot.error.log")
             } catch {
                 return ""
             }
@@ -65,7 +89,7 @@ client.on("message", async (message) => {
         console.error(err)
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
 
-        await fs.writeFile(
+        await writeFile(
             "bot.error.log",
             `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}"\n${prevContents}`,
         )
