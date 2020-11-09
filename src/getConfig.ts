@@ -62,9 +62,9 @@ const defaultConfig: FullConfig = {
     commandCooldown: 1,
     maxMotions: 20,
     serverIconUrl:
-        "https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256",
+        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
-        "https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256",
+        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shoulddetectProfanity: true,
     shoulduseFuzzyStringMatch: true,
     emojis: {
