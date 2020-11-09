@@ -186,4 +186,14 @@ module.exports = () => {
 
         testHelpers.includes(returnMsg, "No manual entry for notACommand")
     })
+
+    it("Should give fuzzy matched manual entry", () => {
+        const message = new Message("!hekp brug") // Help bruh
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Otis")
+    })
 }
