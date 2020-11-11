@@ -37,6 +37,35 @@ const writeFile = (path: string, content: string): Promise<void> => (
     })
 )
 
+const uncaughtException = async (err: Error): Promise<void> => {
+    const date = new Date()
+    const formattedDate = DatePlus.addZeros(
+        `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
+    )
+    const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+    const formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`
+    const prevContents = await (async (): Promise<string> => {
+        try {
+            return await readFile("bot.error.log")
+        } catch {
+            return ""
+        }
+    })()
+    let stack: undefined | string = ""
+
+    console.error(err)
+
+    if (err instanceof Error) {
+        // eslint-disable-next-line
+        stack = err.stack
+    }
+
+    await writeFile(
+        "bot.error.log",
+        `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`,
+    )
+}
+
 dotenv.config()
 
 console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
@@ -64,7 +93,6 @@ client.once("ready", () => {
 
 client.on("message", async (message) => {
     try {
-        // Any commands that need the client object should go here (some exceptions)
         if (message.content === `${prefix}ping`) {
             message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
 
@@ -73,32 +101,12 @@ client.on("message", async (message) => {
 
         handleMessage(message, client)
     } catch (err: unknown) {
-        const date = new Date()
-        const formattedDate = DatePlus.addZeros(
-            `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
-        )
-        const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
-        const formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`
-        const prevContents = await (async (): Promise<string> => {
-            try {
-                return await readFile("bot.error.log")
-            } catch {
-                return ""
-            }
-        })()
-        let stack: undefined | string = ""
-
-        console.error(err)
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
 
         if (err instanceof Error) {
-            // eslint-disable-next-line
-            stack = err.stack
+            uncaughtException(err)
         }
-
-        await writeFile(
-            "bot.error.log",
-            `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`,
-        )
     }
 })
+
+process.on("uncaughtException", uncaughtException)
