@@ -91,7 +91,7 @@ client.once("ready", () => {
     })
 })
 
-client.on("message", async (message) => {
+client.on("message", (message) => {
     try {
         if (message.content === `${prefix}ping`) {
             message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
