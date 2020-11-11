@@ -265,15 +265,15 @@ export class Timer {
             muteUser(this.message.guild, this._mentionedUser)
         }
 
-        if (this._fakeId !== undefined) {
-            Reflect.deleteProperty(timers, this._fakeId)
-        }
-
         if (sendMsg) {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
         (await this._msg).edit(`:white_check_mark: Speech Finished!`)
+
+        if (this._fakeId !== undefined) {
+            Reflect.deleteProperty(timers, this._fakeId)
+        }
     }
 
     /**
