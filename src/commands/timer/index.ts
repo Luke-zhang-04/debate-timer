@@ -198,8 +198,11 @@ export class Timer {
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+        const bar = `\`[${"\u2014".repeat(60)}]\` 0%` // Progress bar, with "EM DASH" character —
 
-        this._msg = message.channel.send(`${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`)
+        this._msg = message.channel.send(
+            `${bar}\n${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+        )
     }
 
     public get time (): number {
@@ -237,14 +240,27 @@ export class Timer {
             // Subtract current time from start time and round to nearest second
             this._time = Math.round((Date.now() - this._startTime) / 1000)
 
+            // Mentioned user id
             const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
 
-            msg.edit(`${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`)
+            // Progress bar
+            const elapsedTicks = Math.floor(this._time / 5)
+            const blocks = "\u2588".repeat(elapsedTicks)
+            const dashes = "\u2014".repeat(Math.min(Math.max(60 - elapsedTicks, 0), 60))
+            const percentage =
+                Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
+
+            // Progress bar with █ and —
+            const bar = `\`[${blocks}${dashes}]\` ${percentage}%`
+
+            msg.edit(
+                `${bar}\n${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            )
 
             this._notifySpeechStatus()
 
             // If speech surpasses 320 seconds (5 minutes 15 seconds)
-            if (this.time >= 315 || this.time > 900) {
+            if (this.time >= 315 || this.time > DatePlus.minsToMs(15)) {
                 this.kill(false)
             }
         }, interval * 1000)
