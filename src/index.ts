@@ -72,12 +72,13 @@ client.on("message", async (message) => {
         }
 
         handleMessage(message, client)
-    } catch (err) {
+    } catch (err: unknown) {
         const date = new Date()
         const formattedDate = DatePlus.addZeros(
             `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`
         )
-        const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
+        const formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`
         const prevContents = await (async () => {
             try {
                 return await readFile("bot.error.log")
@@ -85,13 +86,18 @@ client.on("message", async (message) => {
                 return ""
             }
         })()
+        let stack: undefined | string = ""
 
         console.error(err)
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
 
+        if (err instanceof Error) {
+            stack = err.stack
+        }
+
         await writeFile(
             "bot.error.log",
-            `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}"\n${prevContents}`,
+            `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`,
         )
     }
 })
