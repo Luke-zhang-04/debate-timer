@@ -6,6 +6,7 @@
  * @license BSD-3-Clause
  */
 
+const {strictEqual} = require("assert")
 const {Message, Member} = require("./utils/mockDiscord")
 const handleMessage = require("../lib/handleMessage")
 const testHelpers = require("./utils/helpers")
@@ -28,7 +29,8 @@ module.exports = () => {
             id
 
         it("Should have started a timer", () => {
-            testHelpers.includes(returnMsg, "Starting timer")
+            testHelpers.includes(returnMsg, "For: <@Tester>")
+            testHelpers.includes(returnMsg, "Current time: 0")
         })
 
         it("Should show id", (done) => {
@@ -45,17 +47,19 @@ module.exports = () => {
         it("Should have ticked to 5 seconds", (done) => {
             setTimeout(() => {
                 // eslint-disable-next-line
-                id = returnMsg.split(" ")[3]
+                id = returnMsg.split(" ")[7]
 
                 returnMsg = message.newMessage.content
+                console.log({message})
 
                 testHelpers.includes(returnMsg, "Current time: 5")
+                strictEqual(id, "0")
 
                 done()
             }, 4600)
         })
 
-        it("Should not kill the timer if uauthorized", () => {
+        it("Should not kill the timer if unauthorized", () => {
             const message2 = new Message(
                 `!kill ${id}`,
                 {

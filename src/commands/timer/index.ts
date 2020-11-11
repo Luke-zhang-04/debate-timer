@@ -261,8 +261,6 @@ export class Timer {
             clearInterval(this._intervalId)
         }
 
-        (await this._msg).edit(`:white_check_mark: Speech Finished!`)
-
         if (this._mentionedUser !== undefined && this.shouldmute) {
             muteUser(this.message.guild, this._mentionedUser)
         }
@@ -274,6 +272,8 @@ export class Timer {
         if (sendMsg) {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
+
+        (await this._msg).edit(`:white_check_mark: Speech Finished!`)
     }
 
     /**
