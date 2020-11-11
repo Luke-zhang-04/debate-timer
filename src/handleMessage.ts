@@ -26,68 +26,81 @@ filter.addWords("dipshit", "dumbass")
 
 let lastCommand = 0
 
-/* eslint max-lines-per-function: ["error", {"max": 50, "skipComments": true, "skipBlankLines": true}] */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/**
+ * All commands
+ * @param message - message object
+ * @param client - client object
+ * @returns void
+ */
+const getCommands = (message: Message, client: Client): Commands => ({
+    help: () => help(message),
+    man: () => help(message),
+    bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
+    coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+    epic: () => message.channel.send("", {files: [config.botIconUrl]}),
+    start: () => timer.start(message),
+    kill: () => {
+        const shouldmute = message.content.split(" ")[2] === undefined ||
+            message.content.split(" ")[2] === "mute"
+
+        timer.kill(
+            message, message.content.split(" ")[1], shouldmute,
+        )
+    },
+    makeTeams: () => teamGen.randomTeams(message.channel),
+    makePartners: () => teamGen.randomPartners(message),
+    makeRound: async () => {
+        /* eslint-disable no-unused-expressions */
+        teamGen.randomPartners(message) &&
+        teamGen.randomTeams(message.channel) &&
+        message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
+        /* eslint-enable no-unused-expressions */
+    },
+    getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
+    getMotions: () => motion.getRandomMotions(message),
+    systemInfo: async () => message.channel.send(await systemInfo()),
+    poll: () => poll.makePoll(message, client),
+    getPoll: () => poll.getPoll(message.channel),
+    pause: () => {
+        timer.playPause(
+            message, message.content.split(" ")[1], "pause",
+        )
+    },
+    play: () => {
+        timer.playPause(
+            message, message.content.split(" ")[1], "play",
+        )
+    },
+})
+/* eslint-enable @typescript-eslint/explicit-function-return-type */
+
+
 /**
  * Handle a command (starts with !)
  * @param message - message object
+ * @param client - client object
  * @returns void
  */
 const handleCmd = (message: Message, client: Client): void => {
     const {prefix} = config
     const [cmd] = message.content.slice(prefix.length).split(" ")
-    const commands: Commands = {
-        help: () => help(message),
-        man: () => help(message),
-        bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
-        coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
-        epic: () => message.channel.send("", {files: [config.botIconUrl]}),
-        start: () => timer.start(message),
-        kill: () => {
-            const shouldmute = message.content.split(" ")[2] === undefined ||
-                message.content.split(" ")[2] === "mute"
-
-            timer.kill(
-                message, message.content.split(" ")[1], shouldmute,
-            )
-        },
-        makeTeams: () => teamGen.randomTeams(message.channel),
-        makePartners: () => teamGen.randomPartners(message),
-        makeRound: async () => {
-            /* eslint-disable */
-            teamGen.randomPartners(message) &&
-            teamGen.randomTeams(message.channel) &&
-            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
-            /* eslint-enable */
-        },
-        getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
-        getMotions: () => motion.getRandomMotions(message),
-        systemInfo: async () => message.channel.send(await systemInfo()),
-        poll: () => poll.makePoll(message, client),
-        getPoll: () => poll.getPoll(message.channel),
-        pause: () => {
-            timer.playPause(
-                message, message.content.split(" ")[1], "pause",
-            )
-        },
-        play: () => {
-            timer.playPause(
-                message, message.content.split(" ")[1], "play",
-            )
-        }
-    }
+    const commands = getCommands(message, client)
 
     switch (cmd) {
         case null || undefined || "":
             message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
             return
+
+        default: break
     }
 
     const correctedCmd = config.shoulduseFuzzyStringMatch
         ? didyoumean(cmd, Object.keys(commands))
         : cmd
 
-    if  (correctedCmd !== null) {
+    if (correctedCmd !== null) {
         for (const [key, command] of Object.entries(commands)) {
             if (correctedCmd === key) {
                 if (correctedCmd !== cmd) {

@@ -75,11 +75,11 @@ client.on("message", async (message) => {
     } catch (err: unknown) {
         const date = new Date()
         const formattedDate = DatePlus.addZeros(
-            `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`
+            `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
         )
         const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
         const formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`
-        const prevContents = await (async () => {
+        const prevContents = await (async (): Promise<string> => {
             try {
                 return await readFile("bot.error.log")
             } catch {
@@ -92,6 +92,7 @@ client.on("message", async (message) => {
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
 
         if (err instanceof Error) {
+            // eslint-disable-next-line
             stack = err.stack
         }
 

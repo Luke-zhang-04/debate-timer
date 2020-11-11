@@ -24,7 +24,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: lint
-        run: ./node_modules/.bin/eslint src/**/*.ts
+        run: ./node_modules/.bin/eslint src/"{*.ts,**/*.ts}"
 
       - name: build
         run: ./scripts/compile

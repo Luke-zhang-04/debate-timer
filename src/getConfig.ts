@@ -107,7 +107,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         typeof obj.shoulddetectProfanity === "boolean" ||
         obj.shoulddetectProfanity === undefined
     ) && (
-        typeof obj.shoulduseFuzzyStringMatch == "boolean" ||
+        typeof obj.shoulduseFuzzyStringMatch === "boolean" ||
         obj.shoulduseFuzzyStringMatch === undefined
     ) && (
         typeof obj.adminRoleName === "string" ||
