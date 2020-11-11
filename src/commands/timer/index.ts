@@ -38,20 +38,6 @@ const timers: {[key: number]: Timer} = {}
 const interval = 5
 
 /**
- * Checks if a number is within a range
- * E.g `inRange(9, 10)` -> `true`
- *     `inRange(7, 10, 2)` -> `false`
- * @param actual - actual value of number
- * @param expected - expected value of number
- * @param margin - margin for error
- * @returns whether actual is within the margin of error against expected
- */
-const inRange = (actual: number, expected: number, margin = 1): boolean => (
-    actual >= expected - margin && actual <= expected + margin
-)
-
-
-/**
  * Pauses a timer with id
  * @param param0 - message object with message info
  * @param id - timer id - could be undefined, but shouldn't be
@@ -139,6 +125,16 @@ export const kill = (
 export class Timer {
 
     /**
+     * If user should be muted after their speech temporarily (experimental)
+     */
+    public shouldmute = true
+
+    /**
+     * If timer is currently paused
+     */
+    public ispaused = false
+
+    /**
      * Uid of mentioned user if provided
      */
     public readonly mentionedUid?: string
@@ -148,7 +144,7 @@ export class Timer {
      */
     public readonly creator: User
 
-        /**
+    /**
      * Real start time which is readonly
      */
     private readonly _trueStartTime = Date.now()
@@ -175,16 +171,6 @@ export class Timer {
     private readonly _mentionedUser?: User
 
     /**
-     * If user should be muted after their speech temporarily (experimental)
-     */
-    public shouldmute = true
-
-    /**
-     * If timer is currently paused
-     */
-    public ispaused = false
-
-    /**
      * Current time
      */
     private _time = 0
@@ -201,7 +187,7 @@ export class Timer {
 
     public constructor (
         private readonly _fakeId: number,
-        public readonly message: Message
+        public readonly message: Message,
     ) {
         this._mentionedUser = message.mentions.users.first() // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
@@ -257,8 +243,8 @@ export class Timer {
 
             this._notifySpeechStatus()
 
-            // If speech surpasses 320 seconds (5 minutes 20 seconds)
-            if (this.time >= 320 || this.time > 900) {
+            // If speech surpasses 320 seconds (5 minutes 15 seconds)
+            if (this.time >= 315 || this.time > 900) {
                 this.kill(false)
             }
         }, interval * 1000)
@@ -303,23 +289,27 @@ export class Timer {
      * Sends a message to the channel to notify everyone that an important time
      * has passed, such as protected times
      */
-   private _notifySpeechStatus = (): void => {
-       const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
-       const {channel} = this.message
-       const {time} = this
+    private _notifySpeechStatus = (): void => {
+        const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
+        const {channel} = this.message
+        const {time} = this
 
-       if (inRange(time, 30)) {
-           channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
-       } else if (inRange(time, 150)) {
-           channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
-       } else if (inRange(time, 270)) {
-           channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
-       } else if (inRange(time, 300)) {
-           channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Your speech is over! You have 15 seconds of grace time.`)
-       } else if (inRange(time, 315)) {
-           channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
-       }
-   }
+        if (time >= 315) {
+            channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
+        } else if (time >= 300 && !this._stages[4]) {
+            this._stages[4] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
+        } else if (time >= 270 && !this._stages[3]) {
+            this._stages[3] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
+        } else if (time >= 150 && !this._stages[2]) {
+            this._stages[2] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
+        } else if (time >= 30 && !this._stages[1]) {
+            this._stages[1] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
+        }
+    }
 
 }
 
