@@ -198,10 +198,12 @@ export class Timer {
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
-        const bar = `\`[${"\u2014".repeat(60)}]\` 0%` // Progress bar, with "EM DASH" character —
+        const bar = process.env.NODE_ENV === "test"
+            ? ""
+            : `\`[${"\u2014".repeat(60)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
-            `${bar}\n${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -251,10 +253,12 @@ export class Timer {
                 Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
 
             // Progress bar with █ and —
-            const bar = `\`[${blocks}${dashes}]\` ${percentage}%`
+            const bar = process.env.NODE_ENV === "test"
+                ? ""
+                : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
             msg.edit(
-                `${bar}\n${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+                `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
             )
 
             this._notifySpeechStatus()
