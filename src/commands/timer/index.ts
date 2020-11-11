@@ -148,6 +148,32 @@ export class Timer {
      */
     public readonly creator: User
 
+        /**
+     * Real start time which is readonly
+     */
+    private readonly _trueStartTime = Date.now()
+
+    /**
+     * Keep track of this message, as we're going to consantly edit it and
+     * change it's time
+     */
+    private readonly _msg: Promise<Message>
+
+    /**
+     * Stages of speech
+     */
+    private readonly _stages = {
+        1: false, // 30 seconds in - protected time
+        2: false, // 2:30 minutes in - halfway through
+        3: false, // 4:30 minutes in - protected time
+        4: false, // 5:00 minutes in - grace time begins
+    }
+
+    /**
+     * User object from mentioned user
+     */
+    private readonly _mentionedUser?: User
+
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
@@ -157,11 +183,6 @@ export class Timer {
      * If timer is currently paused
      */
     public ispaused = false
-
-    /**
-     * User object from mentioned user
-     */
-    private readonly _mentionedUser?: User
 
     /**
      * Current time
@@ -178,18 +199,10 @@ export class Timer {
      */
     private _startTime = Date.now()
 
-    /**
-     * Real start time which is readonly
-     */
-    private readonly _trueStartTime = Date.now()
-
-    /**
-     * Keep track of this message, as we're going to consantly edit it and
-     * change it's time
-     */
-    private _msg: Promise<Message>
-
-    public constructor (private _fakeId: number, public message: Message) {
+    public constructor (
+        private readonly _fakeId: number,
+        public readonly message: Message
+    ) {
         this._mentionedUser = message.mentions.users.first() // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
         this.creator = message.author
@@ -207,7 +220,7 @@ export class Timer {
         return this._time
     }
 
-    public get fakeId (): number | undefined {
+    public get fakeId (): number {
         return this._fakeId
     }
 
