@@ -60,7 +60,7 @@ const inRange = (actual: number, expected: number, margin = 1): boolean => (
 export const playPause = (
     {author, member, channel}: Message,
     id?: string,
-    playOrPause?: "play" | "pause",
+    playOrPause?: "resume" | "pause",
 ): void => {
     const numericId = Number(id)
 
@@ -277,10 +277,10 @@ export class Timer {
     }
 
     /**
-     * Control play or pause state of timer
-     * @param playOrPause - if the timer should play or pause
+     * Control resume or pause state of timer
+     * @param playOrPause - if the timer should resume or pause
      */
-    public playPause = (playOrPause?: "play" | "pause"): void => {
+    public playPause = (playOrPause?: "resume" | "pause"): void => {
         this.ispaused = playOrPause === undefined
             ? !this.ispaused
             : playOrPause === "pause"

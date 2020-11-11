@@ -62,11 +62,11 @@ const manual: {[key: string]: string} = {
 > Creating a new poll will erase the data in any other polls`,
     getPoll: `> **\`${prefix}getPoll\`**
 > Gets data from current poll. If no poll has been made, data will be empty.`,
-    play: `> **\`${prefix}play [id]\`**
-> Continues playing a timer with id of \`[id]\`
+    resume: `> **\`${prefix}resume [id]\`**
+> Continues a timer with id of \`[id]\`
 > Parameters:
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-> E.g \`${prefix}play 254\``,
+> E.g \`${prefix}resume 254\``,
     pause: `> **\`${prefix}pause [id]\`**
 > Pauses a timer with id of \`[id]\`
 > Parameters:
@@ -123,7 +123,7 @@ This bot is in version ${version}
 > :timer:
 > **\`${prefix}start [@mention?]\`**
 > **\`${prefix}kill [id] [shouldMute?]\`**
-> **\`${prefix}play [id]\`**
+> **\`${prefix}resume [id]\`**
 > **\`${prefix}pause [id]\`**
 
 > :newspaper:

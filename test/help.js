@@ -96,14 +96,14 @@ module.exports = () => {
 
         testHelpers.includes(returnMsg, "Kills a timer")
     })
-    it("Should have a manual entry for play", () => {
-        const message = new Message("!help play")
+    it("Should have a manual entry for resume", () => {
+        const message = new Message("!help resume")
 
         handleMessage.default(message)
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Continues playing a timer")
+        testHelpers.includes(returnMsg, "Continues a timer")
     })
     it("Should have a manual entry for pause", () => {
         const message = new Message("!help pause")

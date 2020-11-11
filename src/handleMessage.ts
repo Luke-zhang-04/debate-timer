@@ -67,9 +67,9 @@ const getCommands = (message: Message, client: Client): Commands => ({
             message, message.content.split(" ")[1], "pause",
         )
     },
-    play: () => {
+    resume: () => {
         timer.playPause(
-            message, message.content.split(" ")[1], "play",
+            message, message.content.split(" ")[1], "resume",
         )
     },
 })
