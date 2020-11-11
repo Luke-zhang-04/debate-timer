@@ -50,7 +50,6 @@ module.exports = () => {
                 id = returnMsg.split(" ")[7]
 
                 returnMsg = message.newMessage.content
-                console.log({message})
 
                 testHelpers.includes(returnMsg, "Current time: 5")
                 strictEqual(id, "0")
