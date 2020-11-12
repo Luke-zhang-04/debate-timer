@@ -60,9 +60,10 @@ const uncaughtException = async (err: Error): Promise<void> => {
         stack = err.stack
     }
 
+    // Write error to log file. Log file size shall not exceed 2.5 Mb.
     await writeFile(
         "bot.error.log",
-        `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`,
+        `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(0, 2_500_000),
     )
 }
 
