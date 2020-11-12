@@ -70,6 +70,7 @@ export class Timer {
         2: false, // 2:30 minutes in - halfway through
         3: false, // 4:30 minutes in - protected time
         4: false, // 5:00 minutes in - grace time begins
+        5: false, // 5:15 minutes in - speech is over
     }
 
     /**
@@ -151,7 +152,9 @@ export class Timer {
 
         const {_time: time} = this
 
-        if (time < 300 && this._stages[4]) {
+        if (time < 315 && this._stages[5]) {
+            this._stages[5] = false
+        } if (time < 300 && this._stages[4]) {
             this._stages[4] = false
         } if (time < 270 && this._stages[3]) {
             this._stages[3] = false
@@ -273,7 +276,8 @@ export class Timer {
         } if (!this._stages[4] && time >= 300) {
             this._stages[4] = true
             channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
-        } if (time >= 315) {
+        } if (!this._stages[5] && time >= 315) {
+            this._stages[5] = true
             channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
         }
     }
