@@ -9,7 +9,8 @@ A discord bot and web timer
 
 [Web timer](https://luke-zhang-04.github.io/debate-timer/)
 
-![Screenshot](./assets/screenshot.png)
+![Screenshot](./assets/screenshot1.png)
+![Screenshot](./assets/screenshot2.png)
 
 ## NodeJS Versions
 This bot only works on Node JS >= 12. This is because Discord JS only supports Node >= 12. Therefore, we don't test for, nor support Node JS 10 or 8.
