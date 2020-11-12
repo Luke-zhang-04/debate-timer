@@ -152,13 +152,17 @@ export class Timer {
 
         if (time < 315 && this._stages[5]) {
             this._stages[5] = false
-        } if (time < 300 && this._stages[4]) {
+        }
+        if (time < 300 && this._stages[4]) {
             this._stages[4] = false
-        } if (time < 270 && this._stages[3]) {
+        }
+        if (time < 270 && this._stages[3]) {
             this._stages[3] = false
-        } if (time < 150 && this._stages[2]) {
+        }
+        if (time < 150 && this._stages[2]) {
             this._stages[2] = false
-        } if (time < 30 && this._stages[1]) {
+        }
+        if (time < 30 && this._stages[1]) {
             this._stages[1] = false
         }
     }
@@ -166,7 +170,7 @@ export class Timer {
     /**
      * Start the timer and interval
      */
-    public start = async (): Promise<void> => {
+    public start = (): void => {
         this._intervalId = setInterval(() => {
             if (this.ispaused) {
                 this._startTime += interval * 1000
@@ -265,16 +269,20 @@ export class Timer {
         if (!this._stages[1] && time >= 30) {
             this._stages[1] = true
             channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
-        } if (!this._stages[2] && time >= 150) {
+        }
+        if (!this._stages[2] && time >= 150) {
             this._stages[2] = true
             channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
-        } if (!this._stages[3] && time >= 270) {
+        }
+        if (!this._stages[3] && time >= 270) {
             this._stages[3] = true
             channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
-        } if (!this._stages[4] && time >= 300) {
+        }
+        if (!this._stages[4] && time >= 300) {
             this._stages[4] = true
             channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
-        } if (!this._stages[5] && time >= 315) {
+        }
+        if (!this._stages[5] && time >= 315) {
             this._stages[5] = true
             channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
         }
