@@ -7,7 +7,10 @@
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000",
     "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
     "build": "./scripts/compile",
-    "start": "./scripts/start --dev"
+    "start": "./scripts/start --dev",
+    "lint": "./node_modules/.bin/eslint src/\"{*.ts,**/*.ts}\"",
+    "lint:fix": "./lint.mjs --fix",
+    "lint:watch": "./lint.mjs --watch"
   },
   "keywords": [],
   "author": {
@@ -42,9 +45,11 @@
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "babel-preset-minify": "^0.5.1",
+    "chokidar": "^3.4.3",
     "eslint": "^7.11.0",
     "eslint-config-recommended": "^4.1.0",
     "eslint-plugin-prefer-arrow": "^1.2.2",
+    "eslint_d": "^9.1.2",
     "mocha": "^8.2.0",
     "nodemon": "^2.0.6",
     "rollup": "^2.33.1",

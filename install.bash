@@ -84,7 +84,7 @@ cleanIntall() {
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
     fi
 }
 
@@ -120,7 +120,7 @@ else
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
     fi
 fi
 

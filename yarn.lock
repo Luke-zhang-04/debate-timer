@@ -1069,7 +1069,7 @@ chokidar@2.1.8:
   optionalDependencies:
     fsevents "^1.2.7"
 
-chokidar@3.4.3, chokidar@^3.2.2, chokidar@^3.4.0:
+chokidar@3.4.3, chokidar@^3.2.2, chokidar@^3.4.0, chokidar@^3.4.3:
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.3.tgz#c1df38231448e45ca4ac588e6c79573ba6a57d5b"
   integrity sha512-DtM3g7juCXQxFVSNPNByEC2+NImtBuxQQvWlHunpJIS5Ocr0lG306cC7FCi7cEA0fzmybPUIl4txBIobk1gGOQ==
@@ -1224,6 +1224,13 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
   integrity sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+
+core_d@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/core_d/-/core_d-2.0.0.tgz#353ea67194d26b41c5f8d98f18fc9cacadfc0d68"
+  integrity sha512-oIb3QJj/ayYNbg2WYTYM1h3d8XvKF/RBUFhNeVVOfXDskeQC43fypCwnvdGqgTK7rbJ/a8tvxeErCr8vJhJ4vA==
+  dependencies:
+    supports-color "^5.5.0"
 
 cross-spawn@^6.0.5:
   version "6.0.5"
@@ -1758,6 +1765,59 @@ eslint@^7.11.0:
     table "^5.2.3"
     text-table "^0.2.0"
     v8-compile-cache "^2.0.3"
+
+eslint@^7.3.0:
+  version "7.13.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.13.0.tgz#7f180126c0dcdef327bfb54b211d7802decc08da"
+  integrity sha512-uCORMuOO8tUzJmsdRtrvcGq5qposf7Rw0LwkTJkoDbOycVQtQjmnhZSuLQnozLE4TmAzlMVV45eCHmQ1OpDKUQ==
+  dependencies:
+    "@babel/code-frame" "^7.0.0"
+    "@eslint/eslintrc" "^0.2.1"
+    ajv "^6.10.0"
+    chalk "^4.0.0"
+    cross-spawn "^7.0.2"
+    debug "^4.0.1"
+    doctrine "^3.0.0"
+    enquirer "^2.3.5"
+    eslint-scope "^5.1.1"
+    eslint-utils "^2.1.0"
+    eslint-visitor-keys "^2.0.0"
+    espree "^7.3.0"
+    esquery "^1.2.0"
+    esutils "^2.0.2"
+    file-entry-cache "^5.0.1"
+    functional-red-black-tree "^1.0.1"
+    glob-parent "^5.0.0"
+    globals "^12.1.0"
+    ignore "^4.0.6"
+    import-fresh "^3.0.0"
+    imurmurhash "^0.1.4"
+    is-glob "^4.0.0"
+    js-yaml "^3.13.1"
+    json-stable-stringify-without-jsonify "^1.0.1"
+    levn "^0.4.1"
+    lodash "^4.17.19"
+    minimatch "^3.0.4"
+    natural-compare "^1.4.0"
+    optionator "^0.9.1"
+    progress "^2.0.0"
+    regexpp "^3.1.0"
+    semver "^7.2.1"
+    strip-ansi "^6.0.0"
+    strip-json-comments "^3.1.0"
+    table "^5.2.3"
+    text-table "^0.2.0"
+    v8-compile-cache "^2.0.3"
+
+eslint_d@^9.1.2:
+  version "9.1.2"
+  resolved "https://registry.yarnpkg.com/eslint_d/-/eslint_d-9.1.2.tgz#153e17d3a5a8d84e688be07b2dbd5c27304a1975"
+  integrity sha512-HJ7n92z+gSBLPP/en2pse1SLsFfwOXb8aqHn3FyXwYaE+J5wSM+raBbSmvE9Ttq20IF6Rq/dXxjhiIjuxAUjpw==
+  dependencies:
+    core_d "^2.0.0"
+    eslint "^7.3.0"
+    nanolru "^1.0.0"
+    optionator "^0.9.1"
 
 espree@^6.1.2:
   version "6.2.1"
@@ -3033,6 +3093,11 @@ nanoid@3.1.12:
   version "3.1.12"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.12.tgz#6f7736c62e8d39421601e4a0c77623a97ea69654"
   integrity sha512-1qstj9z5+x491jfiC4Nelk+f8XBad7LN20PmyWINJEMRSf3wcAjAWysw1qaA8z6NSKe2sjq1hRSDpBH5paCb6A==
+
+nanolru@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/nanolru/-/nanolru-1.0.0.tgz#0a5679cd4e4578c4ca3741e610b71c4c9b5afaf8"
+  integrity sha512-GyQkE8M32pULhQk7Sko5raoIbPalAk90ICG+An4fq6fCsFHsP6fB2K46WGXVdoJpy4SGMnZ/EKbo123fZJomWg==
 
 nanomatch@^1.2.9:
   version "1.2.13"

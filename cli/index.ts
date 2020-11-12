@@ -22,7 +22,7 @@ client.login(process.env.AUTHTOKEN)
 
 const connected = new Promise((resolve) => {
     client.once("ready", resolve)
-});
+})
 
 const readFile = (path: string): Promise<string> => (
     new Promise((resolve, reject) => {
