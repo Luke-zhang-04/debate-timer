@@ -146,8 +146,6 @@ export class Timer {
             this._startTime = now - DatePlus.minsToMs(5.25)
         }
 
-        console.log(DatePlus.minsToMs(5.25))
-
         await this._updateStatus()
 
         const {_time: time} = this
