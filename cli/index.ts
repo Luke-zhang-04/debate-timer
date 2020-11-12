@@ -2,14 +2,14 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  * @file lets you send messages on the bots behalf
  */
 
 import Discord from "discord.js"
 import dotenv from "dotenv"
-import fs from "fs/promises"
+import fs from "fs"
 import prompts from "prompts"
 
 dotenv.config()
@@ -22,7 +22,19 @@ client.login(process.env.AUTHTOKEN)
 
 const connected = new Promise((resolve) => {
     client.once("ready", resolve)
-});
+})
+
+const readFile = (path: string): Promise<string> => (
+    new Promise((resolve, reject) => {
+        fs.readFile(path, "utf-8", (err, data) => {
+            if (err) {
+                return reject(err)
+            }
+
+            return resolve(data)
+        })
+    })
+);
 
 /* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
@@ -31,7 +43,7 @@ const connected = new Promise((resolve) => {
     console.log("Connected to client")
 
     const {version} = JSON.parse(
-        (await fs.readFile("package.json")).toString(),
+        await readFile("package.json"),
     )
 
     let channel = client.channels.cache.find((_channel) => (

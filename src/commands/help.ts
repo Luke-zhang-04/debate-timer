@@ -2,17 +2,17 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  */
-
+import {prefix, shoulduseFuzzyStringMatch} from "../getConfig"
 import type {Message} from "discord.js"
+import didyoumean from "didyoumean"
 import fs from "fs"
-import {prefix} from "../getConfig"
 
 /* eslint-disable no-sync */
 
-// Object with all the manual entries
+// Object with all the mafullConfignual entries
 const manual: {[key: string]: string} = {
     bruh: `> **\`${prefix}bruh\`**
 > Otis.`,
@@ -33,6 +33,35 @@ const manual: {[key: string]: string} = {
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
 >     \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
 > E.g \`${prefix}kill 254\``,
+    list: `> **\`list [global? = global | undefined]\`**
+> Lists the currently stored timers
+> Parameters:
+>     \`[global?]\` - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.
+> E.g \`${prefix}list global\``,
+    give: `> ** \`give [id] [amt]\`**
+> Gives \`[amt]\` amount of seconds to timer with id \`[id]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer back
+> E.g \`${prefix}give 0 10\``,
+    take: `> ** \`take [id] [amt]\`**
+> Takes \`[amt]\` amount of seconds from timer with id \`[id]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer forward
+> E.g \`${prefix}take 0 10\``,
+    backward: `> ** \`backward [id] [amt]\`**
+> Functionally equivalent to \`give\`
+> Winds timer with id \`[id]\` backward by \`[amt]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer back`,
+    forward: `> ** \`take [id] [amt]\`**
+    > Functionally equivalent to \`take\`
+    > Winds timer with id \`[id]\` forward by \`[amt]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer forward`,
     getMotion: `> **\`getMotion\`**
 > Gets a random motion from the hellomotions spreadsheet
 > <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
@@ -62,11 +91,11 @@ const manual: {[key: string]: string} = {
 > Creating a new poll will erase the data in any other polls`,
     getPoll: `> **\`${prefix}getPoll\`**
 > Gets data from current poll. If no poll has been made, data will be empty.`,
-    play: `> **\`${prefix}play [id]\`**
-> Continues playing a timer with id of \`[id]\`
+    resume: `> **\`${prefix}resume [id]\`**
+> Continues a timer with id of \`[id]\`
 > Parameters:
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-> E.g \`${prefix}play 254\``,
+> E.g \`${prefix}resume 254\``,
     pause: `> **\`${prefix}pause [id]\`**
 > Pauses a timer with id of \`[id]\`
 > Parameters:
@@ -74,14 +103,28 @@ const manual: {[key: string]: string} = {
 > E.g \`${prefix}pause 254\``,
 }
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString())
+type Package = {
+    name?: string,
+    version?: string,
+    description?: string,
+    main?: string,
+    scripts: {[key: string]: string},
+    keywords?: string[],
+    author?: string | {name: string, url: string, email?: string},
+    license?: string,
+    dependencies?: {[key: string]: string},
+    devDependencies?: {[key: string]: string},
+    engines?: {[key: string]: string},
+}
+
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
 // Default help message
 const defaultMsg = `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
-For a web timer, you can go to <https://luke-zhang-04.github.io/debate-timer/>.
+Found a bug? Report it at <https://github.com/Luke-zhang-04/debate-timer/issues/new>
 
 The configured prefix is \`${prefix}\`
 This bot is in version ${version}
@@ -103,14 +146,20 @@ This bot is in version ${version}
 > **\`${prefix}epic\`**
 
 > :computer:
-> **\`ping\`**
-> **\`systemInfo\`**
+> **\`${prefix}ping\`**
+> **\`${prefix}systemInfo\`**
 
 > :timer:
 > **\`${prefix}start [@mention?]\`**
 > **\`${prefix}kill [id] [shouldMute?]\`**
-> **\`${prefix}play [id]\`**
+> **\`${prefix}resume [id]\`**
 > **\`${prefix}pause [id]\`**
+> **\`${prefix}list [global?]\`**
+>${" "}
+> **\`${prefix}give [id] [amt]\`**
+> **\`${prefix}take [id] [amt]\`**
+> **\`${prefix}backward [id] [amt]\`**
+> **\`${prefix}forward [id] [amt]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**
@@ -131,15 +180,31 @@ This bot is in version ${version}
  * @returns string
  */
 export default (message: Message): void => {
-    const arg = message.content.split(" ")[1]
+    let arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
         message.channel.send(defaultMsg)
-    } else if (arg in manual) {
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg]}`)
-    } else if (arg.slice(1) in manual) {
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[arg.slice(1)]}`)
-    } else {
-        message.channel.send(`:book: No manual entry for ${arg}`)
+
+        return
     }
+
+    if (arg[0] === "!") { // Get rid of ! at beginning
+        arg = arg.slice(1)
+    }
+
+    const correctedArg = shoulduseFuzzyStringMatch
+        ? didyoumean(arg, Object.keys(manual))
+        : arg
+
+    if (correctedArg === null) {
+        message.channel.send(`:book: No manual entry for ${arg}`)
+
+        return
+    }
+
+    if (correctedArg !== arg) {
+        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
+    }
+
+    message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
 }

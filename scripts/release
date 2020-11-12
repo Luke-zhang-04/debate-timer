@@ -7,11 +7,11 @@ git config --local user.email "luke.zhang2004dev@gmail.com"
 git config --local user.name "Luke-zhang-04"
 
 # Add JS files for distribution
-git add --force lib
+git add --force bot.js
 git add --force cli/
 
 # Remove unecessary files
-rm -rfv ./test .github assets docs test .editorconfig .eslintignore .eslintrc.json .gitattributes tsconfig.json tsconfig.cli.json yarn.lock src cli/index.ts
+rm -rfv .github assets cli/*.ts lib test .babelrc.js .editorconfig .eslintignore .eslitnrc .gitattributes config.yml lint.mjs rollup.config.js tsconfig.cli.json tsconfig.json yarn.lock
 
 # Commit
 git commit -am "Release for version $version"

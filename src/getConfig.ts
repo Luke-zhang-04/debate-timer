@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  */
 
@@ -14,11 +14,14 @@ import yaml from "yaml"
 type FullConfig = {
     prefix: string,
     maxTimers: number,
+    maxTimersPerUser: number,
     commandCooldown: number,
     maxMotions: number,
     serverIconUrl: string,
     botIconUrl: string,
     shoulddetectProfanity: boolean,
+    shoulduseFuzzyStringMatch: boolean,
+    adminRoleName: string,
     emojis: {
         debating: {
             name: string,
@@ -36,11 +39,14 @@ type InputConfig = {
     [key: string]: unknown,
     prefix?: string,
     maxTimers?: number,
+    maxTimersPerUser?: number,
     commandCooldown?: number,
     maxMotions?: number,
     serverIconUrl?: string,
     botIconUrl?: string,
     shoulddetectProfanity?: boolean,
+    shoulduseFuzzyStringMatch?: boolean,
+    adminRoleName?: string,
     emojis?: {
         debating: {
             name: string,
@@ -57,13 +63,16 @@ type InputConfig = {
 const defaultConfig: FullConfig = {
     prefix: "!",
     maxTimers: 10,
+    maxTimersPerUser: 3,
     commandCooldown: 1,
     maxMotions: 20,
     serverIconUrl:
-        "https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256",
+        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
-        "https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256",
+        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shoulddetectProfanity: true,
+    shoulduseFuzzyStringMatch: true,
+    adminRoleName: "admin",
     emojis: {
         debating: {
             name: "speaking_head",
@@ -73,6 +82,8 @@ const defaultConfig: FullConfig = {
         },
     },
 }
+
+Object.freeze(defaultConfig)
 
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
@@ -101,17 +112,28 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         typeof obj.shoulddetectProfanity === "boolean" ||
         obj.shoulddetectProfanity === undefined
     ) && (
+        typeof obj.shoulduseFuzzyStringMatch === "boolean" ||
+        obj.shoulduseFuzzyStringMatch === undefined
+    ) && (
+        typeof obj.adminRoleName === "string" ||
+        obj.adminRoleName === undefined
+    ) && (
         typeof obj.emojis === "object" ||
         typeof obj.emojis === undefined
     )
 )
 
 // Try and get config.yml from root
-let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) ?? ""
+let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""
 
 // If that doesn't work, try .yaml instead
 if (inputConfigFile === "") {
-    inputConfigFile = niceTry(() => readFileSync("config.yaml").toString()) ?? "{}"
+    inputConfigFile = niceTry(() => readFileSync("config.yaml").toString()) || ""
+}
+
+// If that doesn't work, try .json instead
+if (inputConfigFile === "") {
+    inputConfigFile = niceTry(() => readFileSync("config.json").toString()) || "{}"
 }
 
 // Parse the yaml config
@@ -140,11 +162,14 @@ for (const [key, val] of Object.entries(defaultConfig)) {
 export const {
     prefix,
     maxTimers,
+    maxTimersPerUser,
     commandCooldown,
     maxMotions,
     serverIconUrl,
     botIconUrl,
     shoulddetectProfanity,
+    shoulduseFuzzyStringMatch,
+    adminRoleName,
     emojis,
 } = fullConfig as FullConfig
 

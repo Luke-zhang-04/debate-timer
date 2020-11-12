@@ -24,10 +24,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: lint
-        run: ./node_modules/.bin/eslint src/**/*.ts
+        run: ./node_modules/.bin/eslint src/"{*.ts,**/*.ts}"
 
       - name: build
         run: ./scripts/compile
 
       - name: test
-        run: NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --no-googlesheets
+        run: NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --no-googlesheets --exit

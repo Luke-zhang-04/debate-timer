@@ -13,14 +13,14 @@ maxMotions: 20 # Largest number of motions that can be fetched at once. Default 
 # To display on the command for !bruh
 # Defaults to the GitHub logo
 serverIconUrl:
-  https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256
+  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
 
 # Url of your bot's icon image, or any other image works too.
 # This doesn't actually set your picture. It just dictates what
 # To display on the command for !epic
 # Defaults to the Discord logo
 botIconUrl:
-  https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256
+  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
 
 # Profanity detection. Default true
 shoulddetectProfanity: true
@@ -30,7 +30,7 @@ shoulduseFuzzyStringMatch: true
 
 # Admin role in your server. Defaults to just "admin".
 # If you have no admin role, you can leave this value as it's default
-adminRoleName: "potato"
+adminRoleName: "admin"
 
 # Emoji config for polls
 # Do not include :colons: around the emoji name
@@ -38,8 +38,8 @@ adminRoleName: "potato"
 # ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
 emojis:
   debating:
-    name: emoji_1
-    id: "762110857550757888"
+    name: speaking_head
+    id: ""
   spectating:
-    name: emoji_2
-    id: "762112564787675156"
+    name: eyes
+    id: ""

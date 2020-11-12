@@ -6,5 +6,5 @@ module.exports = {
             mangle: true,
         }]
     ],
-    shouldPrintComment: (comment) => /@license/.test(comment),
+    comments: false,
 }

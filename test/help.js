@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  */
 
@@ -76,7 +76,6 @@ module.exports = () => {
         testHelpers.includes(returnMsg, "Starts a 5 minute timer")
     })
 
-
     it("Should have a manual entry for kill", () => {
         const message = new Message("!man !kill")
 
@@ -87,24 +86,26 @@ module.exports = () => {
         testHelpers.includes(returnMsg, "Kills a timer")
     })
 
-    it("Should have a manual entry for kill", () => {
-        const message = new Message("!man !kill")
+    it("Should have a manual entry for list", () => {
+        const message = new Message("!man !list")
 
         handleMessage.default(message)
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Kills a timer")
+        testHelpers.includes(returnMsg, "Lists the currently stored timers")
     })
-    it("Should have a manual entry for play", () => {
-        const message = new Message("!help play")
+
+    it("Should have a manual entry for resume", () => {
+        const message = new Message("!help resume")
 
         handleMessage.default(message)
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Continues playing a timer")
+        testHelpers.includes(returnMsg, "Continues a timer")
     })
+
     it("Should have a manual entry for pause", () => {
         const message = new Message("!help pause")
 
@@ -185,5 +186,15 @@ module.exports = () => {
         const returnMsg = message.newMessage.content
 
         testHelpers.includes(returnMsg, "No manual entry for notACommand")
+    })
+
+    it("Should give fuzzy matched manual entry", () => {
+        const message = new Message("!hekp brug") // Help bruh
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Otis")
     })
 }

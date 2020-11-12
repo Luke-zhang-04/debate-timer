@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  */
 
@@ -38,7 +38,7 @@ module.exports = () => {
                     `user${userNum}`,
                     userNum <= 7 ? "emoji_1" : "emoji_2",
                     client,
-                )
+                ),
             )
         }
 
@@ -65,7 +65,7 @@ module.exports = () => {
 
         for (let userNum = 0; userNum < 9; userNum++) {
             reactPromises.push(
-                msg.newMessage.react(`user${userNum}`, "emoji_1", client)
+                msg.newMessage.react(`user${userNum}`, "emoji_1", client),
             )
         }
 
