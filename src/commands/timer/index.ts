@@ -78,7 +78,7 @@ export class Timer {
     private readonly _mentionedUser?: User
 
     /**
-     * Current time
+     * Current time in seconds
      */
     private _time = 0
 
@@ -127,11 +127,45 @@ export class Timer {
     }
 
     /**
+     * Changes the current time of this timer by changing the start time
+     * @param amt - amount to wind FORWARD by
+     */
+    public changeTime = async (amt: number): Promise<void> => {
+        this._startTime -= amt * 1000 // Wind the start time the opposite direction
+
+        const now = Date.now()
+
+        /**
+         * If removed time causes negative time, make it 0
+         * If added time causes more than 5:15, make it 5:15
+         */
+        if (this._startTime > now) {
+            this._startTime = now
+        } else if (this._startTime < now - DatePlus.minsToMs(5.25)) {
+            this._startTime = now - DatePlus.minsToMs(5.25)
+        }
+
+        console.log(DatePlus.minsToMs(5.25))
+
+        await this._updateStatus()
+
+        const {_time: time} = this
+
+        if (time < 300 && this._stages[4]) {
+            this._stages[4] = false
+        } if (time < 270 && this._stages[3]) {
+            this._stages[3] = false
+        } if (time < 150 && this._stages[2]) {
+            this._stages[2] = false
+        } if (time < 30 && this._stages[1]) {
+            this._stages[1] = false
+        }
+    }
+
+    /**
      * Start the timer and interval
      */
     public start = async (): Promise<void> => {
-        const msg = await this._msg
-
         this._intervalId = setInterval(() => {
             if (this.ispaused) {
                 this._startTime += interval * 1000
@@ -146,29 +180,7 @@ export class Timer {
                 return
             }
 
-            // Subtract current time from start time and round to nearest second
-            this._time = Math.round((Date.now() - this._startTime) / 1000)
-
-            // Mentioned user id
-            const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
-
-            // Progress bar
-            const elapsedTicks = Math.floor(this._time / 5)
-            const blocks = "\u2588".repeat(Math.min(elapsedTicks, 60))
-            const dashes = "\u2014".repeat(Math.min(Math.max(60 - elapsedTicks, 0), 60))
-            const percentage =
-                Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
-
-            // Progress bar with █ and —
-            const bar = process.env.NODE_ENV === "test"
-                ? ""
-                : `\`[${blocks}${dashes}]\` ${percentage}%\n`
-
-            msg.edit(
-                `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
-            )
-
-            this._notifySpeechStatus()
+            this._updateStatus()
 
             // If speech surpasses 320 seconds (5 minutes 15 seconds)
             if (this.time >= 315 || this.time > DatePlus.minsToMs(15)) {
@@ -212,6 +224,34 @@ export class Timer {
             : playOrPause === "pause"
     }
 
+    private _updateStatus = async (): Promise<void> => {
+        const msg = await this._msg
+
+        // Subtract current time from start time and round to nearest second
+        this._time = Math.round((Date.now() - this._startTime) / 1000)
+
+        // Mentioned user id
+        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+
+        // Progress bar
+        const elapsedTicks = Math.floor(this._time / 5)
+        const blocks = "\u2588".repeat(Math.min(elapsedTicks, 60))
+        const dashes = "\u2014".repeat(Math.min(Math.max(60 - elapsedTicks, 0), 60))
+        const percentage =
+            Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
+
+        // Progress bar with █ and —
+        const bar = process.env.NODE_ENV === "test"
+            ? ""
+            : `\`[${blocks}${dashes}]\` ${percentage}%\n`
+
+        msg.edit(
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+        )
+
+        this._notifySpeechStatus()
+    }
+
     /**
      * Sends a message to the channel to notify everyone that an important time
      * has passed, such as protected times
@@ -221,20 +261,20 @@ export class Timer {
         const {channel} = this.message
         const {time} = this
 
-        if (time >= 315) {
-            channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
-        } else if (time >= 300 && !this._stages[4]) {
-            this._stages[4] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
-        } else if (time >= 270 && !this._stages[3]) {
-            this._stages[3] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
-        } else if (time >= 150 && !this._stages[2]) {
-            this._stages[2] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
-        } else if (time >= 30 && !this._stages[1]) {
+        if (!this._stages[1] && time >= 30) {
             this._stages[1] = true
             channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
+        } if (!this._stages[2] && time >= 150) {
+            this._stages[2] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
+        } if (!this._stages[3] && time >= 270) {
+            this._stages[3] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
+        } if (!this._stages[4] && time >= 300) {
+            this._stages[4] = true
+            channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
+        } if (time >= 315) {
+            channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
         }
     }
 

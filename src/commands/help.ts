@@ -38,6 +38,30 @@ const manual: {[key: string]: string} = {
 > Parameters:
 >     \`[global?]\` - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.
 > E.g \`${prefix}list global\``,
+    give: `> ** \`give [id] [amt]\`**
+> Gives \`[amt]\` amount of seconds to timer with id \`[id]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer back
+> E.g \`${prefix}give 0 10\``,
+    take: `> ** \`take [id] [amt]\`**
+> Takes \`[amt]\` amount of seconds from timer with id \`[id]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer forward
+> E.g \`${prefix}take 0 10\``,
+    backward: `> ** \`backward [id] [amt]\`**
+> Functionally equivalent to \`give\`
+> Winds timer with id \`[id]\` backward by \`[amt]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer back`,
+    forward: `> ** \`take [id] [amt]\`**
+    > Functionally equivalent to \`take\`
+    > Winds timer with id \`[id]\` forward by \`[amt]\`
+> Parameters:
+>    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
+>    \`[amt]\` - required - amount in seconds to wind the timer forward`,
     getMotion: `> **\`getMotion\`**
 > Gets a random motion from the hellomotions spreadsheet
 > <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
@@ -131,6 +155,11 @@ This bot is in version ${version}
 > **\`${prefix}resume [id]\`**
 > **\`${prefix}pause [id]\`**
 > **\`${prefix}list [global?]\`**
+>${" "}
+> **\`${prefix}give [id] [amt]\`**
+> **\`${prefix}take [id] [amt]\`**
+> **\`${prefix}backward [id] [amt]\`**
+> **\`${prefix}forward [id] [amt]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**

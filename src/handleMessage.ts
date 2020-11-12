@@ -8,6 +8,7 @@
 
 import {Client, Message} from "discord.js"
 import Filter from "bad-words"
+import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import didyoumean from "didyoumean"
 import help from "./commands/help"
@@ -27,9 +28,12 @@ const filter = new Filter()
 
 filter.addWords("dipshit", "dumbass")
 
+didyoumean.threshold = 0.6
+
 let lastCommand = 0
 
 const timer = {
+    changeTime,
     kill,
     playPause,
     start,
@@ -60,6 +64,10 @@ const getCommands = (message: Message, client: Client): Commands => ({
         )
     },
     list: () => list(message),
+    take: () => changeTime(message, 1),
+    give: () => changeTime(message, -1),
+    forward: () => changeTime(message, 1),
+    backward: () => changeTime(message, -1),
     makeTeams: () => teamGen.randomTeams(message.channel),
     makePartners: () => teamGen.randomPartners(message),
     makeRound: async () => {
