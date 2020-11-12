@@ -26,7 +26,7 @@ import DatePlus from "@luke-zhang-04/dateplus"
  * This keeps track of running timers
  * To kill a timer, the kill() function should be called
  */
-const timers: {[key: number]: Timer} = {}
+export const timers: {[key: number]: Timer} = {}
 
 /* eslint-enable no-use-before-define */
 

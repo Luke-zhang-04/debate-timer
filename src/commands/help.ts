@@ -33,6 +33,11 @@ const manual: {[key: string]: string} = {
 >     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
 >     \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
 > E.g \`${prefix}kill 254\``,
+    list: `> **\`list [global? = global | undefined]\`**
+> Lists the currently stored timers
+> Parameters:
+>     \`[global?]\` - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.
+> E.g \`${prefix}list global\``,
     getMotion: `> **\`getMotion\`**
 > Gets a random motion from the hellomotions spreadsheet
 > <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
@@ -117,14 +122,15 @@ This bot is in version ${version}
 > **\`${prefix}epic\`**
 
 > :computer:
-> **\`ping\`**
-> **\`systemInfo\`**
+> **\`${prefix}ping\`**
+> **\`${prefix}systemInfo\`**
 
 > :timer:
 > **\`${prefix}start [@mention?]\`**
 > **\`${prefix}kill [id] [shouldMute?]\`**
 > **\`${prefix}resume [id]\`**
 > **\`${prefix}pause [id]\`**
+> **\`${prefix}list [global?]\`**
 
 > :newspaper:
 > **\`${prefix}getMotion\`**

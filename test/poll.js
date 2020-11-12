@@ -38,7 +38,7 @@ module.exports = () => {
                     `user${userNum}`,
                     userNum <= 7 ? "emoji_1" : "emoji_2",
                     client,
-                )
+                ),
             )
         }
 
@@ -65,7 +65,7 @@ module.exports = () => {
 
         for (let userNum = 0; userNum < 9; userNum++) {
             reactPromises.push(
-                msg.newMessage.react(`user${userNum}`, "emoji_1", client)
+                msg.newMessage.react(`user${userNum}`, "emoji_1", client),
             )
         }
 

@@ -51,6 +51,7 @@ class Message {
     author = {
         bot: false,
         id: "Tester",
+        username: "Tester",
     }
 
     constructor (content, options, member) {
@@ -112,7 +113,7 @@ class User {
 
     id
 
-    constructor(id) {
+    constructor (id) {
         this.id = id
     }
 
@@ -124,7 +125,7 @@ class Member {
 
     user
 
-    constructor(roles, id) {
+    constructor (roles, id) {
         this.roles = {
             roles,
             cache: {
@@ -136,8 +137,8 @@ class Member {
                     }
 
                     return null
-                }
-            }
+                },
+            },
         }
         this.user = new User(id)
     }

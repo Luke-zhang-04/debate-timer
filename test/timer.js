@@ -10,6 +10,7 @@ const {strictEqual} = require("assert")
 const {Message, Member} = require("./utils/mockDiscord")
 const handleMessage = require("../lib/handleMessage")
 const testHelpers = require("./utils/helpers")
+const {default: listCmd} = require("../lib/commands/list")
 
 module.exports = () => {
     context("Should start a timer properly", () => {
@@ -18,8 +19,8 @@ module.exports = () => {
             {
                 author: {
                     bot: false,
-                    id: "user1"
-                }
+                    id: "user1",
+                },
             },
         )
 
@@ -58,14 +59,83 @@ module.exports = () => {
             }, 4600)
         })
 
+        context("Listing timers", () => {
+            for (let i = 0; i < 2; i++) {
+                const timerForList = new Message(
+                    "!start @Tester",
+                    {
+                        author: {
+                            bot: false,
+                            id: `user${i + 1}`,
+                            username: `user${i + 2}`,
+                        },
+                    },
+                )
+
+                handleMessage.default(timerForList)
+            }
+
+            it("Should list 2 timers for global", async () => {
+                const listMsg = new Message("!list global")
+                const {includes} = testHelpers
+
+                await listCmd(listMsg)
+
+                includes(listMsg.newMessage.content, "**1**")
+                includes(listMsg.newMessage.content, "user2")
+                includes(listMsg.newMessage.content, "**2**")
+                includes(listMsg.newMessage.content, "user3")
+            })
+
+            it("Should list 1 timer for user", async () => {
+                const listMsg = new Message(
+                    "!list",
+                    {
+                        author: {
+                            bot: false,
+                            id: "user2",
+                            username: "user2",
+                        },
+                    },
+                )
+                const {includes} = testHelpers
+
+                await listCmd(listMsg)
+
+                includes(listMsg.newMessage.content, "**1**")
+                includes(listMsg.newMessage.content, "user2")
+            })
+
+            it("Should list 2 timers for Tester", async () => {
+                const listMsg = new Message(
+                    "!list",
+                    {
+                        author: {
+                            bot: false,
+                            id: "Tester",
+                            username: "Tester",
+                        },
+                    },
+                )
+                const {includes} = testHelpers
+
+                await listCmd(listMsg)
+
+                includes(listMsg.newMessage.content, "**1**")
+                includes(listMsg.newMessage.content, "user2")
+                includes(listMsg.newMessage.content, "**2**")
+                includes(listMsg.newMessage.content, "user3")
+            })
+        })
+
         it("Should not kill the timer if unauthorized", () => {
             const message2 = new Message(
                 `!kill ${id}`,
                 {
                     author: {
                         bot: false,
-                        id: "user2"
-                    }
+                        id: "user2",
+                    },
                 },
                 new Member([], "user2"),
             )
@@ -84,8 +154,8 @@ module.exports = () => {
                     {
                         author: {
                             bot: false,
-                            id: "user1"
-                        }
+                            id: "user1",
+                        },
                     },
                     new Member([], "user1"),
                 )

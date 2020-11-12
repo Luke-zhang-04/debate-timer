@@ -11,6 +11,7 @@ import Filter from "bad-words"
 import config from "./getConfig"
 import didyoumean from "didyoumean"
 import help from "./commands/help"
+import list from "./commands/list"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
 import systemInfo from "./commands/systemInfo"
@@ -48,6 +49,7 @@ const getCommands = (message: Message, client: Client): Commands => ({
             message, message.content.split(" ")[1], shouldmute,
         )
     },
+    list: () => list(message),
     makeTeams: () => teamGen.randomTeams(message.channel),
     makePartners: () => teamGen.randomPartners(message),
     makeRound: async () => {

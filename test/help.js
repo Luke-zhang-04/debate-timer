@@ -76,7 +76,6 @@ module.exports = () => {
         testHelpers.includes(returnMsg, "Starts a 5 minute timer")
     })
 
-
     it("Should have a manual entry for kill", () => {
         const message = new Message("!man !kill")
 
@@ -87,15 +86,16 @@ module.exports = () => {
         testHelpers.includes(returnMsg, "Kills a timer")
     })
 
-    it("Should have a manual entry for kill", () => {
-        const message = new Message("!man !kill")
+    it("Should have a manual entry for list", () => {
+        const message = new Message("!man !list")
 
         handleMessage.default(message)
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Kills a timer")
+        testHelpers.includes(returnMsg, "Lists the currently stored timers")
     })
+
     it("Should have a manual entry for resume", () => {
         const message = new Message("!help resume")
 
@@ -105,6 +105,7 @@ module.exports = () => {
 
         testHelpers.includes(returnMsg, "Continues a timer")
     })
+
     it("Should have a manual entry for pause", () => {
         const message = new Message("!help pause")
 
