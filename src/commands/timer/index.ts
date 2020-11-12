@@ -247,7 +247,7 @@ export class Timer {
 
             // Progress bar
             const elapsedTicks = Math.floor(this._time / 5)
-            const blocks = "\u2588".repeat(elapsedTicks)
+            const blocks = "\u2588".repeat(Math.min(elapsedTicks, 60))
             const dashes = "\u2014".repeat(Math.min(Math.max(60 - elapsedTicks, 0), 60))
             const percentage =
                 Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
