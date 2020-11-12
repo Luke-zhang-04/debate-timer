@@ -68,3 +68,15 @@ node cli
 ```
 
 And type `help` for help
+
+### Compared to other bots
+Why use this bot over other existing bots?
+Namely the most used bot [CUDS NotTDBot](https://github.com/spiltbeans/NotTDBot)
+
+1. **Get current time of speech** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time
+2. **Configurable** - host the bot yourself and configure it to your liking with YAML
+3. **Lax syntax** - created with ease of use in mind
+    1. Simple autocorrect (e.g `hekp` -> `help`, `star` -> `start`)
+    2. Syntax is straighforward (e.g `!start` instead of `+start {5}`)
+4. **Timer limits** - users can't create too many timers to prevent RAM overuse from one timer
+5. **Other functions** - including random motions, team generation, and some other useful commands
