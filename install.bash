@@ -72,12 +72,11 @@ cleanIntall() {
     ./scripts/compile || exit 1
 
     if [[ "$removeSources" == "y" ]]; then
-        rm -rfv src
-        rm -rv cli/index.ts
+        rm -rfv src cli/index.ts
     fi
 
     if [[ "$removeDevDependencies" == "y" ]]; then
-        if [[ "$pkgMan" == "yarn" ]]; then
+        if [[ "$pkgMan" == "yarn" ]]; then # DO NOT QUOTE SUBSHELLS BELOW
             yarn remove $(./scripts/listDevDependencies) # Have to do it like this for some reason
         else
             npm uninstall $(./scripts/listDevDependencies)
@@ -85,18 +84,17 @@ cleanIntall() {
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
     fi
 }
 
-if [ ! -d lib ]||[ ! -f cli/index.js ]; then
+if [ ! -f bot.js ]||[ ! -f cli/index.js ]; then
     cleanIntall || exit 1
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
 
     printf "Remove source files after install? [y/N] "
     read -r removeSources
-
     if [[ "$removeSources" == "" ]]; then
         removeSources="y"
     elif [[ ! "${validResponseValues[*]}" =~ $removeSources ]]; then
@@ -105,13 +103,28 @@ else
         exit 1
     fi
 
+    printf "Remove unecessary files after install? [y/N] "
+    read -r removeOthers
+    if [[ "$removeOthers" == "" ]]; then
+        removeOthers="y"
+    elif [[ ! "${validResponseValues[*]}" =~ $removeOthers ]]; then
+        echo "Unknown response. Response should either be y, N, or nothing"
+
+        exit 1
+    fi
+
     "$pkgInstall" --production || exit 1
 
     if [[ "$removeSources" == "y" ]]; then
-        rm -rfv src
-        rm -rv cli/index.ts
+        rm -rfv src cli/index.ts
+    fi
+
+    if [[ "$removeOthers" == "y" ]]; then
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
     fi
 fi
+
+cp config.default.yml config.yml
 
 if [ ! -f .env ]; then
     cp -v .env.example .env
@@ -119,4 +132,4 @@ if [ ! -f .env ]; then
     echo "Make sure you add the proper credentials to your .env file. AUTHTOKEN is the Discord authentication token, and APIKEY is the Google Sheets API key."
 fi
 
-echo "Installation finished! You can run ./start to start the bot."
+echo "Installation finished! You can run ./bot.js to start the bot."

@@ -125,3 +125,4 @@ dist
 .env.production.local
 lib/
 cli/*.js
+bot.js

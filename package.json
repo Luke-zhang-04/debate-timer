@@ -1,12 +1,16 @@
 {
   "name": "debate-timer",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "BP Debate timer Discord Bot",
-  "main": "lib/index.js",
+  "main": "./bot.js",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --exit",
     "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
-    "build": "./build"
+    "build": "./scripts/compile",
+    "start": "./scripts/start --dev",
+    "lint": "./node_modules/.bin/eslint_d src/\"{*.ts,**/*.ts}\"",
+    "lint:fix": "./lint.mjs --fix",
+    "lint:watch": "./lint.mjs --watch"
   },
   "keywords": [],
   "author": {
@@ -28,6 +32,8 @@
   "devDependencies": {
     "@babel/cli": "^7.12.1",
     "@babel/core": "^7.12.3",
+    "@rollup/plugin-commonjs": "^16.0.0",
+    "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/bad-words": "^3.0.0",
     "@types/didyoumean": "^1.2.0",
     "@types/dotenv": "^8.2.0",
@@ -39,11 +45,14 @@
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
     "babel-preset-minify": "^0.5.1",
+    "chokidar": "^3.4.3",
     "eslint": "^7.11.0",
     "eslint-config-recommended": "^4.1.0",
     "eslint-plugin-prefer-arrow": "^1.2.2",
+    "eslint_d": "^9.1.2",
     "mocha": "^8.2.0",
     "nodemon": "^2.0.6",
+    "rollup": "^2.33.1",
     "typescript": "^4.0.3"
   },
   "engines": {

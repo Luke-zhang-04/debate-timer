@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.2.1
+ * @version 1.3.0
  * @license BSD-3-Clause
  */
 
@@ -38,6 +38,8 @@ class Message {
 
     newMessage
 
+    member
+
     files
 
     mentions
@@ -49,16 +51,18 @@ class Message {
     author = {
         bot: false,
         id: "Tester",
+        username: "Tester",
     }
 
-    constructor (content, options) {
+    constructor (content, options, member) {
         this.content = content
         this.files = options ? options.files : undefined
         this.id = messageId
+        this.member = member
 
         messageId++
 
-        if (options && options.author) {
+        if (options && options.author !== undefined) {
             this.author = options.author
         }
 
@@ -105,7 +109,45 @@ class Client {
 
 }
 
+class User {
+
+    id
+
+    constructor (id) {
+        this.id = id
+    }
+
+}
+
+class Member {
+
+    roles
+
+    user
+
+    constructor (roles, id) {
+        this.roles = {
+            roles,
+            cache: {
+                find: (func) => {
+                    for (const role of roles) {
+                        if (func(role) === true) {
+                            return true
+                        }
+                    }
+
+                    return null
+                },
+            },
+        }
+        this.user = new User(id)
+    }
+
+}
+
 module.exports = {
     Message,
     Client,
+    Member,
+    User,
 }

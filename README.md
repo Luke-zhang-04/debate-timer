@@ -9,21 +9,32 @@ A discord bot and web timer
 
 [Web timer](https://luke-zhang-04.github.io/debate-timer/)
 
-![Screenshot](./assets/screenshot.png)
+![Screenshot](./assets/screenshot1.png)
+![Screenshot](./assets/screenshot2.png)
 
 ## NodeJS Versions
 This bot only works on Node JS >= 12. This is because Discord JS only supports Node >= 12. Therefore, we don't test for, nor support Node JS 10 or 8.
 
-When installing Node JS for the first time with a package manager such as Yum or dnf, it may install Node 10. Make sure you install Node 12.
+When installing Node JS for the first time with a package manager such as Yum or DNF, it may install Node 10. Make sure you install Node 12.
 
 ## Using the bot
+***These steps are applicable to \*nix systems only, including Unix, Linux, and MacOS, but NOT WINDOWS***
+If you're using Windows, you'll have to do everything yourself.
 
-Clone the latest version from git like so
+Make sure you have git installed. If not, you can download this package to a zip file.
+
+1. Use one of the below methods
+Stable release with pre-built bundle
 ```bash
+# Git clone
 git clone --single-branch --branch release https://github.com/Luke-zhang-04/debate-timer.git && cd debate-timer
 ```
+Lastest features, which you have to build yourself (no big deal)
+```bash
+git clone --single-branch --branch master https://github.com/Luke-zhang-04/debate-timer.git && cd debate-timer
+```
 
-Install dependencies
+2. Install dependencies
 ```bash
 ./install.bash
 
@@ -31,16 +42,42 @@ Install dependencies
 bash install.bash
 ```
 
-Get credentials
+3. Get credentials
 - You need to put a [Google Sheets API key](https://developers.google.com/sheets/api/quickstart/js#step_1_turn_on_the) in your .env file for the value APIKEY
 - You need to put your [Discord auth token](https://github.com/Tyrrrz/DiscordChatExporter/wiki/Obtaining-Token-and-Channel-IDs) in your .env file for the value AUTHTOKEN
 
 Note that these values are sensitive and should not be shown publicly
 
-Run
+4. Run
 ```bash
-node .
+./bot.js
 
 # To run it in the background
-node . & disown
+./bot.js & disown
+
+# Other ways you can run
+node .
+node bot.js
 ```
+
+### CLI
+The CLI is a REPL that lets you send messages on behalf of the bot
+
+Run
+```bash
+node cli
+```
+
+And type `help` for help
+
+### Compared to other bots
+Why use this bot over other existing bots?
+Namely the most used bot [CUDS NotTDBot](https://github.com/spiltbeans/NotTDBot)
+
+1. **Get current time of speech** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time
+2. **Configurable** - host the bot yourself and configure it to your liking with YAML
+3. **Lax syntax** - created with ease of use in mind
+    1. Simple autocorrect (e.g `hekp` -> `help`, `star` -> `start`)
+    2. Syntax is straighforward (e.g `!start` instead of `+start {5}`)
+4. **Timer limits** - users can't create too many timers to prevent RAM overuse from one timer
+5. **Other functions** - including random motions, team generation, and some other useful commands
