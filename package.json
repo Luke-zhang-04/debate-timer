@@ -8,7 +8,7 @@
     "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
     "build": "./scripts/compile",
     "start": "./scripts/start --dev",
-    "lint": "./node_modules/.bin/eslint src/\"{*.ts,**/*.ts}\"",
+    "lint": "./node_modules/.bin/eslint_d src/\"{*.ts,**/*.ts}\"",
     "lint:fix": "./lint.mjs --fix",
     "lint:watch": "./lint.mjs --watch"
   },
