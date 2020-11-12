@@ -188,19 +188,6 @@ export default (message: Message): void => {
         return
     }
 
-<<<<<<< HEAD
-    if (arg[0] == "!") { // Get rid of ! at beginning
-        arg = arg.slice(1)
-    }
-
-    const correctedArg = didyoumean(arg, Object.keys(manual))
-
-    if (correctedArg === null) {
-        message.channel.send(`:book: No manual entry for ${arg}`)
-    } else if (correctedArg !== arg) {
-        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
-        message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
-=======
     if (arg[0] === "!") { // Get rid of ! at beginning
         arg = arg.slice(1)
     }
@@ -217,7 +204,6 @@ export default (message: Message): void => {
 
     if (correctedArg !== arg) {
         message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
->>>>>>> 7eb8ea79ef106072a3b993ffa371ec3269eb2799
     }
 
     message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
