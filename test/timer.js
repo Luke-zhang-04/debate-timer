@@ -217,7 +217,7 @@ module.exports = () => {
 
         handleMessage.default(myTimer)
 
-        const id = myTimer.newMessage?.content.split(" ")[7]
+        const id = myTimer.newMessage.content.split(" ")[7]
 
         it("Should move timer forward by 20 seconds", async () => {
             const forwardMsg = new Message(
