@@ -128,7 +128,7 @@ module.exports = () => {
             })
         })
 
-        it("Should not kill the timer if unauthorized", () => {
+        it("Should not kill the timer if unauthorized", async () => {
             const message2 = new Message(
                 `!kill ${id}`,
                 {
@@ -140,7 +140,7 @@ module.exports = () => {
                 new Member([], "user2"),
             )
 
-            handleMessage.default(message2)
+            await handleMessage.default(message2)
 
             const returnMsg2 = message2.newMessage.content
 
@@ -148,7 +148,7 @@ module.exports = () => {
         })
 
         it("Should kill the timer properly if authorized", (done) => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 const message2 = new Message(
                     `!kill ${id}`,
                     {
@@ -160,7 +160,7 @@ module.exports = () => {
                     new Member([], "user1"),
                 )
 
-                handleMessage.default(message2)
+                await handleMessage.default(message2)
 
                 const returnMsg2 = message.newMessage.content
 
@@ -172,10 +172,10 @@ module.exports = () => {
     })
 
     context("Edge cases for the kill command", () => {
-        it("Should send message if id is not provided", () => {
+        it("Should send message if id is not provided", async () => {
             const message = new Message("!kill")
 
-            handleMessage.default(message)
+            await handleMessage.default(message)
 
             const returnMsg = message.newMessage.content
 
@@ -192,10 +192,10 @@ module.exports = () => {
             testHelpers.includes(returnMsg, "Learn to count")
         })
 
-        it("Should send a message if no timer with id is found", () => {
+        it("Should send a message if no timer with id is found", async () => {
             const message = new Message("!kill 420")
 
-            handleMessage.default(message)
+            await handleMessage.default(message)
 
             const returnMsg = message.newMessage.content
 

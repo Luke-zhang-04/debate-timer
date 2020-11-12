@@ -11,12 +11,14 @@ import Filter from "bad-words"
 import config from "./getConfig"
 import didyoumean from "didyoumean"
 import help from "./commands/help"
+import kill from "./commands/timer/kill"
 import list from "./commands/list"
 import motion from "./commands/randomMotion"
+import playPause from "./commands/timer/playPause"
 import poll from "./commands/poll"
+import start from "./commands/timer"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
-import timer from "./commands/timer"
 
 type Commands = {[key: string]: (()=> unknown)}
 
@@ -26,6 +28,14 @@ const filter = new Filter()
 filter.addWords("dipshit", "dumbass")
 
 let lastCommand = 0
+
+const timer = {
+    kill,
+    playPause,
+    start,
+}
+
+Object.freeze(timer)
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /**
@@ -45,7 +55,7 @@ const getCommands = (message: Message, client: Client): Commands => ({
         const shouldmute = message.content.split(" ")[2] === undefined ||
             message.content.split(" ")[2] === "mute"
 
-        timer.kill(
+        return timer.kill(
             message, message.content.split(" ")[1], shouldmute,
         )
     },
@@ -82,9 +92,9 @@ const getCommands = (message: Message, client: Client): Commands => ({
  * Handle a command (starts with !)
  * @param message - message object
  * @param client - client object
- * @returns void
+ * @returns unknown
  */
-const handleCmd = (message: Message, client: Client): void => {
+const handleCmd = async (message: Message, client: Client): Promise<void> => {
     const {prefix} = config
     const [cmd] = message.content.slice(prefix.length).split(" ")
     const commands = getCommands(message, client)
@@ -102,18 +112,22 @@ const handleCmd = (message: Message, client: Client): void => {
         ? didyoumean(cmd, Object.keys(commands))
         : cmd
 
+    // Await in loop is ok because we return after the loop anyways
+    /* eslint-disable no-await-in-loop */
     if (correctedCmd !== null) {
         for (const [key, command] of Object.entries(commands)) {
             if (correctedCmd === key) {
                 if (correctedCmd !== cmd) {
                     message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
                 }
-                command()
+
+                await command()
 
                 return
             }
         }
     }
+    /* eslint-enable no-await-in-loop */
 
     message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
 }
@@ -124,7 +138,7 @@ const handleCmd = (message: Message, client: Client): void => {
  * @param message - message object
  * @returns void
  */
-export default (message: Message, client: Client): void => {
+export default async (message: Message, client: Client): Promise<void> => {
     if (!message.author.bot) {
         if (message.content.startsWith(config.prefix)) {
             const timeGap = config.commandCooldown * 1000
@@ -133,7 +147,7 @@ export default (message: Message, client: Client): void => {
                 process.env.NODE_ENV === "test" ||
                 Date.now() - lastCommand >= timeGap
             ) { // Time gap reached
-                handleCmd(message, client)
+                await handleCmd(message, client)
                 lastCommand = Date.now()
 
                 return

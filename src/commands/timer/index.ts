@@ -6,21 +6,9 @@
  * @license BSD-3-Clause
  */
 
-import type {
-    Message,
-    User
-} from "discord.js"
-import {
-    adminRoleName,
-    maxTimers,
-    maxTimersPerUser
-} from "../../getConfig"
-import {
-    formatTime,
-    isauthorizedToModifyTimer,
-    muteUser,
-    nextKey
-} from "./utils"
+import type {Message, User} from "discord.js"
+import {formatTime, muteUser, nextKey} from "./utils"
+import {maxTimers, maxTimersPerUser} from "../../getConfig"
 import DatePlus from "@luke-zhang-04/dateplus"
 
 /* eslint-disable no-use-before-define */
@@ -40,91 +28,6 @@ export const timers: {[key: number]: Timer} = {}
  * Anything smaller might cause issues
  */
 const interval = 5
-
-/**
- * Pauses a timer with id
- * @param param0 - message object with message info
- * @param id - timer id - could be undefined, but shouldn't be
- * @returns void
- */
-export const playPause = (
-    {author, member, channel}: Message,
-    id?: string,
-    playOrPause?: "resume" | "pause",
-): void => {
-    const numericId = Number(id)
-
-    if (id === undefined) { // Id was never provided. Terminate.
-        channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
-
-        return
-    } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
-        channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
-
-        return
-    }
-
-    channel.send(`Looking for timer with id ${id}`)
-
-    const timer = timers[numericId]
-
-    if (timer === undefined) {
-        channel.send(`:confused: Could not find timer with id ${id}`)
-    } else if (isauthorizedToModifyTimer(member, author, timer)) {
-        timer.playPause(playOrPause)
-
-        channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
-    } else {
-        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only <@${timer.creator.id}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
-    }
-}
-
-
-/**
- * Kills a timer with id
- * @param param0 - message object with message info
- * @param id - timermessage.member.roles id - could be undefined, but shouldn't be
- * @returns void
- */
-export const kill = (
-    {author, member, channel}: Message,
-    id?: string,
-    shouldmute?: boolean,
-): void => {
-    const numericId = Number(id)
-
-    if (id === undefined) { // Id was never provided. Terminate.
-        channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
-
-        return
-    } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
-        channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
-
-        return
-    }
-
-    const num = Math.random()
-
-    if (num < 0.5) {
-        channel.send(`Looking for timer with id ${id}`)
-    } else if (num < 0.75) {
-        channel.send(`Sending hitman for timer with id ${id}`)
-    } else {
-        channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
-    }
-
-    const timer = timers[numericId]
-
-    if (timer === undefined) {
-        channel.send(`:confused: Could not find timer with id ${id}`)
-    } else if (isauthorizedToModifyTimer(member, author, timer)) {
-        timer.shouldmute = Boolean(shouldmute)
-        timer.kill() // Run the `kill()` function
-        Reflect.deleteProperty(timers, numericId) // Delete timer after killing
-    } else {
-        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only <@${timer.creator.id}> of the timer and those with the \`${adminRoleName}\` role may modify this timer.`)
-    }
-}
 
 export class Timer {
 
@@ -383,8 +286,4 @@ export const start = (message: Message): void => {
     timers[fakeId] = timer
 }
 
-export default {
-    kill,
-    start,
-    playPause,
-}
+export default start
