@@ -4,6 +4,7 @@
 prefix: "!" # Prefix for command. Default "!".
 
 maxTimers: 10 # Maximum number of concurrent timers. Default 10
+maxTimersPerUser: 3 # Maximum number of concurrent timers per user. Default 3
 commandCooldown: 1 # Time gap between consecutive commands. Default 1
 maxMotions: 20 # Largest number of motions that can be fetched at once. Default 20
 

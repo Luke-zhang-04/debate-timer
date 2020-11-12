@@ -10,7 +10,11 @@ import type {
     Message,
     User
 } from "discord.js"
-import {adminRoleName, maxTimers} from "../../getConfig"
+import {
+    adminRoleName,
+    maxTimers,
+    maxTimersPerUser
+} from "../../getConfig"
 import {
     formatTime,
     isauthorizedToModifyTimer,
@@ -334,6 +338,28 @@ export class Timer {
 }
 
 /**
+ * Checks if one user has exceeded the number of timers that can be run
+ * @param user - user object
+ * @returns {boolean} if user has exceeded the limit
+ */
+const userTimersExceeded = (user: User): boolean => {
+    let timerCount = 0
+
+    for (const timer of Object.values(timers)) {
+        if (timer.creator.id === user.id) {
+            timerCount ++
+        }
+
+        // Break the loop early if possible
+        if (timerCount >= maxTimersPerUser) {
+            return true
+        }
+    }
+
+    return timerCount >= maxTimersPerUser
+}
+
+/**
  * Start a new timer in background
  * @param message - message object
  * @returns Promise<void>
@@ -341,6 +367,10 @@ export class Timer {
 export const start = (message: Message): void => {
     if (Object.keys(timers).length >= maxTimers) { // Max number of timers reached
         message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. Since this bot is hosted on either some crappy server or Luke's laptop, running too many concurrent tasks isn't a great idea. The max timer count can be changed in the configuration file.`)
+
+        return
+    } else if (userTimersExceeded(message.author)) {
+        message.channel.send(`A maximum of ${maxTimersPerUser} are allowed for one user. Why tf do you even need ${maxTimersPerUser} at once? The max timers per user count can be changed in the configuration file.`)
 
         return
     }

@@ -14,6 +14,7 @@ import yaml from "yaml"
 type FullConfig = {
     prefix: string,
     maxTimers: number,
+    maxTimersPerUser: number,
     commandCooldown: number,
     maxMotions: number,
     serverIconUrl: string,
@@ -38,6 +39,7 @@ type InputConfig = {
     [key: string]: unknown,
     prefix?: string,
     maxTimers?: number,
+    maxTimersPerUser?: number,
     commandCooldown?: number,
     maxMotions?: number,
     serverIconUrl?: string,
@@ -61,6 +63,7 @@ type InputConfig = {
 const defaultConfig: FullConfig = {
     prefix: "!",
     maxTimers: 10,
+    maxTimersPerUser: 3,
     commandCooldown: 1,
     maxMotions: 20,
     serverIconUrl:
@@ -79,6 +82,8 @@ const defaultConfig: FullConfig = {
         },
     },
 }
+
+Object.freeze(defaultConfig)
 
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
@@ -157,6 +162,7 @@ for (const [key, val] of Object.entries(defaultConfig)) {
 export const {
     prefix,
     maxTimers,
+    maxTimersPerUser,
     commandCooldown,
     maxMotions,
     serverIconUrl,
