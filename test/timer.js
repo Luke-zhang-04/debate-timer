@@ -66,7 +66,7 @@ module.exports = () => {
                     {
                         author: {
                             bot: false,
-                            id: `user${i + 1}`,
+                            id: `user${i + 2}`,
                             username: `user${i + 2}`,
                         },
                     },
@@ -200,6 +200,102 @@ module.exports = () => {
             const returnMsg = message.newMessage.content
 
             testHelpers.includes(returnMsg, "Could not find timer")
+        })
+    })
+
+    context("Time change commands", () => {
+        const myTimer = new Message(
+            "!start @Tester",
+            {
+                author: {
+                    bot: false,
+                    id: "user2",
+                    username: "user2",
+                },
+            },
+        )
+
+        handleMessage.default(myTimer)
+
+        const id = myTimer.newMessage?.content.split(" ")[7]
+
+        it("Should move timer forward by 20 seconds", async () => {
+            const forwardMsg = new Message(
+                `!forward ${id} 20`,
+                {
+                    author: {
+                        bot: false,
+                        id: "user2",
+                        username: "user2",
+                    },
+                },
+            )
+
+            await handleMessage.default(forwardMsg)
+
+            testHelpers.includes(forwardMsg.newMessage.content, "forward by 20")
+
+            const time = Number(
+                myTimer.newMessage.content
+                    .replace(/\n/ug, " ")
+                    .split(" ")[8]
+            )
+
+            if (!(time >= 20 && time <= 30)) {
+                throw new Error(`Expected time to be between 20 and 30. Found ${time}`)
+            }
+        })
+
+        it("Should move timer backward by 10 seconds", async () => {
+            const backwardMsg = new Message(
+                `!backward ${id} 10`,
+                {
+                    author: {
+                        bot: false,
+                        id: "user2",
+                        username: "user2",
+                    },
+                },
+            )
+
+            await handleMessage.default(backwardMsg)
+
+            testHelpers.includes(backwardMsg.newMessage.content, "backwards by 10")
+
+            const time = Number(
+                myTimer.newMessage.content
+                    .replace(/\n/ug, " ")
+                    .split(" ")[8]
+            )
+
+            if (!(time >= 10 && time <= 20)) {
+                throw new Error(`Expected time to be between 10 and 20. Found ${time}`)
+            }
+        })
+
+        it("Should not move timer back past 0", async () => {
+            const backwardMsg = new Message(
+                `!backward ${id} 1000`,
+                {
+                    author: {
+                        bot: false,
+                        id: "user2",
+                        username: "user2",
+                    },
+                },
+            )
+
+            await handleMessage.default(backwardMsg)
+
+            testHelpers.includes(backwardMsg.newMessage.content, "backwards by 1000")
+
+            const time = Number(
+                myTimer.newMessage.content
+                    .replace(/\n/ug, " ")
+                    .split(" ")[8]
+            )
+
+            strictEqual(time, 0)
         })
     })
 }
