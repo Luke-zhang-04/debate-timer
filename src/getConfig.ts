@@ -119,11 +119,16 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
 )
 
 // Try and get config.yml from root
-let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) ?? ""
+let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""
 
 // If that doesn't work, try .yaml instead
 if (inputConfigFile === "") {
-    inputConfigFile = niceTry(() => readFileSync("config.yaml").toString()) ?? "{}"
+    inputConfigFile = niceTry(() => readFileSync("config.yaml").toString()) || ""
+}
+
+// If that doesn't work, try .json instead
+if (inputConfigFile === "") {
+    inputConfigFile = niceTry(() => readFileSync("config.json").toString()) || "{}"
 }
 
 // Parse the yaml config
