@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Compiling with Typescript"
 ./node_modules/.bin/tsc -p . || exit 1 &
@@ -17,7 +17,7 @@ echo "Minifying with Babel"
 
 wait
 
-echo "#!/bin/node
+echo -n "#!/bin/node
 /**
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
@@ -27,7 +27,7 @@ echo "#!/bin/node
  */
 $(cat bot.js)" > bot.js
 
-echo "#!/bin/node
+echo -n "#!/bin/node
 /**
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
