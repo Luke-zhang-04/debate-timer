@@ -27,6 +27,7 @@ type Commands = {[key: string]: (()=> unknown)}
 const filter = new Filter()
 
 filter.addWords("dipshit", "dumbass")
+filter.removeWords(...config.whitelistedWords)
 
 didyoumean.threshold = 0.6
 

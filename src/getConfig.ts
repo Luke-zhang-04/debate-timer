@@ -32,6 +32,7 @@ type FullConfig = {
             id?: string,
         },
     },
+    whitelistedWords: string[],
 }
 
 // Configuration with optional options that are passed in
@@ -57,6 +58,7 @@ type InputConfig = {
             id?: string,
         },
     },
+    whitelistedWords?: string[],
 }
 
 // Default configuration values
@@ -81,6 +83,7 @@ const defaultConfig: FullConfig = {
             name: "eyes",
         },
     },
+    whitelistedWords: [],
 }
 
 Object.freeze(defaultConfig)
@@ -120,6 +123,8 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
     ) && (
         typeof obj.emojis === "object" ||
         typeof obj.emojis === undefined
+    ) && (
+        obj.whitelistedWords instanceof Array
     )
 )
 
@@ -171,6 +176,7 @@ export const {
     shoulduseFuzzyStringMatch,
     adminRoleName,
     emojis,
+    whitelistedWords,
 } = fullConfig as FullConfig
 
 export default fullConfig as FullConfig

@@ -25,6 +25,12 @@ botIconUrl:
 # Profanity detection. Default true
 shoulddetectProfanity: true
 
+# Whitelisted words from profanity detection. Default empty.
+whitelistedWords:
+  - god
+  - crap
+  - hell
+
 # Automatically commands with near matches. Default true.
 shoulduseFuzzyStringMatch: true
 
