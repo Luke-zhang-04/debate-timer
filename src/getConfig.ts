@@ -88,6 +88,7 @@ const defaultConfig: FullConfig = {
 
 Object.freeze(defaultConfig)
 
+/* eslint-disable complexity */ // Not much we can do
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
  * @param obj - object to check
@@ -127,6 +128,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         obj.whitelistedWords instanceof Array
     )
 )
+/* eslint-enable complexity */
 
 // Try and get config.yml from root
 let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""

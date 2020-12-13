@@ -132,11 +132,11 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
 
     message.channel
         .send(`:speaking_head: **Got random motions**: ${motionsString}`)
-        .catch((err) => {
+        .catch((err) => (
             err instanceof Error
                 ? message.channel.send(`${err.name}: ${err.message}. Solution: try again.`)
                 : message.channel.send(JSON.stringify(err))
-        })
+        ))
 }
 
 export default {
