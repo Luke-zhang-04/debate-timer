@@ -111,3 +111,4 @@ client.on("message", (message) => {
 })
 
 process.on("uncaughtException", uncaughtException)
+process.on("unhandledRejection", uncaughtException)
