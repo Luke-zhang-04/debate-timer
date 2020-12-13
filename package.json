@@ -22,10 +22,11 @@
     "@luke-zhang-04/dateplus": "^2.0.3",
     "bad-words": "^3.0.3",
     "didyoumean": "^1.2.1",
-    "discord.js": "^12.4.0",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.0.13",
     "nice-try": "^2.1.0",
+    "ora": "^5.1.0",
     "prompts": "^2.4.0",
     "yaml": "^1.10.0"
   },

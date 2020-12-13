@@ -124,5 +124,5 @@ dist
 .env.test.local
 .env.production.local
 lib/
-cli/*.js
+cli/lib
 bot.js

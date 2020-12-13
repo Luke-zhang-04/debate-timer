@@ -1,10 +1,10 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "outDir": "cli",
+        "outDir": "cli/lib",
     },
     "include": [
-      "cli/"
+      "cli/src"
     ],
     "exclude": [],
   }
