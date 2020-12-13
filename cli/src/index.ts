@@ -65,13 +65,18 @@ const readFile = (path: string): Promise<string> => (
     console.log(`\nCLI Version ${version}\n`)
 
     while (shouldcontinueRunning) {
-        const response = await prompts({
+        const fullCommand = await prompts({
             type: "text",
             name: "text",
             message: `debate-timer-bot ${Math.round(client.ws.ping)}ms ${cwd} ->`,
         })
+            .then(({text}) => text as string)
+            .catch(() => "")
 
-        const fullCommand = (response.text as string)
+        if (fullCommand === undefined) {
+            continue
+        }
+
         const command = fullCommand.split(" ")[0]
         const currentChannel = channels[channels.length - 1]
 
