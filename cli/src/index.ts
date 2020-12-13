@@ -46,13 +46,17 @@ const readFile = (path: string): Promise<string> => (
 
 /* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
+// Main CLI IIFE
 (async (): Promise<void> => {
     await connected
     console.log("Connected to client")
 
+    // Get CLI Version
     const {version} = JSON.parse(
         await readFile("package.json"),
     ) as {version: string}
+
+    // Current channel(s) that the user is on
     const channels: Channels = []
 
     // Fix some weird things when breaking a loop
@@ -65,7 +69,7 @@ const readFile = (path: string): Promise<string> => (
     console.log(`\nCLI Version ${version}\n`)
 
     while (shouldcontinueRunning) {
-        const fullCommand = await prompts({
+        const fullCommand = await prompts({ // Get input
             type: "text",
             name: "text",
             message: `debate-timer-bot ${Math.round(client.ws.ping)}ms ${cwd} ->`,
@@ -73,11 +77,11 @@ const readFile = (path: string): Promise<string> => (
             .then(({text}) => text as string)
             .catch(() => "")
 
-        if (fullCommand === undefined) {
+        if (fullCommand === undefined) { // Deal with undefined input
             continue
         }
 
-        const command = fullCommand.split(" ")[0]
+        const command = fullCommand.split(" ")[0] // Name of the command ONLY
         const currentChannel = channels[channels.length - 1]
 
         switch (command) {
