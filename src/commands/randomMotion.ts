@@ -6,7 +6,7 @@
  * @license BSD-3-Clause
  */
 
-import {GoogleSpreadsheet} from "google-spreadsheet"
+import {GoogleSpreadsheet, GoogleSpreadsheetCell} from "google-spreadsheet"
 import type {Message} from "discord.js"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
@@ -51,12 +51,19 @@ const randint = (min: number, max: number): number => {
 export const getRandomMotion = async (): Promise<string> => {
     await docDidLoad // Make sure doc was properly loaded
 
-    const [sheet] = doc.sheetsByIndex // First sheet
-    const row = randint(2, sheet.rowCount) // Random row
+    let motion: string | number | boolean | null = null
 
-    await sheet.loadCells(`A${row}:X${row}`) // Load cell from random row
+    while (motion === null) {
+        const [sheet] = doc.sheetsByIndex // First sheet
+        const row = randint(2, sheet.rowCount) // Random row
 
-    const motion = sheet.getCellByA1(`S${row}`).value // Get motion from column S
+        /* eslint-disable no-await-in-loop */
+        // OK in this situation b/c the loop usually will run once
+        await sheet.loadCells(`A${row}:X${row}`) // Load cell from random row
+        /* eslint-enable no-await-in-loop */
+
+        motion = sheet.getCellByA1(`S${row}`).value // Get motion from column
+    }
 
     return motion.toString()
 }
@@ -69,7 +76,9 @@ export const getRandomMotion = async (): Promise<string> => {
 export const getRandomMotions = async (message: Message): Promise<void> => {
     await docDidLoad
 
-    const motions: Promise<string>[] = [] // Array of motions
+    type MotionResult = string | number | boolean | null | GoogleSpreadsheetCell
+
+    const motions: Promise<string | GoogleSpreadsheetCell>[] = [] // Array of motions
     const rowsUsed: number[] = [] // Keep track of rows used to prevent duplicates
     const [sheet] = doc.sheetsByIndex // First sheel
     let motionsString = "",
@@ -99,18 +108,35 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
 
         // Push a Promise with a random motion to motions
         motions.push(sheet.loadCells(`A${row}:X${row}`).then(() => (
-            sheet.getCellByA1(`S${row}`).value.toString()
+            sheet.getCellByA1(`S${row}`)
         )))
     }
 
     // Wait for Promises to resolve, then add them to motionsString
-    await Promise.all(motions).then((_motions) => {
+    await Promise.all(motions).then(async (_motions) => {
         for (const [index, motion] of _motions.entries()) {
-            motionsString += `\n\n${index + 1}. ${motion}`
+            let formattedMotion: MotionResult = motion
+
+            if (typeof formattedMotion !== "string") {
+                /* eslint-disable no-await-in-loop */
+                // OK in this situation b/c the loop usually will run once
+                formattedMotion =
+                    formattedMotion.value?.toString() ?? await getRandomMotion()
+                /* eslint-enable no-await-in-loop */
+            }
+
+            motionsString += `\n\n${index + 1}. ${formattedMotion}`
         }
     })
+        .catch(() => "***Error :sweat_smile:***")
 
-    message.channel.send(`:speaking_head: **Got random motions**: ${motionsString}`)
+    message.channel
+        .send(`:speaking_head: **Got random motions**: ${motionsString}`)
+        .catch((err) => {
+            err instanceof Error
+                ? message.channel.send(`${err.name}: ${err.message}. Solution: try again.`)
+                : message.channel.send(JSON.stringify(err))
+        })
 }
 
 export default {
