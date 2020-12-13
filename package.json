@@ -4,7 +4,7 @@
   "description": "BP Debate timer Discord Bot",
   "main": "./bot.js",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --exit",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 --exit",
     "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
     "build": "./scripts/compile",
     "start": "./scripts/start --dev",

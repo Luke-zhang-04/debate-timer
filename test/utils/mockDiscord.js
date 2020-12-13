@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.0
+ * @version 1.3.1
  * @license BSD-3-Clause
  */
 
@@ -78,7 +78,7 @@ class Message {
     }
 
     channel = {
-        send: (contents, options) => {
+        send: async (contents, options) => {
             this.newMessage = new Message(contents, options)
 
             return this.newMessage

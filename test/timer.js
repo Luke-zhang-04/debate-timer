@@ -45,18 +45,18 @@ module.exports = () => {
             }, 500)
         })
 
-        it("Should have ticked to 5 seconds", (done) => {
+        it("Should have ticked", (done) => {
             setTimeout(() => {
                 // eslint-disable-next-line
                 id = returnMsg.split(" ")[7]
 
                 returnMsg = message.newMessage.content
 
-                testHelpers.includes(returnMsg, "Current time: 5")
+                testHelpers.includes(returnMsg, "Current time:")
                 strictEqual(id, "0")
 
                 done()
-            }, 4600)
+            }, 1000)
         })
 
         context("Listing timers", () => {
