@@ -57,7 +57,7 @@ const uncaughtException = async (err: Error): Promise<void> => {
 
     if (err instanceof Error) {
         // eslint-disable-next-line
-        stack = err.stack
+        stack = err.stack?.length ?? 0 < 1000 ? err.stack : "Stack trace too long"
     }
 
     // Write error to log file. Log file size shall not exceed 2.5 Mb.
