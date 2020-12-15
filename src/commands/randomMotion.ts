@@ -45,7 +45,7 @@ const randint = (min: number, max: number): number => {
 
 /**
  * Gets a random motion from the hellomotions motions spreadsheet
- * @see {@link https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing}
+ * @see {@link https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678}
  * @returns promise with a motion
  */
 export const getRandomMotion = async (): Promise<string> => {
@@ -54,7 +54,7 @@ export const getRandomMotion = async (): Promise<string> => {
     let motion: string | number | boolean | null = null
 
     while (motion === null) {
-        const [sheet] = doc.sheetsByIndex // First sheet
+        const sheet = doc.sheetsById["2007846678"] // Motions sheet
         const row = randint(2, sheet.rowCount) // Random row
 
         /* eslint-disable no-await-in-loop */
@@ -80,7 +80,7 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
 
     const motions: Promise<string | GoogleSpreadsheetCell>[] = [] // Array of motions
     const rowsUsed: number[] = [] // Keep track of rows used to prevent duplicates
-    const [sheet] = doc.sheetsByIndex // First sheel
+    const sheet = doc.sheetsById["2007846678"] // Motions sheet
     let motionsString = "",
         amt = Number(message.content.split(" ")[1] ?? 5) // Number of motions
 
