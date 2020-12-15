@@ -76,11 +76,6 @@ export const client = new Discord.Client()
 client.login(process.env.AUTHTOKEN)
 
 client.once("ready", () => {
-    const channel = client.channels.cache.find((_channel) => (
-        (_channel as Discord.TextChannel).name === "spam"
-    )) as Discord.TextChannel
-
-    channel.send("Timer bot is online!")
     console.log("Timer bot is online!")
 
     client.user?.setPresence({
