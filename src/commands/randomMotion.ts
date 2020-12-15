@@ -51,8 +51,8 @@ const randint = (min: number, max: number): number => {
 export const getRandomMotion = async (): Promise<string> => {
     await docDidLoad // Make sure doc was properly loaded
 
-    let motion: string | number | boolean | null = null
-    let infoSlide: string = ""
+    let motion: string | number | boolean | null = null,
+        infoSlide = ""
 
     while (motion === null) {
         const sheet = doc.sheetsById["2007846678"] // Motions sheet
@@ -98,7 +98,7 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
         message.channel.send(`:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you ${maxMotions} motions.`)
         amt = maxMotions
     } else if (amt < 0) {
-        message.channel.send(`:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).\nBruh.`)
+        message.channel.send(`:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).`)
 
         return
     }
@@ -140,7 +140,7 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
         .send(`:speaking_head: **Got random motions**: ${motionsString}`)
         .catch((err) => (
             err instanceof Error
-                ? message.channel.send(`${err.name}: ${err.message}. Solution: try again.`)
+                ? message.channel.send(`${err.name}: ${err.message} Solution: try again.`)
                 : message.channel.send(JSON.stringify(err))
         ))
 }
