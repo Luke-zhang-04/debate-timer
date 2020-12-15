@@ -52,6 +52,7 @@ export const getRandomMotion = async (): Promise<string> => {
     await docDidLoad // Make sure doc was properly loaded
 
     let motion: string | number | boolean | null = null
+    let infoSlide: string = ""
 
     while (motion === null) {
         const sheet = doc.sheetsById["2007846678"] // Motions sheet
@@ -59,13 +60,18 @@ export const getRandomMotion = async (): Promise<string> => {
 
         /* eslint-disable no-await-in-loop */
         // OK in this situation b/c the loop usually will run once
-        await sheet.loadCells(`A${row}:X${row}`) // Load cell from random row
+        await sheet.loadCells(`S${row}:T${row}`) // Load cell from random row
         /* eslint-enable no-await-in-loop */
 
         motion = sheet.getCellByA1(`S${row}`).value // Get motion from column
+        infoSlide = sheet.getCellByA1(`T${row}`).value?.toString() ?? "" // Get the infoslide (if any)
     }
 
-    return motion.toString()
+    if (infoSlide) {
+        infoSlide += "\n\nMotion: "
+    }
+
+    return `${infoSlide}${motion.toString()}`
 }
 
 /**
@@ -107,7 +113,7 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
         rowsUsed.push(row)
 
         // Push a Promise with a random motion to motions
-        motions.push(sheet.loadCells(`A${row}:X${row}`).then(() => (
+        motions.push(sheet.loadCells(`S${row}:T${row}`).then(() => (
             sheet.getCellByA1(`S${row}`)
         )))
     }
