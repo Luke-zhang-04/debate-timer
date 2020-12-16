@@ -362,7 +362,7 @@ export const start = (message: Message): void => {
     }
 
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
-    let [timeCtrl] = message.content.split(" ")
+    const [timeCtrl] = message.content.split(" ")
         .filter((content) => !isNaN(Number(content)))
         .map((val) => Number(val))
 
