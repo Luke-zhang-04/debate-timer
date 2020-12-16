@@ -43,7 +43,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Otis")
+        testHelpers.includes(returnMsg, "B R U H")
     })
 
     it("Should have a manual entry for coinflip", () => {
@@ -63,7 +63,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Shen Bapiro")
+        testHelpers.includes(returnMsg, "Ok, this is epic")
     })
 
     it("Should have a manual entry for start", () => {
@@ -73,7 +73,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Starts a 5 minute timer")
+        testHelpers.includes(returnMsg, "Starts a timer")
     })
 
     it("Should have a manual entry for kill", () => {
@@ -195,6 +195,6 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Otis")
+        testHelpers.includes(returnMsg, "B R U H")
     })
 }

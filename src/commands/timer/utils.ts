@@ -118,7 +118,7 @@ export const muteUser = async (
         member?.voice.setMute(true, "Your speech is over") // Mute them
 
         await new Promise((resolve) => { // Wait one second
-            setTimeout(() => resolve(), 2500)
+            setTimeout(() => resolve(undefined), 2500)
         })
 
         member?.voice.setMute(false)

@@ -52,6 +52,11 @@ export class Timer {
     public readonly creator: User
 
     /**
+     * Timer length
+     */
+    public readonly timeCtrl: number
+
+    /**
      * Real start time which is readonly
      */
     private readonly _trueStartTime = Date.now()
@@ -89,6 +94,11 @@ export class Timer {
     private _intervalId: NodeJS.Timeout | null = null
 
     /**
+     * Width of the progress bar
+     */
+    private readonly _barWidth = 60
+
+    /**
      * Started time, which can be changed if paused
      */
     private _startTime = Date.now()
@@ -96,6 +106,7 @@ export class Timer {
     public constructor (
         private readonly _fakeId: number,
         public readonly message: Message,
+        timeCtrl: number,
     ) {
         this._mentionedUser = message.mentions.users.first() // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
@@ -103,15 +114,20 @@ export class Timer {
 
         const uid = this.mentionedUid
 
+        // Make sure timer isn't longer than 15 mins
+        this.timeCtrl = isNaN(timeCtrl) || timeCtrl > DatePlus.minsToSecs(15)
+            ? DatePlus.minsToSecs(5)
+            : timeCtrl
+
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
         const bar = process.env.NODE_ENV === "test"
             ? ""
-            : `\`[${"\u2014".repeat(60)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+            : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -142,24 +158,24 @@ export class Timer {
          */
         if (this._startTime > now) {
             this._startTime = now
-        } else if (this._startTime < now - DatePlus.minsToMs(5.25)) {
-            this._startTime = now - DatePlus.minsToMs(5.25)
+        } else if (this._startTime < now - (this.timeCtrl + 15) * 1000) {
+            this._startTime = now - (this.timeCtrl + 15) * 1000
         }
 
         await this._updateStatus()
 
-        const {_time: time} = this
+        const {_time: time, timeCtrl} = this
 
-        if (time < 315 && this._stages[5]) {
+        if (time < timeCtrl + 15 && this._stages[5]) {
             this._stages[5] = false
         }
-        if (time < 300 && this._stages[4]) {
+        if (time < timeCtrl && this._stages[4]) {
             this._stages[4] = false
         }
-        if (time < 270 && this._stages[3]) {
+        if (time < timeCtrl - 30 && this._stages[3]) {
             this._stages[3] = false
         }
-        if (time < 150 && this._stages[2]) {
+        if (time < timeCtrl / 2 && this._stages[2]) {
             this._stages[2] = false
         }
         if (time < 30 && this._stages[1]) {
@@ -187,8 +203,11 @@ export class Timer {
 
             this._updateStatus()
 
-            // If speech surpasses 320 seconds (5 minutes 15 seconds)
-            if (this.time >= 315 || this.time > DatePlus.minsToMs(15)) {
+            // If speech surpasses time
+            if (
+                this.time >= this.timeCtrl + 15 ||
+                this.time > DatePlus.minsToMs(15)
+            ) {
                 this.kill(false)
             }
         }, interval * 1000)
@@ -231,6 +250,7 @@ export class Timer {
 
     private _updateStatus = async (): Promise<void> => {
         const msg = await this._msg
+        const {_barWidth: barWidth, timeCtrl} = this
 
         // Subtract current time from start time and round to nearest second
         this._time = Math.round((Date.now() - this._startTime) / 1000)
@@ -239,19 +259,19 @@ export class Timer {
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
 
         // Progress bar
-        const elapsedTicks = Math.floor(this._time / 5)
-        const blocks = "\u2588".repeat(Math.min(elapsedTicks, 60))
-        const dashes = "\u2014".repeat(Math.min(Math.max(60 - elapsedTicks, 0), 60))
+        const elapsedTicks = Math.floor(this._time / (timeCtrl / barWidth)) // Number of ticks so far
+        const blocks = "\u2588".repeat(Math.min(elapsedTicks, barWidth))
+        const dashes = "\u2014".repeat(Math.min(Math.max(barWidth - elapsedTicks, 0), barWidth))
         const percentage =
-            Math.min(Math.round(this._time / 300 * 1000) / 10, 100)
+            Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100)
 
         // Progress bar with █ and —
-        const bar = process.env.NODE_ENV === "test"
+        const bar = process.env.NODE_ENV === "test" // Ignore if testing
             ? ""
             : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
-        msg.edit(
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+        msg.edit( // Edit the message with required information
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
         )
 
         this._notifySpeechStatus()
@@ -264,27 +284,40 @@ export class Timer {
     private _notifySpeechStatus = (): void => {
         const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
         const {channel} = this.message
-        const {time} = this
+        const {time, timeCtrl} = this
+        const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3) // 3 minute speechs are all protected
 
-        if (!this._stages[1] && time >= 30) {
+        if (!this._stages[1] && hasProtectedTime && time >= 30) {
             this._stages[1] = true
             channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
         }
-        if (!this._stages[2] && time >= 150) {
+        if (!this._stages[2] && time >= timeCtrl / 2) {
+            const showTime = formatTime(timeCtrl / 2)
+
             this._stages[2] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **2:30** - You're halfway through your speech!`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - You're halfway through your speech!`)
         }
-        if (!this._stages[3] && time >= 270) {
+        if (!this._stages[3] && hasProtectedTime && time >= timeCtrl - 30) {
+            const showTime = formatTime(timeCtrl - 30)
+
             this._stages[3] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **4:30** - Protected time! Your speech is almost over!`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Protected time! Your speech is almost over!`)
         }
-        if (!this._stages[4] && time >= 300) {
+        if (!this._stages[4] && time >= timeCtrl) {
+            const showTime = formatTime(timeCtrl)
+
             this._stages[4] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **5:00** - Wrap it up! You have 15 seconds of grace time.`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Wrap it up! You have 15 seconds.`)
         }
-        if (!this._stages[5] && time >= 315) {
+        if (!this._stages[5] && time >= timeCtrl + 15) {
+            const showTime = formatTime(timeCtrl + 15)
+
             this._stages[5] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **5:15** - Your speech is over!`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`)
+
+            if (Math.random() >= 0.9) {
+                channel.send("BTW, I don't use exclamation marks because I'm exited, I'm just forced to.")
+            }
         }
     }
 
@@ -318,8 +351,8 @@ const userTimersExceeded = (user: User): boolean => {
  * @returns Promise<void>
  */
 export const start = (message: Message): void => {
-    if (Object.keys(timers).length >= maxTimers) { // Max number of timers reached
-        message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. Since this bot is hosted on either some crappy server or Luke's laptop, running too many concurrent tasks isn't a great idea. The max timer count can be changed in the configuration file.`)
+    if (maxTimers > -1 && Object.keys(timers).length >= maxTimers) { // Max number of timers reached
+        message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. The max timer count can be changed in the configuration file.`)
 
         return
     } else if (userTimersExceeded(message.author)) {
@@ -329,7 +362,15 @@ export const start = (message: Message): void => {
     }
 
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
-    const timer = new Timer(fakeId, message)
+    const [timeCtrl] = message.content.split(" ")
+        .filter((content) => !isNaN(Number(content)))
+        .map((val) => Number(val))
+
+    const timer = new Timer(
+        fakeId,
+        message,
+        DatePlus.minsToSecs(timeCtrl),
+    )
 
     timer.start()
 

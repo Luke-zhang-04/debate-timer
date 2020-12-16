@@ -15,15 +15,19 @@ import fs from "fs"
 // Object with all the mafullConfignual entries
 const manual: {[key: string]: string} = {
     bruh: `> **\`${prefix}bruh\`**
-> Otis.`,
+> B R U H.`,
     coinflip: `> **\`${prefix}coinflip\`**
 > Flip a coin`,
     epic: `> **\`${prefix}epic\`**
-> Shen Bapiro.`,
-    start: `> **\`${prefix}start [@mention?]\`**
-> Starts a 5 minute timer with 30 seconds protected time at the start and end.
+> Ok, this is epic.`,
+    start: `> **\`${prefix}start [@mention?] [timeControl?: 3 | 5 | 7 = 5]\`**
+> Starts a timer with a default length of 5 minutes.
+> If the speech is 5 or 7 minutes, there is 30 seconds protected time at the start and end of the speech.
+> All lengths include 15 seconds grace time.
 > Parameters:
 >     \`[@mention?]\` - optional - @mention for current speaker
+>     \`[timeControl?: 3 | 5 | 7 = 5]\` - optional - speech length in minutes, must be 3, 5, or 7. Default value of 5.
+> Note that parameter order does not matter :smiley:
 > Will ping \`[@mention]\` for important times if included
 > Will also mute \`[@mention]\` after 5:15
 > E.g \`${prefix}start @debate-timer\``,
@@ -150,7 +154,7 @@ This bot is in version ${version}
 > **\`${prefix}systemInfo\`**
 
 > :timer:
-> **\`${prefix}start [@mention?]\`**
+> **\`${prefix}start [@mention?] [timeControl?: 3 | 5 | 7 = 5]\`**
 > **\`${prefix}kill [id] [shouldMute?]\`**
 > **\`${prefix}resume [id]\`**
 > **\`${prefix}pause [id]\`**
