@@ -115,7 +115,7 @@ export class Timer {
         const uid = this.mentionedUid
 
         // Make sure timer isn't longer than 15 mins
-        this.timeCtrl = isNaN(timeCtrl) || timeCtrl > DatePlus.minsToSecs(15)
+        this.timeCtrl = isNaN(timeCtrl)
             ? DatePlus.minsToSecs(5)
             : timeCtrl
 
@@ -362,9 +362,15 @@ export const start = (message: Message): void => {
     }
 
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
-    const [timeCtrl] = message.content.split(" ")
+    let [timeCtrl] = message.content.split(" ")
         .filter((content) => !isNaN(Number(content)))
         .map((val) => Number(val))
+
+    if (!isNaN(timeCtrl) && timeCtrl > 15) {
+        message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
+
+        return
+    }
 
     const timer = new Timer(
         fakeId,
