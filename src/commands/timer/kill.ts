@@ -44,8 +44,11 @@ export const kill = async (
         channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
     }
 
-    const {timers} = await import(".")
-    const timer = timers[numericId]
+    // Array of timers from index
+    const {timers} = await import("."),
+
+        // The current timer
+        timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)

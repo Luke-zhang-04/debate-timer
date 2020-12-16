@@ -14,58 +14,58 @@ import handleMessage from "./handleMessage"
 import {prefix} from "./getConfig"
 
 const readFile = (path: string): Promise<string> => (
-    new Promise((resolve, reject) => {
-        fs.readFile(path, "utf-8", (err, data) => {
-            if (err) {
-                return reject(err)
-            }
+        new Promise((resolve, reject) => {
+            fs.readFile(path, "utf-8", (err, data) => {
+                if (err) {
+                    return reject(err)
+                }
 
-            return resolve(data)
+                return resolve(data)
+            })
         })
-    })
-)
+    ),
 
-const writeFile = (path: string, content: string): Promise<void> => (
-    new Promise((resolve, reject) => {
-        fs.writeFile(path, content, "utf-8", (err) => {
-            if (err) {
-                return reject(err)
-            }
+    writeFile = (path: string, content: string): Promise<void> => (
+        new Promise((resolve, reject) => {
+            fs.writeFile(path, content, "utf-8", (err) => {
+                if (err) {
+                    return reject(err)
+                }
 
-            return resolve()
+                return resolve()
+            })
         })
-    })
-)
+    ),
 
-const uncaughtException = async (err: Error): Promise<void> => {
-    const date = new Date()
-    const formattedDate = DatePlus.addZeros(
-        `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
-    )
-    const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
-    const formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`
-    const prevContents = await (async (): Promise<string> => {
-        try {
-            return await readFile("bot.error.log")
-        } catch {
-            return ""
+    uncaughtException = async (err: Error): Promise<void> => {
+        const date = new Date(),
+            formattedDate = DatePlus.addZeros(
+                `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
+            ),
+            seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds(),
+            formattedTime = `${date.getHours()}:${date.getMinutes()}:${seconds}`,
+            prevContents = await (async (): Promise<string> => {
+                try {
+                    return await readFile("bot.error.log")
+                } catch {
+                    return ""
+                }
+            })()
+        let stack: undefined | string = ""
+
+        console.error(err)
+
+        if (err instanceof Error) {
+            // eslint-disable-next-line
+            stack = err.stack?.length ?? 0 < 1000 ? err.stack : "Stack trace too long"
         }
-    })()
-    let stack: undefined | string = ""
 
-    console.error(err)
-
-    if (err instanceof Error) {
-        // eslint-disable-next-line
-        stack = err.stack?.length ?? 0 < 1000 ? err.stack : "Stack trace too long"
+        // Write error to log file. Log file size shall not exceed 2.5 Mb.
+        await writeFile(
+            "bot.error.log",
+            `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(0, 2_500_000),
+        )
     }
-
-    // Write error to log file. Log file size shall not exceed 2.5 Mb.
-    await writeFile(
-        "bot.error.log",
-        `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(0, 2_500_000),
-    )
-}
 
 dotenv.config()
 

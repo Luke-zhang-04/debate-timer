@@ -30,19 +30,19 @@ export type Channels = [
 
 const connected = new Promise<void>((resolve) => {
     client.once("ready", resolve)
-})
+}),
 
-const readFile = (path: string): Promise<string> => (
-    new Promise((resolve, reject) => {
-        fs.readFile(path, "utf-8", (err, data) => {
-            if (err) {
-                return reject(err)
-            }
+    readFile = (path: string): Promise<string> => (
+        new Promise((resolve, reject) => {
+            fs.readFile(path, "utf-8", (err, data) => {
+                if (err) {
+                    return reject(err)
+                }
 
-            return resolve(data)
+                return resolve(data)
+            })
         })
-    })
-);
+    );
 
 /* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
@@ -54,10 +54,10 @@ const readFile = (path: string): Promise<string> => (
     // Get CLI Version
     const {version} = JSON.parse(
         await readFile("package.json"),
-    ) as {version: string}
+    ) as {version: string},
 
-    // Current channel(s) that the user is on
-    const channels: Channels = []
+        // Current channel(s) that the user is on
+        channels: Channels = []
 
     // Fix some weird things when breaking a loop
     let shouldcontinueRunning = true,
@@ -81,8 +81,8 @@ const readFile = (path: string): Promise<string> => (
             continue
         }
 
-        const command = fullCommand.split(" ")[0] // Name of the command ONLY
-        const currentChannel = channels[channels.length - 1]
+        const command = fullCommand.split(" ")[0], // Name of the command ONLY
+            currentChannel = channels[channels.length - 1]
 
         switch (command) {
             case "exit":

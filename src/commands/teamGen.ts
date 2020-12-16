@@ -16,35 +16,35 @@ import type {
 type Channel = TextChannel | DMChannel | NewsChannel
 
 const baseTeams = [
-    "Team-A",
-    "Team-B",
-    "Team-C",
-    "Team-D",
-]
-const basePositions = [
-    "OG",
-    "OO",
-    "CG",
-    "CO",
-]
+        "Team-A",
+        "Team-B",
+        "Team-C",
+        "Team-D",
+    ],
+    basePositions = [
+        "OG",
+        "OO",
+        "CG",
+        "CO",
+    ],
 
-/**
- * Shuffles an array
- * @param array - array to shuffle
- * @param cycles - number of shuffle cycles to go through
- * @returns void; shuffles in-place
- */
-const shuffle = <T>(array: T[], cycles = 1): void => {
-    for (let _ = 0; _ < cycles; _++) {
-        for (let index = array.length - 1; index > 0; index--) {
-            const randonIndex = Math.floor(Math.random() * (index + 1))
-            const temp = array[index]
+    /**
+     * Shuffles an array
+     * @param array - array to shuffle
+     * @param cycles - number of shuffle cycles to go through
+     * @returns void; shuffles in-place
+     */
+    shuffle = <T>(array: T[], cycles = 1): void => {
+        for (let _ = 0; _ < cycles; _++) {
+            for (let index = array.length - 1; index > 0; index--) {
+                const randonIndex = Math.floor(Math.random() * (index + 1)),
+                    temp = array[index]
 
-            array[index] = array[randonIndex]
-            array[randonIndex] = temp
+                array[index] = array[randonIndex]
+                array[randonIndex] = temp
+            }
         }
     }
-}
 
 /**
  * Creates random teams

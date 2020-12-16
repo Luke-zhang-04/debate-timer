@@ -121,10 +121,10 @@ type Package = {
     engines?: {[key: string]: string},
 }
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package,
 
-// Default help message
-const defaultMsg = `**Debate Timer Bot**
+    // Default help message
+    defaultMsg = `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
@@ -181,6 +181,7 @@ This bot is in version ${version}
 
 /**
  * Help command invoked with !help
+ * @param message - Discord message
  * @returns string
  */
 export default (message: Message): void => {

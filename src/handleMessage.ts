@@ -33,113 +33,111 @@ didyoumean.threshold = 0.6
 
 let lastCommand = 0
 
-const timer = {
-    changeTime,
-    kill,
-    playPause,
-    start,
-}
+const timer = Object.freeze({
+        changeTime,
+        kill,
+        playPause,
+        start,
+    }),
 
-Object.freeze(timer)
-
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/**
- * All commands
- * @param message - message object
- * @param client - client object
- * @returns void
- */
-const getCommands = (message: Message, client: Client): Commands => ({
-    help: () => help(message),
-    man: () => help(message),
-    bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
-    coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
-    epic: () => message.channel.send("", {files: [config.botIconUrl]}),
-    start: () => timer.start(message),
-    kill: () => {
-        const shouldMute = message.content.split(" ")[2] === undefined ||
+    /* eslint-disable @typescript-eslint/explicit-function-return-type */
+    /**
+     * All commands
+     * @param message - message object
+     * @param client - client object
+     * @returns void
+     */
+    getCommands = (message: Message, client: Client): Commands => ({
+        help: () => help(message),
+        man: () => help(message),
+        bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
+        coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+        epic: () => message.channel.send("", {files: [config.botIconUrl]}),
+        start: () => timer.start(message),
+        kill: () => {
+            const shouldMute = message.content.split(" ")[2] === undefined ||
             message.content.split(" ")[2] === "mute"
 
-        return timer.kill(
-            message, message.content.split(" ")[1], shouldMute,
-        )
-    },
-    list: () => list(message),
-    take: () => changeTime(message, 1),
-    give: () => changeTime(message, -1),
-    forward: () => changeTime(message, 1),
-    backward: () => changeTime(message, -1),
-    makeTeams: () => teamGen.randomTeams(message.channel),
-    makePartners: () => teamGen.randomPartners(message),
-    makeRound: async () => {
+            return timer.kill(
+                message, message.content.split(" ")[1], shouldMute,
+            )
+        },
+        list: () => list(message),
+        take: () => changeTime(message, 1),
+        give: () => changeTime(message, -1),
+        forward: () => changeTime(message, 1),
+        backward: () => changeTime(message, -1),
+        makeTeams: () => teamGen.randomTeams(message.channel),
+        makePartners: () => teamGen.randomPartners(message),
+        makeRound: async () => {
         /* eslint-disable no-unused-expressions */
-        teamGen.randomPartners(message) &&
-        teamGen.randomTeams(message.channel) &&
-        message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
+            teamGen.randomPartners(message) &&
+            teamGen.randomTeams(message.channel) &&
+            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
         /* eslint-enable no-unused-expressions */
-    },
-    getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
-    getMotions: () => motion.getRandomMotions(message),
-    systemInfo: async () => message.channel.send(await systemInfo()),
-    poll: () => poll.makePoll(message, client),
-    getPoll: () => poll.getPoll(message.channel),
-    pause: () => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "pause",
-        )
-    },
-    resume: () => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "resume",
-        )
-    },
-})
-/* eslint-enable @typescript-eslint/explicit-function-return-type */
+        },
+        getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
+        getMotions: () => motion.getRandomMotions(message),
+        systemInfo: async () => message.channel.send(await systemInfo()),
+        poll: () => poll.makePoll(message, client),
+        getPoll: () => poll.getPoll(message.channel),
+        pause: () => {
+            timer.playPause(
+                message, message.content.split(" ")[1], "pause",
+            )
+        },
+        resume: () => {
+            timer.playPause(
+                message, message.content.split(" ")[1], "resume",
+            )
+        },
+    }),
+    /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 
-/**
- * Handle a command (starts with !)
- * @param message - message object
- * @param client - client object
- * @returns unknown
- */
-const handleCmd = async (message: Message, client: Client): Promise<void> => {
-    const {prefix} = config
-    const [cmd] = message.content.slice(prefix.length).split(" ")
-    const commands = getCommands(message, client)
+    /**
+     * Handle a command (starts with !)
+     * @param message - message object
+     * @param client - client object
+     * @returns unknown
+     */
+    handleCmd = async (message: Message, client: Client): Promise<void> => {
+        const {prefix} = config,
+            [cmd] = message.content.slice(prefix.length).split(" "),
+            commands = getCommands(message, client)
 
-    switch (cmd) {
-        case null || undefined || "":
-            message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
-
-            return
-
-        default: break
-    }
-
-    const correctedCmd = config.shouldUseFuzzyStringMatch
-        ? didyoumean(cmd, Object.keys(commands))
-        : cmd
-
-    // Await in loop is ok because we return after the loop anyways
-    /* eslint-disable no-await-in-loop */
-    if (correctedCmd !== null) {
-        for (const [key, command] of Object.entries(commands)) {
-            if (correctedCmd === key) {
-                if (correctedCmd !== cmd) {
-                    message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
-                }
-
-                await command()
+        switch (cmd) {
+            case null || undefined || "":
+                message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
                 return
+
+            default: break
+        }
+
+        const correctedCmd = config.shouldUseFuzzyStringMatch
+            ? didyoumean(cmd, Object.keys(commands))
+            : cmd
+
+        // Await in loop is ok because we return after the loop anyways
+        /* eslint-disable no-await-in-loop */
+        if (correctedCmd !== null) {
+            for (const [key, command] of Object.entries(commands)) {
+                if (correctedCmd === key) {
+                    if (correctedCmd !== cmd) {
+                        message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
+                    }
+
+                    await command()
+
+                    return
+                }
             }
         }
-    }
-    /* eslint-enable no-await-in-loop */
+        /* eslint-enable no-await-in-loop */
 
-    message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
-}
+        message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
+    }
 
 /* eslint-disable */
 /**
@@ -167,8 +165,8 @@ export default async (message: Message, client: Client): Promise<void> => {
             config.shouldDetectProfanity &&
             filter.isProfane(message.content)
         ) { // Swear word detected
-            const number = Math.random()
-            const author = message.author.id
+            const number = Math.random(),
+                author = message.author.id
 
             if (number <= 0.6) {
                 message.channel.send(`Hey <@${author}>! That's not very nice!`)

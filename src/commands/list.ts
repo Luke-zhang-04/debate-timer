@@ -16,22 +16,35 @@ import {formatTime} from "./timer/utils"
  * Lists timers and prints them to message.channel
  * @param param0 - message object to send to
  * @param user - user for looking for timers
+ * @returns void - sends message in function
  */
 const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
-    const timers = Object.values((await import("./timer")).timers) // Get all the timers
-        .filter((timer, index) => (index <= 10 && (
-            user === undefined ||
-            user.id === timer.creator.id ||
-            user.id === timer.mentionedUid
-        )))
-    const timersString = timers.map((timer, index) => ( // Format each timer to a string
-        `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.ispaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
-    ))
-    const title = `${user?.id && `<@${user.id}>` || "global"}`
+    // Get all the timers
+    const timers = Object.values((await import("./timer")).timers)
+            .filter((timer, index) => (
+                index <= 10 && (
+                    user === undefined ||
+                    user.id === timer.creator.id ||
+                    user.id === timer.mentionedUid
+                )
+            )),
+
+        // Format each timer to a string
+        timersString = timers.map((timer, index) => (
+            `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.ispaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
+        )),
+
+        // Message title/header
+        title = `${user?.id && `<@${user.id}>` || "global"}`
 
     channel.send(`**Timers for: ${title}**:\n${timersString.join("\n") || "None"}`)
 }
 
+/**
+ * Lists timers
+ * @param message - Discord message
+ * @returns void - sends message in function
+ */
 export default (message: Message): Promise<void> => {
     const param = message.content.split(" ")[1]
 

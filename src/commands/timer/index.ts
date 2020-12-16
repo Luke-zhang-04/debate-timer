@@ -121,10 +121,10 @@ export class Timer {
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
-        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
-        const bar = process.env.NODE_ENV === "test"
-            ? ""
-            : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : "",
+            bar = process.env.NODE_ENV === "test"
+                ? ""
+                : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
@@ -248,27 +248,39 @@ export class Timer {
             : playOrPause === "pause"
     }
 
+    /**
+     * Update the message with the current time
+     */
     private _updateStatus = async (): Promise<void> => {
-        const msg = await this._msg
-        const {_barWidth: barWidth, timeCtrl} = this
+        const msg = await this._msg,
+            {_barWidth: barWidth, timeCtrl} = this
 
         // Subtract current time from start time and round to nearest second
         this._time = Math.round((Date.now() - this._startTime) / 1000)
 
         // Mentioned user id
-        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : "",
 
-        // Progress bar
-        const elapsedTicks = Math.floor(this._time / (timeCtrl / barWidth)) // Number of ticks so far
-        const blocks = "\u2588".repeat(Math.min(elapsedTicks, barWidth))
-        const dashes = "\u2014".repeat(Math.min(Math.max(barWidth - elapsedTicks, 0), barWidth))
-        const percentage =
-            Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100)
+            /**
+             * Progress bar
+             */
+            // Number of ticks so far
+            elapsedTicks = Math.floor(this._time / (timeCtrl / barWidth)),
 
-        // Progress bar with █ and —
-        const bar = process.env.NODE_ENV === "test" // Ignore if testing
-            ? ""
-            : `\`[${blocks}${dashes}]\` ${percentage}%\n`
+            // Blocks and dashes for bar
+            blocks = "\u2588".repeat(Math.min(elapsedTicks, barWidth)),
+            dashes = "\u2014".repeat(Math.min(Math.max(barWidth - elapsedTicks, 0), barWidth)),
+
+            /**
+             * Percentage of the speech that is complete
+             */
+            percentage =
+                Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100),
+
+            // Progress bar with █ and —
+            bar = process.env.NODE_ENV === "test" // Ignore if testing
+                ? ""
+                : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
         msg.edit( // Edit the message with required information
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
@@ -282,11 +294,15 @@ export class Timer {
      * has passed, such as protected times
      */
     private _notifySpeechStatus = (): void => {
-        const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
-        const {channel} = this.message
-        const {time, timeCtrl} = this
-        const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3) // 3 minute speechs are all protected
+        // Tagged user to notify
+        const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : "",
+            {channel} = this.message,
+            {time, timeCtrl} = this,
 
+            // 3 minute speechs are all protected
+            hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
+
+        // The messages can be used as comments they're kinda self explanatory
         if (!this._stages[1] && hasProtectedTime && time >= 30) {
             this._stages[1] = true
             channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
@@ -361,10 +377,13 @@ export const start = (message: Message): void => {
         return
     }
 
-    const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
-    const [timeCtrl] = message.content.split(" ")
-        .filter((content) => !isNaN(Number(content)))
-        .map((val) => Number(val))
+    // Fake id given to the user
+    const fakeId = nextKey(Object.keys(timers).map((id) => Number(id))),
+
+        // User defined time control (e.g 5 mins)
+        [timeCtrl] = message.content.split(" ")
+            .filter((content) => !isNaN(Number(content)))
+            .map((val) => Number(val))
 
     if (!isNaN(timeCtrl) && timeCtrl > 15) {
         message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
