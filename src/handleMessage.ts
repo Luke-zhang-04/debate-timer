@@ -102,7 +102,13 @@ const timer = Object.freeze({
      * @returns unknown
      */
     handleCmd = async (message: Message, client: Client): Promise<void> => {
+        // Trip duplicate spaces to just one space
+        message.content = message.content.replace(/  +/gui, " ")
+
+        // Bot command prefix
         const {prefix} = config,
+
+            // Command name
             [cmd] = message.content.slice(prefix.length).split(" "),
             commands = getCommands(message, client)
 
