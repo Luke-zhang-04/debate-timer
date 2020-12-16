@@ -19,8 +19,8 @@ type FullConfig = {
     maxMotions: number,
     serverIconUrl: string,
     botIconUrl: string,
-    shoulddetectProfanity: boolean,
-    shoulduseFuzzyStringMatch: boolean,
+    shouldDetectProfanity: boolean,
+    shouldUseFuzzyStringMatch: boolean,
     adminRoleName: string,
     emojis: {
         debating: {
@@ -45,8 +45,8 @@ type InputConfig = {
     maxMotions?: number,
     serverIconUrl?: string,
     botIconUrl?: string,
-    shoulddetectProfanity?: boolean,
-    shoulduseFuzzyStringMatch?: boolean,
+    shouldDetectProfanity?: boolean,
+    shouldUseFuzzyStringMatch?: boolean,
     adminRoleName?: string,
     emojis?: {
         debating: {
@@ -72,8 +72,8 @@ const defaultConfig: FullConfig = {
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
-    shoulddetectProfanity: true,
-    shoulduseFuzzyStringMatch: true,
+    shouldDetectProfanity: true,
+    shouldUseFuzzyStringMatch: true,
     adminRoleName: "admin",
     emojis: {
         debating: {
@@ -113,11 +113,11 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         typeof obj.botIconUrl === "string" ||
         obj.botIconUrl === undefined
     ) && (
-        typeof obj.shoulddetectProfanity === "boolean" ||
-        obj.shoulddetectProfanity === undefined
+        typeof obj.shouldDetectProfanity === "boolean" ||
+        obj.shouldDetectProfanity === undefined
     ) && (
-        typeof obj.shoulduseFuzzyStringMatch === "boolean" ||
-        obj.shoulduseFuzzyStringMatch === undefined
+        typeof obj.shouldUseFuzzyStringMatch === "boolean" ||
+        obj.shouldUseFuzzyStringMatch === undefined
     ) && (
         typeof obj.adminRoleName === "string" ||
         obj.adminRoleName === undefined
@@ -174,8 +174,8 @@ export const {
     maxMotions,
     serverIconUrl,
     botIconUrl,
-    shoulddetectProfanity,
-    shoulduseFuzzyStringMatch,
+    shouldDetectProfanity,
+    shouldUseFuzzyStringMatch,
     adminRoleName,
     emojis,
     whitelistedWords,

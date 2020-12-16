@@ -57,11 +57,11 @@ const getCommands = (message: Message, client: Client): Commands => ({
     epic: () => message.channel.send("", {files: [config.botIconUrl]}),
     start: () => timer.start(message),
     kill: () => {
-        const shouldmute = message.content.split(" ")[2] === undefined ||
+        const shouldMute = message.content.split(" ")[2] === undefined ||
             message.content.split(" ")[2] === "mute"
 
         return timer.kill(
-            message, message.content.split(" ")[1], shouldmute,
+            message, message.content.split(" ")[1], shouldMute,
         )
     },
     list: () => list(message),
