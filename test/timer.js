@@ -48,7 +48,7 @@ module.exports = () => {
         it("Should have ticked", (done) => {
             setTimeout(() => {
                 // eslint-disable-next-line
-                id = returnMsg.split(" ")[7]
+                id = returnMsg.split(" ")[9]
 
                 returnMsg = message.newMessage.content
 
@@ -217,7 +217,7 @@ module.exports = () => {
 
         handleMessage.default(myTimer)
 
-        const id = myTimer.newMessage.content.split(" ")[7]
+        const id = myTimer.newMessage.content.split(" ")[9]
 
         it("Should move timer forward by 20 seconds", async () => {
             const forwardMsg = new Message(
