@@ -5,7 +5,7 @@
  * @version 1.4.0
  * @license BSD-3-Clause
  */
-import {prefix, shoulduseFuzzyStringMatch} from "../getConfig"
+import {prefix, shouldUseFuzzyStringMatch} from "../getConfig"
 import type {Message} from "discord.js"
 import didyoumean from "didyoumean"
 import fs from "fs"
@@ -196,7 +196,7 @@ export default (message: Message): void => {
         arg = arg.slice(1)
     }
 
-    const correctedArg = shoulduseFuzzyStringMatch
+    const correctedArg = shouldUseFuzzyStringMatch
         ? didyoumean(arg, Object.keys(manual))
         : arg
 
