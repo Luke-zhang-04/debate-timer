@@ -78,7 +78,7 @@ class Message {
     }
 
     channel = {
-        send: (contents, options) => {
+        send: async (contents, options) => {
             this.newMessage = new Message(contents, options)
 
             return this.newMessage

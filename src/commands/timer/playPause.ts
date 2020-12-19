@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -35,8 +35,11 @@ export const playPause = async (
 
     channel.send(`Looking for timer with id ${id}`)
 
-    const {timers} = await import(".")
-    const timer = timers[numericId]
+    // Array of timers from index
+    const {timers} = await import("."),
+
+        // The current timer
+        timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)

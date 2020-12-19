@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -24,8 +24,8 @@ export const changeTime = async (
     id?: string,
     amt?: string,
 ): Promise<void> => {
-    const numericId = Number(id)
-    const numericAmt = Number(amt) * multiply
+    const numericId = Number(id),
+        numericAmt = Number(amt) * multiply
 
     if (id === undefined) { // Id was never provided. Terminate.
         channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
@@ -53,8 +53,11 @@ export const changeTime = async (
         return
     }
 
-    const {timers} = await import(".")
-    const timer = timers[numericId]
+    // Array of timers from index
+    const {timers} = await import("."),
+
+        // The current timer
+        timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)

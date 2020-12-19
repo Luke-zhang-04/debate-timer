@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -45,18 +45,18 @@ module.exports = () => {
             }, 500)
         })
 
-        it("Should have ticked to 5 seconds", (done) => {
+        it("Should have ticked", (done) => {
             setTimeout(() => {
                 // eslint-disable-next-line
-                id = returnMsg.split(" ")[7]
+                id = returnMsg.split(" ")[9]
 
                 returnMsg = message.newMessage.content
 
-                testHelpers.includes(returnMsg, "Current time: 5")
+                testHelpers.includes(returnMsg, "Current time:")
                 strictEqual(id, "0")
 
                 done()
-            }, 4600)
+            }, 1000)
         })
 
         context("Listing timers", () => {
@@ -217,7 +217,7 @@ module.exports = () => {
 
         handleMessage.default(myTimer)
 
-        const id = myTimer.newMessage.content.split(" ")[7]
+        const id = myTimer.newMessage.content.split(" ")[9]
 
         it("Should move timer forward by 20 seconds", async () => {
             const forwardMsg = new Message(

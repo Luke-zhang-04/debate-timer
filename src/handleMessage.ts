@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -27,118 +27,118 @@ type Commands = {[key: string]: (()=> unknown)}
 const filter = new Filter()
 
 filter.addWords("dipshit", "dumbass")
+filter.removeWords(...config.whitelistedWords)
 
 didyoumean.threshold = 0.6
 
 let lastCommand = 0
 
-const timer = {
-    changeTime,
-    kill,
-    playPause,
-    start,
-}
+const timer = Object.freeze({
+        changeTime,
+        kill,
+        playPause,
+        start,
+    }),
 
-Object.freeze(timer)
-
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-/**
- * All commands
- * @param message - message object
- * @param client - client object
- * @returns void
- */
-const getCommands = (message: Message, client: Client): Commands => ({
-    help: () => help(message),
-    man: () => help(message),
-    bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
-    coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
-    epic: () => message.channel.send("", {files: [config.botIconUrl]}),
-    start: () => timer.start(message),
-    kill: () => {
-        const shouldmute = message.content.split(" ")[2] === undefined ||
+    /* eslint-disable @typescript-eslint/explicit-function-return-type */
+    /**
+     * All commands
+     * @param message - message object
+     * @param client - client object
+     * @returns void
+     */
+    getCommands = (message: Message, client: Client): Commands => ({
+        help: () => help(message),
+        man: () => help(message),
+        bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
+        coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+        epic: () => message.channel.send("", {files: [config.botIconUrl]}),
+        start: () => timer.start(message),
+        kill: () => {
+            const shouldMute = message.content.split(" ")[2] === undefined ||
             message.content.split(" ")[2] === "mute"
 
-        return timer.kill(
-            message, message.content.split(" ")[1], shouldmute,
-        )
-    },
-    list: () => list(message),
-    take: () => changeTime(message, 1),
-    give: () => changeTime(message, -1),
-    forward: () => changeTime(message, 1),
-    backward: () => changeTime(message, -1),
-    makeTeams: () => teamGen.randomTeams(message.channel),
-    makePartners: () => teamGen.randomPartners(message),
-    makeRound: async () => {
-        /* eslint-disable no-unused-expressions */
-        teamGen.randomPartners(message) &&
-        teamGen.randomTeams(message.channel) &&
-        message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
-        /* eslint-enable no-unused-expressions */
-    },
-    getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
-    getMotions: () => motion.getRandomMotions(message),
-    systemInfo: async () => message.channel.send(await systemInfo()),
-    poll: () => poll.makePoll(message, client),
-    getPoll: () => poll.getPoll(message.channel),
-    pause: () => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "pause",
-        )
-    },
-    resume: () => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "resume",
-        )
-    },
-})
-/* eslint-enable @typescript-eslint/explicit-function-return-type */
+            return timer.kill(
+                message, message.content.split(" ")[1], shouldMute,
+            )
+        },
+        list: () => list(message),
+        take: () => changeTime(message, 1),
+        give: () => changeTime(message, -1),
+        forward: () => changeTime(message, 1),
+        backward: () => changeTime(message, -1),
+        makeDraw: () => teamGen.makeDraw(message),
+        makeTeams: () => teamGen.makeTeams(message),
+        makePartners: () => teamGen.makePartners(message),
+        makeRound: () => teamGen.makeRound(message),
+        getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
+        getMotions: () => motion.getRandomMotions(message),
+        systemInfo: async () => message.channel.send(await systemInfo()),
+        poll: () => poll.makePoll(message, client),
+        getPoll: () => poll.getPoll(message.channel),
+        pause: () => {
+            timer.playPause(
+                message, message.content.split(" ")[1], "pause",
+            )
+        },
+        resume: () => {
+            timer.playPause(
+                message, message.content.split(" ")[1], "resume",
+            )
+        },
+    }),
+    /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 
-/**
- * Handle a command (starts with !)
- * @param message - message object
- * @param client - client object
- * @returns unknown
- */
-const handleCmd = async (message: Message, client: Client): Promise<void> => {
-    const {prefix} = config
-    const [cmd] = message.content.slice(prefix.length).split(" ")
-    const commands = getCommands(message, client)
+    /**
+     * Handle a command (starts with !)
+     * @param message - message object
+     * @param client - client object
+     * @returns unknown
+     */
+    handleCmd = async (message: Message, client: Client): Promise<void> => {
+        // Trip duplicate spaces to just one space
+        message.content = message.content.replace(/  +/gui, " ")
 
-    switch (cmd) {
-        case null || undefined || "":
-            message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
+        // Bot command prefix
+        const {prefix} = config,
 
-            return
+            // Command name
+            [cmd] = message.content.slice(prefix.length).split(" "),
+            commands = getCommands(message, client)
 
-        default: break
-    }
-
-    const correctedCmd = config.shoulduseFuzzyStringMatch
-        ? didyoumean(cmd, Object.keys(commands))
-        : cmd
-
-    // Await in loop is ok because we return after the loop anyways
-    /* eslint-disable no-await-in-loop */
-    if (correctedCmd !== null) {
-        for (const [key, command] of Object.entries(commands)) {
-            if (correctedCmd === key) {
-                if (correctedCmd !== cmd) {
-                    message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
-                }
-
-                await command()
+        switch (cmd) {
+            case null || undefined || "":
+                message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
                 return
+
+            default: break
+        }
+
+        const correctedCmd = config.shouldUseFuzzyStringMatch
+            ? didyoumean(cmd, Object.keys(commands))
+            : cmd
+
+        // Await in loop is ok because we return after the loop anyways
+        /* eslint-disable no-await-in-loop */
+        if (correctedCmd !== null) {
+            for (const [key, command] of Object.entries(commands)) {
+                if (correctedCmd === key) {
+                    if (correctedCmd !== cmd) {
+                        message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
+                    }
+
+                    await command()
+
+                    return
+                }
             }
         }
-    }
-    /* eslint-enable no-await-in-loop */
+        /* eslint-enable no-await-in-loop */
 
-    message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
-}
+        message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
+    }
 
 /* eslint-disable */
 /**
@@ -163,11 +163,11 @@ export default async (message: Message, client: Client): Promise<void> => {
 
             message.channel.send(`The configured command cooldown is ${config.commandCooldown}s. Since this bot is hosted on either some crappy server or Luke's laptop, there needs to be a cooldown. The cooldown time can be changed in the configuration file.`)
         } else if (
-            config.shoulddetectProfanity &&
+            config.shouldDetectProfanity &&
             filter.isProfane(message.content)
         ) { // Swear word detected
-            const number = Math.random()
-            const author = message.author.id
+            const number = Math.random(),
+                author = message.author.id
 
             if (number <= 0.6) {
                 message.channel.send(`Hey <@${author}>! That's not very nice!`)

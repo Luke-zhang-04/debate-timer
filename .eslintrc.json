@@ -123,7 +123,7 @@
         "max-classes-per-file": ["error", 3],
         "max-depth": "error",
         "max-len": ["error", {"code": 81, "ignoreComments": true, "ignoreTemplateLiterals": true, "ignoreUrls": true, "ignoreStrings": true}],
-        "max-lines": ["error", {"max": 400}],
+        "max-lines": ["error", {"max": 500}],
         "max-lines-per-function": ["error", {"max": 75, "skipComments": true, "skipBlankLines": true}],
         "max-nested-callbacks": "error",
         "max-params": ["error", {"max": 6}],
@@ -239,7 +239,7 @@
         "object-curly-spacing": "error",
         "object-property-newline": "error",
         "object-shorthand": "error",
-        "one-var": ["warn", {"var": "always", "let": "always", "const": "never"}],
+        "one-var": ["warn", {"var": "always", "let": "always", "const": "consecutive"}],
         "one-var-declaration-per-line": "error",
         "operator-assignment": "error",
         "operator-linebreak": "error",
@@ -365,7 +365,7 @@
                 }, {
                     "selector": "variable",
                     "types": ["boolean"],
-                    "format": ["camelCase"],
+                    "format": ["PascalCase"],
                     "prefix": ["is", "should", "has", "can", "did", "will"]
                 }, {
                     "selector": "parameter",

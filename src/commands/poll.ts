@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -15,14 +15,22 @@ import type {
 } from "discord.js"
 import {emojis} from "../getConfig"
 
-const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`
-const emoji2 = emojis.spectating.id ? `<:${emojis.spectating.name}:${emojis.spectating.id}>` : `:${emojis.spectating.name}:`
-
 type Channel = TextChannel | DMChannel | NewsChannel
 
-const debaters: string[] = []
-const spectators: string[] = []
+// Two emojis for the polls
+const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`,
+    emoji2 = emojis.spectating.id ? `<:${emojis.spectating.name}:${emojis.spectating.id}>` : `:${emojis.spectating.name}:`,
 
+    // Arrays with debaters and spectators
+    debaters: string[] = [],
+    spectators: string[] = []
+
+/**
+ * Makes a poll
+ * @param message - Discord message
+ * @param client - Discord client
+ * @returns void - sends the message in the function
+ */
 export const makePoll = async (
     message: Message,
     client: Client,
@@ -57,6 +65,11 @@ export const makePoll = async (
     })
 }
 
+/**
+ * Gets a poll's details
+ * @param channel - Discord channel
+ * @returns void - sends the message in the function
+ */
 export const getPoll = (channel: Channel): void => {
     let debatersString = "",
         spectatorsString = ""

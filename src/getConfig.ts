@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -19,8 +19,8 @@ type FullConfig = {
     maxMotions: number,
     serverIconUrl: string,
     botIconUrl: string,
-    shoulddetectProfanity: boolean,
-    shoulduseFuzzyStringMatch: boolean,
+    shouldDetectProfanity: boolean,
+    shouldUseFuzzyStringMatch: boolean,
     adminRoleName: string,
     emojis: {
         debating: {
@@ -32,6 +32,7 @@ type FullConfig = {
             id?: string,
         },
     },
+    whitelistedWords: string[],
 }
 
 // Configuration with optional options that are passed in
@@ -44,8 +45,8 @@ type InputConfig = {
     maxMotions?: number,
     serverIconUrl?: string,
     botIconUrl?: string,
-    shoulddetectProfanity?: boolean,
-    shoulduseFuzzyStringMatch?: boolean,
+    shouldDetectProfanity?: boolean,
+    shouldUseFuzzyStringMatch?: boolean,
     adminRoleName?: string,
     emojis?: {
         debating: {
@@ -57,6 +58,7 @@ type InputConfig = {
             id?: string,
         },
     },
+    whitelistedWords?: string[],
 }
 
 // Default configuration values
@@ -70,8 +72,8 @@ const defaultConfig: FullConfig = {
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
-    shoulddetectProfanity: true,
-    shoulduseFuzzyStringMatch: true,
+    shouldDetectProfanity: true,
+    shouldUseFuzzyStringMatch: true,
     adminRoleName: "admin",
     emojis: {
         debating: {
@@ -81,10 +83,12 @@ const defaultConfig: FullConfig = {
             name: "eyes",
         },
     },
+    whitelistedWords: [],
 }
 
 Object.freeze(defaultConfig)
 
+/* eslint-disable complexity */ // Not much we can do
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
  * @param obj - object to check
@@ -109,19 +113,22 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
         typeof obj.botIconUrl === "string" ||
         obj.botIconUrl === undefined
     ) && (
-        typeof obj.shoulddetectProfanity === "boolean" ||
-        obj.shoulddetectProfanity === undefined
+        typeof obj.shouldDetectProfanity === "boolean" ||
+        obj.shouldDetectProfanity === undefined
     ) && (
-        typeof obj.shoulduseFuzzyStringMatch === "boolean" ||
-        obj.shoulduseFuzzyStringMatch === undefined
+        typeof obj.shouldUseFuzzyStringMatch === "boolean" ||
+        obj.shouldUseFuzzyStringMatch === undefined
     ) && (
         typeof obj.adminRoleName === "string" ||
         obj.adminRoleName === undefined
     ) && (
         typeof obj.emojis === "object" ||
         typeof obj.emojis === undefined
+    ) && (
+        obj.whitelistedWords instanceof Array
     )
 )
+/* eslint-enable complexity */
 
 // Try and get config.yml from root
 let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""
@@ -167,10 +174,11 @@ export const {
     maxMotions,
     serverIconUrl,
     botIconUrl,
-    shoulddetectProfanity,
-    shoulduseFuzzyStringMatch,
+    shouldDetectProfanity,
+    shouldUseFuzzyStringMatch,
     adminRoleName,
     emojis,
+    whitelistedWords,
 } = fullConfig as FullConfig
 
 export default fullConfig as FullConfig

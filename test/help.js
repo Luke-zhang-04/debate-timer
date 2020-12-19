@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.0
  * @license BSD-3-Clause
  */
 
@@ -43,7 +43,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Otis")
+        testHelpers.includes(returnMsg, "B R U H")
     })
 
     it("Should have a manual entry for coinflip", () => {
@@ -63,7 +63,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Shen Bapiro")
+        testHelpers.includes(returnMsg, "Ok, this is epic")
     })
 
     it("Should have a manual entry for start", () => {
@@ -73,7 +73,7 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Starts a 5 minute timer")
+        testHelpers.includes(returnMsg, "Starts a timer")
     })
 
     it("Should have a manual entry for kill", () => {
@@ -153,9 +153,19 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "random teams")
-        testHelpers.includes(returnMsg, "random partners")
+        testHelpers.includes(returnMsg, "random draw")
         testHelpers.includes(returnMsg, "random motion")
+    })
+
+    it("Should have a manual entry for makeDraw", () => {
+        const message = new Message("!help makeDraw")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "random draw")
+        testHelpers.includes(returnMsg, "positions and teams")
     })
 
     it("Should have a manual entry for poll", () => {
@@ -195,6 +205,6 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Otis")
+        testHelpers.includes(returnMsg, "B R U H")
     })
 }
