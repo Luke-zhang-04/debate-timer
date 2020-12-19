@@ -153,9 +153,19 @@ module.exports = () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "random teams")
-        testHelpers.includes(returnMsg, "random partners")
+        testHelpers.includes(returnMsg, "random draw")
         testHelpers.includes(returnMsg, "random motion")
+    })
+
+    it("Should have a manual entry for makeDraw", () => {
+        const message = new Message("!help makeDraw")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "random draw")
+        testHelpers.includes(returnMsg, "positions and teams")
     })
 
     it("Should have a manual entry for poll", () => {

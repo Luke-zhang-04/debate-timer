@@ -6,27 +6,43 @@
  * @license BSD-3-Clause
  */
 
-import type {
-    DMChannel,
-    Message,
-    NewsChannel,
-    TextChannel
-} from "discord.js"
+import type {Message} from "discord.js"
+import {getRandomMotion} from "./randomMotion"
 
-type Channel = TextChannel | DMChannel | NewsChannel
+export type Formats = "bp" | "cp" | "worlds"
 
-const baseTeams = [
+const baseTeams: Record<Formats, string[]> = {
+    bp: [
         "Team-A",
         "Team-B",
         "Team-C",
         "Team-D",
     ],
-    basePositions = [
-        "OG",
-        "OO",
-        "CG",
-        "CO",
+    cp: [
+        "Team-A",
+        "Team-B",
     ],
+    worlds: [
+        "Team-A",
+        "Team-B",
+    ],
+},
+    basePositions: Record<Formats, string[]> = {
+        bp: [
+            "OG",
+            "OO",
+            "CG",
+            "CO",
+        ],
+        cp: [
+            "GOV",
+            "OPP",
+        ],
+        worlds: [
+            "GOV",
+            "OPP",
+        ],
+    },
 
     /**
      * Shuffles an array
@@ -44,69 +60,143 @@ const baseTeams = [
                 array[randonIndex] = temp
             }
         }
+    },
+
+    /**
+     * Splits an array into chunks
+     * @param arr - array to split
+     * @param chunkSize - size of array chunks
+     */
+    arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
+        const chunks: T[][] = []
+
+        for (let index = 0; index < arr.length; index += chunkSize) {
+            chunks.push(arr.slice(index, index + chunkSize))
+        }
+
+        return chunks
+    },
+
+    /**
+     * Create random partners
+     * @param message - message object
+     * @returns [debaters, format]
+     */
+    createRandomPartners = (message: Message): [string[][], Formats] | void => {
+        // Invocation message
+        const invocation = message.content.split(" "),
+
+            // Array of debaters
+            debaters = invocation.slice(1).filter((content) => (
+                !["bp", "worlds", "cp"].includes(content.toLowerCase())
+            )),
+
+            // Get the debate format
+            format: Formats = (invocation.find((content) => (
+                ["bp", "worlds", "cp"].includes(content.toLowerCase())
+            )) ?? "bp").toLowerCase() as Formats,
+
+            // Members per team
+            membersPerTeam = format === "worlds" ? 3 : 2
+
+        if (debaters.length < basePositions[format].length * membersPerTeam) { // Mention count
+            message.channel.send(`:1234: at least ${basePositions[format].length * membersPerTeam} @mentions required, but ${debaters.length} were found. Learn to count. (That's smaller than ${basePositions[format].length * membersPerTeam}, right?)`)
+
+            return undefined
+        }
+
+        shuffle(debaters, 4)
+
+        debaters.length = basePositions[format].length * membersPerTeam // Truncate the array to the proper length
+
+        return [arrayToChunks(debaters, membersPerTeam), format]
     }
 
 /**
- * Creates random teams
- * @param channel - channel object to send messages to
- * @returns void
+ * Sends random teams to channel
+ * @param message - message object
  */
-export const randomTeams = (channel: Channel): true => {
-    const teams = [
-        "Team-A",
-        "Team-B",
-        "Team-C",
-        "Team-D",
-    ]
+export const makeTeams = (message: Message): void => {
+    // Get the debate format
+    const format: Formats = (message.content.split(" ").find((content) => (
+        ["bp", "worlds", "cp"].includes(content.toLowerCase())
+    )) ?? "bp").toLowerCase() as Formats,
+
+        // Teams based on format
+        teams = [...baseTeams[format]]
 
     shuffle(teams, 2)
 
-    let teamString = ""
+    const teamString = teams.map((team, index) => (
+        `\n> **${basePositions[format][index]}**: ${team}`
+    )).join("")
 
-    for (const [index, team] of teams.entries()) {
-        teamString += `\n> **${basePositions[index]}**: ${team}`
-    }
-
-    channel.send(`:speaking_head: **Generated random teams**: ${teamString}`)
-
-    return true
+    message.channel.send(`:speaking_head: **Generated random teams**: ${teamString}`)
 }
 
 /**
- * Create random partners
+ * Send random partners to channel
  * @param message - message object
- * @returns boolean - id successful
  */
-export const randomPartners = (message: Message): boolean => {
-    const invocation = message.content.split(" ") // Invokation message
+export const makePartners = (message: Message): void => {
+    const randomPartners = createRandomPartners(message)
 
-    if (invocation.length !== 9) { // Mention count
-        message.channel.send(`:1234: 8 @mentions required, but ${invocation.length - 1} were found. Learn to count.`)
+    if (randomPartners) {
+        const [debaters, format] = randomPartners,
 
-        return false
+            // Add debaters to a string and then send it
+            partnersString = debaters.map((_debaters, index) => (
+                `\n> **${baseTeams[format][index]}**: ${_debaters.join(", ")}`
+            )).join()
+
+        message.channel.send(`:speaking_head: **Generated random partners**: ${partnersString}`)
     }
+}
 
-    const debaters = invocation.splice(1) // Array of debaters
+/**
+ * Sends random partners and teams to channel
+ * @param message - message object
+ */
+export const makeDraw = (message: Message): void => {
+    const randomPartners = createRandomPartners(message)
 
-    shuffle(debaters, 4)
+    if (randomPartners) {
+        const [debaters, format] = randomPartners,
 
-    let partnersString = ""
+            // Draw with teams
+            draw = debaters.map((_debaters, index) => (
+                `\n> **${basePositions[format][index]}**: ${_debaters.join(", ")}`
+            )).join()
 
-    // Add debaters to a string and then send it
-    for (const [index, debater] of debaters.entries()) {
-        if (index % 2 === 0) {
-            partnersString += `\n> **${baseTeams[index / 2]}**: ${debater}, `
-        } else {
-            partnersString += `${debater}`
-        }
+        message.channel.send(`:speaking_head: **Generated random draw**: ${draw}`)
     }
+}
 
-    message.channel.send(`:speaking_head: **Generated random partners**: ${partnersString}`)
+/**
+ * Sends a draw + a motion
+ * @param message - message object
+ */
+export const makeRound = async (message: Message): Promise<void> => {
+    const randomPartners = createRandomPartners(message)
 
-    return true // Return true for success for makeRound
+    if (randomPartners) {
+        const [debaters, format] = randomPartners,
+
+            // Draw with teams
+            draw = debaters.map((_debaters, index) => (
+                `\n> **${basePositions[format][index]}**: ${_debaters.join(", ")}`
+            )).join(),
+
+            // Debate motion
+            motion = await getRandomMotion()
+
+        message.channel.send(`:speaking_head: **Here's the round**: ${draw}\n\n${motion}`)
+    }
 }
 
 export default {
-    randomTeams,
-    randomPartners,
+    makeDraw,
+    makeTeams,
+    makePartners,
+    makeRound,
 }

@@ -16,10 +16,13 @@ import fs from "fs"
 const manual: {[key: string]: string} = {
     bruh: `>>> **\`${prefix}bruh\`**
 B R U H.`,
+
     coinflip: `>>> **\`${prefix}coinflip\`**
 Flip a coin`,
+
     epic: `>>> **\`${prefix}epic\`**
 Ok, this is epic.`,
+
     start: `>>> **\`${prefix}start [@mention?] [timeControl?: 3 | 5 | 7 = 5]\`**
 Starts a timer with a default length of 5 minutes.
 If the speech is 5 or 7 minutes, there is 30 seconds protected time at the start and end of the speech.
@@ -31,75 +34,103 @@ Note that parameter order does not matter :smiley:
 Will ping \`[@mention]\` for important times if included
 Will also mute \`[@mention]\` after 5:15
 E.g \`${prefix}start @debate-timer\``,
-    kill: `>>> **\`${prefix}kill [id] [shouldMute? = noMute | mute | undefined]\`**
+
+    kill: `>>> **\`${prefix}kill [id] [shouldMute?: noMute | mute | undefined]\`**
 Kills a timer with id of \`[id]\`
 Parameters:
     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
     \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
 E.g \`${prefix}kill 254\``,
-    list: `>>> **\`list [global? = global | undefined]\`**
+
+    list: `>>> **\`list [global?: global | undefined]\`**
 Lists the currently stored timers
 Parameters:
     \`[global?]\` - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.
 E.g \`${prefix}list global\``,
+
     give: `>>> ** \`give [id] [amt]\`**
 Gives \`[amt]\` amount of seconds to timer with id \`[id]\`
 Parameters:
    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
    \`[amt]\` - required - amount in seconds to wind the timer back
 E.g \`${prefix}give 0 10\``,
+
     take: `>>> ** \`take [id] [amt]\`**
 Takes \`[amt]\` amount of seconds from timer with id \`[id]\`
 Parameters:
    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
    \`[amt]\` - required - amount in seconds to wind the timer forward
 E.g \`${prefix}take 0 10\``,
+
     backward: `>>> ** \`backward [id] [amt]\`**
 Functionally equivalent to \`give\`
 Winds timer with id \`[id]\` backward by \`[amt]\`
 Parameters:
    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
    \`[amt]\` - required - amount in seconds to wind the timer back`,
+
     forward: `>>> ** \`take [id] [amt]\`**
 Functionally equivalent to \`take\`
 Winds timer with id \`[id]\` forward by \`[amt]\`
 Parameters:
    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
    \`[amt]\` - required - amount in seconds to wind the timer forward`,
+
     getMotion: `>>> **\`getMotion\`**
 Gets a random motion from the hellomotions spreadsheet
 <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
+
     getMotions: `>>> **\`getMotions [count?]\`**
 Gets multiple motions from the hellomotions spreadsheet
 <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>
 Parameters:
     \`[count?]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than 20.
 E.g \`${prefix}getMotions 6\``,
-    makeTeams: `>>> **\`${prefix}makeTeams\`**
-Makes random teams with \`Team A\` \`Team B\` \`Team C\` and \`Team D\``,
-    makePartners: `>>> **\`${prefix}makePartners [debater1] [debater2] ... [debater8]\`**
+
+    makeTeams: `>>> **\`${prefix}makeTeams [format?: bp | cp | worlds = bp]\`**
+Makes random teams with \`Team A\` \`Team B\` \`Team C\` and \`Team D\`
+Parameters:
+    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
+E.g \`${prefix}\`makeTeams bp`,
+
+    makePartners: `>>> **\`${prefix}makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
 Makes random partners
 Parameters:
-     \`[debater1]\` - required - @mention of debater 1
-     \`[debater2]\` - required - @mention of debater 2
-     ...
-     \`[debater8]\` - required - @mention of debater 8
-A total of 8 debaters are required
-E.g \`${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8\``,
-    makeRound: `>>> **\`${prefix}makeRound [debater1] [debater2] ... [debater8]\`**
-Creates random teams, random partners, and chooses a random motion
-Similar to \`makePartners\`, 8 debater names are required.`,
+    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
+    \`[debater1]\` - required - @mention of debater 1
+    \`[debater2]\` - required - @mention of debater 2
+    ...
+The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
+E.g \`${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\``,
+
+    makeRound: `>>> **\`${prefix}makeRound \`[format?: bp | cp | worlds = bp]\` - optional [debater1] [debater2]\`**
+Creates random draw, and chooses a random motion
+Similar to \`makeDraw\`.`,
+
+    makeDraw: `>>> **\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
+Makes random draw, which includes positions and teams.
+Parameters:
+    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
+    \`[debater1]\` - required - @mention of debater 1
+    \`[debater2]\` - required - @mention of debater 2
+    ...
+The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
+E.g \`${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\``,
+
     poll: `>>> **\`${prefix}poll\`**
 Creates a poll for debating and spectating
 Only one poll can run at a time
 Creating a new poll will erase the data in any other polls`,
+
     getPoll: `>>> **\`${prefix}getPoll\`**
 Gets data from current poll. If no poll has been made, data will be empty.`,
+
     resume: `>>> **\`${prefix}resume [id]\`**
 Continues a timer with id of \`[id]\`
 Parameters:
     \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
 E.g \`${prefix}resume 254\``,
+
     pause: `>>> **\`${prefix}pause [id]\`**
 Pauses a timer with id of \`[id]\`
 Parameters:
@@ -170,9 +201,10 @@ This bot is in version ${version}
 > **\`${prefix}getMotions [count?]\`**
 
 > :speaking_head:
-> **\`${prefix}makeTeams\`**
-> **\`${prefix}makePartners [debater1] [debater2] ... [debater8]\`**
-> **\`${prefix}makeRound\`**
+> **\`${prefix}makeTeams [format?: bp | cp | worlds = bp]\`**
+> **\`${prefix}makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
+> **\`${prefix}makeRound [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
+> **\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
 
 > :bar_chart:
 > **\`${prefix}poll\`**

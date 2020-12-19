@@ -67,15 +67,10 @@ const timer = Object.freeze({
         give: () => changeTime(message, -1),
         forward: () => changeTime(message, 1),
         backward: () => changeTime(message, -1),
-        makeTeams: () => teamGen.randomTeams(message.channel),
-        makePartners: () => teamGen.randomPartners(message),
-        makeRound: async () => {
-        /* eslint-disable no-unused-expressions */
-            teamGen.randomPartners(message) &&
-            teamGen.randomTeams(message.channel) &&
-            message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`)
-        /* eslint-enable no-unused-expressions */
-        },
+        makeDraw: () => teamGen.makeDraw(message),
+        makeTeams: () => teamGen.makeTeams(message),
+        makePartners: () => teamGen.makePartners(message),
+        makeRound: () => teamGen.makeRound(message),
         getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
         getMotions: () => motion.getRandomMotions(message),
         systemInfo: async () => message.channel.send(await systemInfo()),
