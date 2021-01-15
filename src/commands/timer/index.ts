@@ -191,8 +191,8 @@ export class Timer {
             if (this.ispaused) {
                 this._startTime += interval * 1000
 
-                if (Date.now() - this._trueStartTime > DatePlus.minsToMs(15)) {
-                    this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 15 minutes. This timer is now being killed.`)
+                if (Date.now() - this._trueStartTime > DatePlus.minsToSecs(20)) {
+                    this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
 
                     this.shouldmute = false
                     this.kill()
@@ -206,7 +206,7 @@ export class Timer {
             // If speech surpasses time
             if (
                 this.time >= this.timeCtrl + 15 ||
-                this.time > DatePlus.minsToMs(15)
+                this.time > DatePlus.minsToSecs(20)
             ) {
                 this.kill(false)
             }

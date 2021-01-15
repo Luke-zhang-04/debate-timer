@@ -143,8 +143,8 @@ export const isauthorizedToModifyTimer = (
         return false
     }
 
-    const isAdmin = // If author is admin
-        member?.roles.cache.find((role) => role.name === adminRoleName) !== null
+    const isAdmin =
+        (member?.roles.cache.find((role) => role.name === adminRoleName) ?? undefined) !== undefined
 
     return author.id === timer.mentionedUid ||
         author.id === timer.creator.id ||
