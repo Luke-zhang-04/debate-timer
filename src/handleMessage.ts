@@ -126,12 +126,15 @@ const timer = Object.freeze({
             for (const [key, command] of Object.entries(commands)) {
                 if (correctedCmd === key) {
                     if (correctedCmd !== cmd) {
-                        const content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to tpye.`
+                        const shouldTypo = Math.random() > 0.75,
+                            content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to ${shouldTypo ? "tpye" : "type"}.`
 
                         message.channel.send(content).then((message) => {
-                            setTimeout(() => {
-                                message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-                            }, 500)
+                            if (shouldTypo) {
+                                setTimeout(() => {
+                                    message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                                }, 500)
+                            }
                         })
                     }
 
@@ -143,12 +146,15 @@ const timer = Object.freeze({
         }
         /* eslint-enable no-await-in-loop */
 
-        const content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to tpe.\nOtherwise, tpye \`${prefix}help\` for help.`
+        const shouldTypo = Math.random() > 0.75,
+            content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to ${shouldTypo ? "tpe" : "type"}.\nOtherwise, ${shouldTypo ? "tpye" : "type"} \`${prefix}help\` for help.`
 
         message.channel.send(content).then((message) => {
-            setTimeout(() => {
-                message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-            }, 500)
+            if (shouldTypo) {
+                setTimeout(() => {
+                    message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                }, 500)
+            }
         })
     }
 
