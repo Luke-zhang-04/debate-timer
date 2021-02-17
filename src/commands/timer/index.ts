@@ -332,7 +332,7 @@ export class Timer {
             channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`)
 
             if (Math.random() >= 0.9) {
-                channel.send("BTW, I don't use exclamation marks because I'm exited, I'm just forced to.")
+                channel.send("BTW, I don't use exclamation marks because I'm excited, I'm just forced to.")
             }
         }
     }

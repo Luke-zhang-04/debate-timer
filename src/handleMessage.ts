@@ -126,7 +126,13 @@ const timer = Object.freeze({
             for (const [key, command] of Object.entries(commands)) {
                 if (correctedCmd === key) {
                     if (correctedCmd !== cmd) {
-                        message.channel.send(`Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to type.`)
+                        const content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to tpye.`
+
+                        message.channel.send(content).then((message) => {
+                            setTimeout(() => {
+                                message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                            }, 500)
+                        })
                     }
 
                     await command()
@@ -137,7 +143,13 @@ const timer = Object.freeze({
         }
         /* eslint-enable no-await-in-loop */
 
-        message.channel.send(`:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to type.\nOtherwise, type \`${prefix}help\` for help.`)
+        const content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to tpe.\nOtherwise, tpye \`${prefix}help\` for help.`
+
+        message.channel.send(content).then((message) => {
+            setTimeout(() => {
+                message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+            }, 500)
+        })
     }
 
 /* eslint-disable */

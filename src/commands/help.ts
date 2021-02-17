@@ -240,7 +240,13 @@ export default (message: Message): void => {
     }
 
     if (correctedArg !== arg) {
-        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
+        const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to tpe.`
+
+        message.channel.send(content).then((message) => {
+            setTimeout(() => {
+                message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+            }, 500)
+        })
     }
 
     message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
