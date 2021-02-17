@@ -3,6 +3,7 @@
   "version": "1.4.1",
   "description": "BP Debate timer Discord Bot",
   "main": "./bot.js",
+  "type": "module",
   "scripts": {
     "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 --exit",
     "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
@@ -31,8 +32,6 @@
     "yaml": "^1.10.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.12.1",
-    "@babel/core": "^7.12.3",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@types/bad-words": "^3.0.0",
@@ -45,7 +44,6 @@
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
-    "babel-preset-minify": "^0.5.1",
     "chokidar": "^3.4.3",
     "eslint": "^7.11.0",
     "eslint-config-recommended": "^4.1.0",
