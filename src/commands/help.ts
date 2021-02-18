@@ -240,7 +240,7 @@ export default (message: Message): void => {
     }
 
     if (correctedArg !== arg) {
-        const shouldTypo = Math.random() > 0.75,
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
             content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
 
         message.channel.send(content).then((_message) => {

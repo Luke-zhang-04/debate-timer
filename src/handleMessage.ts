@@ -126,7 +126,7 @@ const timer = Object.freeze({
             for (const [key, command] of Object.entries(commands)) {
                 if (correctedCmd === key) {
                     if (correctedCmd !== cmd) {
-                        const shouldTypo = Math.random() > 0.75,
+                        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
                             content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to ${shouldTypo ? "tpye" : "type"}.`
 
                         message.channel.send(content).then((_message) => {
@@ -146,7 +146,7 @@ const timer = Object.freeze({
         }
         /* eslint-enable no-await-in-loop */
 
-        const shouldTypo = Math.random() > 0.75,
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
             content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to ${shouldTypo ? "tpe" : "type"}.\nOtherwise, ${shouldTypo ? "tpye" : "type"} \`${prefix}help\` for help.`
 
         message.channel.send(content).then((_message) => {

@@ -5,11 +5,11 @@
   "main": "./bot.js",
   "type": "module",
   "scripts": {
-    "test": "NODE_ENV=test ./node_modules/.bin/mocha --timeout 30000 --exit",
-    "tsc": "./node_modules/.bin/tsc && ./node_modules/.bin/tsc -p tsconfig.cli.json",
+    "test": "NODE_ENV=test mocha --timeout 30000 --exit",
+    "tsc": "tsc && tsc -p tsconfig.cli.json",
     "build": "./scripts/compile",
     "start": "./scripts/start --dev",
-    "lint": "./node_modules/.bin/eslint_d src/\"{*.ts,**/*.ts}\"",
+    "lint": "eslint_d src/\"{*.ts,**/*.ts}\"",
     "lint:fix": "./lint.mjs --fix",
     "lint:watch": "./lint.mjs --watch"
   },
