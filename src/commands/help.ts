@@ -247,7 +247,7 @@ export default (message: Message): void => {
             if (shouldTypo) {
                 setTimeout(() => {
                     _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-                }, 500)
+                }, 2500)
             }
         })
     }

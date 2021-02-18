@@ -133,7 +133,7 @@ const timer = Object.freeze({
                             if (shouldTypo) {
                                 setTimeout(() => {
                                     _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-                                }, 500)
+                                }, 2500)
                             }
                         })
                     }
@@ -153,7 +153,7 @@ const timer = Object.freeze({
             if (shouldTypo) {
                 setTimeout(() => {
                     _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-                }, 500)
+                }, 2500)
             }
         })
     }
