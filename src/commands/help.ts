@@ -243,10 +243,10 @@ export default (message: Message): void => {
         const shouldTypo = Math.random() > 0.75,
             content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
 
-        message.channel.send(content).then((message) => {
+        message.channel.send(content).then((_message) => {
             if (shouldTypo) {
                 setTimeout(() => {
-                    message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                    _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
                 }, 500)
             }
         })

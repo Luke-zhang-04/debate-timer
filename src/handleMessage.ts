@@ -129,10 +129,10 @@ const timer = Object.freeze({
                         const shouldTypo = Math.random() > 0.75,
                             content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to ${shouldTypo ? "tpye" : "type"}.`
 
-                        message.channel.send(content).then((message) => {
+                        message.channel.send(content).then((_message) => {
                             if (shouldTypo) {
                                 setTimeout(() => {
-                                    message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                                    _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
                                 }, 500)
                             }
                         })
@@ -149,10 +149,10 @@ const timer = Object.freeze({
         const shouldTypo = Math.random() > 0.75,
             content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to ${shouldTypo ? "tpe" : "type"}.\nOtherwise, ${shouldTypo ? "tpye" : "type"} \`${prefix}help\` for help.`
 
-        message.channel.send(content).then((message) => {
+        message.channel.send(content).then((_message) => {
             if (shouldTypo) {
                 setTimeout(() => {
-                    message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                    _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
                 }, 500)
             }
         })
