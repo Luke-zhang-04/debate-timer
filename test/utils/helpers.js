@@ -7,19 +7,19 @@
  */
 
 
-module.exports.includes = (target, test) => {
+export const includes = (target, test) => {
     if (!target.includes(test)) {
         throw new Error(`Expected "${target}" to include "${test}"`)
     }
 }
 
-module.exports.notIncludes = (target, test) => {
+export const notIncludes = (target, test) => {
     if (target.includes(test)) {
         throw new Error(`Expected "${target}" to not include "${test}"`)
     }
 }
 
-module.exports.includesOneof = (target, ...tests) => {
+export const includesOneof = (target, ...tests) => {
     for (const test of tests) {
         if (target.includes(test)) {
             return
@@ -27,4 +27,10 @@ module.exports.includesOneof = (target, ...tests) => {
     }
 
     throw new Error(`Expected "${target}" to include one of the following:\n${tests}`)
+}
+
+export default {
+    includes,
+    notIncludes,
+    includesOneof,
 }

@@ -11,32 +11,8 @@ echo "Bundling bot with rollup"
 
 echo "If there is a warning above saying \"Entry module 'lib/index.js' is implicitly using 'default' export mode\", you can dismiss it."
 
-echo "Minifying with Babel"
-./node_modules/.bin/babel bot.js -o bot.js || exit 1 &
-./node_modules/.bin/babel cli/index.js -o cli/index.js || exit 1 &
-
 wait
 
-echo -n "#!/bin/node
-/**
- * Discord Debate Timer
- * @copyright 2020 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.1
- * @license BSD-3-Clause
- */
-$(cat bot.js)" > bot.js
-
-echo -n "#!/bin/node
-/**
- * Discord Debate Timer
- * @copyright 2020 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.1
- * @license BSD-3-Clause
- */
-$(cat cli/index.js)" > cli/index.js
-
-chmod --verbose +x bot.js
+chmod --verbose +x bot.mjs
 
 echo "Done"

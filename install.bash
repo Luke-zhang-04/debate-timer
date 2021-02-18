@@ -88,7 +88,7 @@ cleanIntall() {
     fi
 }
 
-if [ ! -f bot.js ]||[ ! -f cli/index.js ]; then
+if [ ! -f bot.mjs ]||[ ! -f cli/index.js ]; then
     cleanIntall || exit 1
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
@@ -132,4 +132,4 @@ if [ ! -f .env ]; then
     echo "Make sure you add the proper credentials to your .env file. AUTHTOKEN is the Discord authentication token, and APIKEY is the Google Sheets API key."
 fi
 
-echo "Installation finished! You can run ./bot.js to start the bot."
+echo "Installation finished! You can run ./bot.mjs to start the bot."

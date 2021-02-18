@@ -50,14 +50,14 @@ Note that these values are sensitive and should not be shown publicly
 
 4. Run
 ```bash
-./bot.js
+./bot.mjs
 
 # To run it in the background
-./bot.js & disown
+./bot.mjs & disown
 
 # Other ways you can run
 node .
-node bot.js
+node bot.mjs
 ```
 
 ### CLI

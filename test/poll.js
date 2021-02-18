@@ -6,13 +6,13 @@
  * @license BSD-3-Clause
  */
 
-const {Client, Message} = require("./utils/mockDiscord")
-const assert = require("assert")
-const handleMessage = require("../lib/handleMessage")
-const poll = require("../lib/commands/poll")
-const testHelpers = require("./utils/helpers")
+import {Client, Message} from "./utils/mockDiscord.js"
+import assert from "assert"
+import handleMessage from "../lib/handleMessage.js"
+import poll from "../lib/commands/poll.js"
+import testHelpers from "./utils/helpers.js"
 
-module.exports = () => {
+export default () => {
     it("Should create a poll", () => {
         const client = new Client()
         const msg = new Message("!poll")

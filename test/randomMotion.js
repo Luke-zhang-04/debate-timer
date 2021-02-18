@@ -6,12 +6,12 @@
  * @license BSD-3-Clause
  */
 
-const {Message} = require("./utils/mockDiscord")
-const assert = require("assert")
-const motion = require("../lib/commands/randomMotion")
-const testHelpers = require("./utils/helpers")
+import {Message} from "./utils/mockDiscord.js"
+import assert from "assert"
+import motion from "../lib/commands/randomMotion.js"
+import testHelpers from "./utils/helpers.js"
 
-module.exports = () => {
+export default () => {
     it("Should give a random motion", async () => {
         const _motion = await motion.default.getRandomMotion()
 
