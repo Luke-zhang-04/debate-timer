@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.0
+ * @version 1.4.1
  * @license BSD-3-Clause
  */
 import {prefix, shouldUseFuzzyStringMatch} from "../getConfig"
@@ -240,7 +240,16 @@ export default (message: Message): void => {
     }
 
     if (correctedArg !== arg) {
-        message.channel.send(`Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to type.`)
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
+            content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
+
+        message.channel.send(content).then((_message) => {
+            if (shouldTypo) {
+                setTimeout(() => {
+                    _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                }, 500)
+            }
+        })
     }
 
     message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)

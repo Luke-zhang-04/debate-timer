@@ -2,19 +2,19 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.0
+ * @version 1.4.1
  * @license BSD-3-Clause
  */
 
-const {Message} = require("./utils/mockDiscord")
-const assert = require("assert")
-const handleMessage = require("../lib/handleMessage")
-const {hostname} = require("os")
-const systemInfo = require("../lib/commands/systemInfo")
-const testHelpers = require("./utils/helpers")
+import {Message} from "./utils/mockDiscord.js"
+import assert from "assert"
+import handleMessage from "../lib/handleMessage.js"
+import {hostname} from "os"
+import systemInfo from "../lib/commands/systemInfo.js"
+import testHelpers from "./utils/helpers.js"
 
 
-module.exports = () => {
+export default () => {
     it("Should do nothing if author was a bot", () => {
         const message = new Message("!help", {author: {bot: true}})
 

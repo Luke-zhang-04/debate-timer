@@ -1,16 +1,47 @@
+import progress from "rollup-plugin-progress"
 import resolve from "@rollup/plugin-node-resolve"
-import commonjs from "@rollup/plugin-commonjs"
+import {terser} from "rollup-plugin-terser"
+import typescript from "@rollup/plugin-typescript"
 
-export default {
-    input: "lib/index.js",
+const banner = `#!/bin/node
+/**
+ * Discord Debate Timer
+ * @copyright 2020 Luke Zhang
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @version 1.4.1
+ * @license BSD-3-Clause
+ * @preserve
+ */
+
+`
+
+/**
+ * @type {import("rollup").RollupOptions}
+ */
+const config = {
+    input: "src/index.ts",
     output: {
-        file: "./bot.js",
-        format: "cjs",
+        file: "./bot.mjs",
+        format: "esm",
+        banner,
     },
     plugins: [
-        commonjs(),
+        progress(),
+        typescript({
+            tsconfig: "./tsconfig.rollup.json",
+        }),
         resolve({
-            resolveOnly: [/^\.{0,2}\//],
+            resolveOnly: [/^\.{0,2}\/|tslib/],
+        }),
+        terser({
+            format: {
+                comments: (_, {value}) => (
+                    (!(/Luke Zhang/ui).test(value) || (/@preserve/ui).test(value)) &&
+                    (/@preserve|li[cs]ense|copyright/ui).test(value)
+                ),
+            }
         }),
     ]
 }
+
+export default config

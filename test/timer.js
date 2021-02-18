@@ -2,17 +2,17 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.0
+ * @version 1.4.1
  * @license BSD-3-Clause
  */
 
-const {strictEqual} = require("assert")
-const {Message, Member} = require("./utils/mockDiscord")
-const handleMessage = require("../lib/handleMessage")
-const testHelpers = require("./utils/helpers")
-const {default: listCmd} = require("../lib/commands/list")
+import {Message, Member} from "./utils/mockDiscord.js"
+import handleMessage from "../lib/handleMessage.js"
+import listCmd from "../lib/commands/list.js"
+import {strictEqual} from "assert"
+import testHelpers from "./utils/helpers.js"
 
-module.exports = () => {
+export default () => {
     context("Should start a timer properly", () => {
         const message = new Message(
             "!start @Tester",
@@ -79,7 +79,9 @@ module.exports = () => {
                 const listMsg = new Message("!list global")
                 const {includes} = testHelpers
 
-                await listCmd(listMsg)
+                await (
+                    listCmd instanceof Function ? listCmd : listCmd.default
+                )(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
@@ -100,7 +102,9 @@ module.exports = () => {
                 )
                 const {includes} = testHelpers
 
-                await listCmd(listMsg)
+                await (
+                    listCmd instanceof Function ? listCmd : listCmd.default
+                )(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
@@ -119,7 +123,9 @@ module.exports = () => {
                 )
                 const {includes} = testHelpers
 
-                await listCmd(listMsg)
+                await (
+                    listCmd instanceof Function ? listCmd : listCmd.default
+                )(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
