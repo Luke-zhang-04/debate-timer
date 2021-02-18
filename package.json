@@ -1,6 +1,6 @@
 {
   "name": "debate-timer",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "BP Debate timer Discord Bot",
   "main": "./bot.mjs",
   "type": "commonjs",
