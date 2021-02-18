@@ -8,7 +8,7 @@ const banner = `#!/bin/node
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.2
+ * @version 1.4.3
  * @license BSD-3-Clause
  * @preserve
  */
@@ -39,6 +39,11 @@ const config = {
                     (!(/Luke Zhang/ui).test(value) || (/@preserve/ui).test(value)) &&
                     (/@preserve|li[cs]ense|copyright/ui).test(value)
                 ),
+            }
+        }),
+        terser({
+            format: {
+                comments: (_, {value}) => (/@preserve/ui).test(value),
             }
         }),
     ]
