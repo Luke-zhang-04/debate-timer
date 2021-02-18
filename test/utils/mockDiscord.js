@@ -2,11 +2,11 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.3.1
+ * @version 1.4.3
  * @license BSD-3-Clause
  */
 
-class Reaction {
+export class Reaction {
 
     emoji
 
@@ -32,7 +32,7 @@ class Reaction {
 
 let messageId = 0
 
-class Message {
+export class Message {
 
     content
 
@@ -99,7 +99,7 @@ class Message {
 
 }
 
-class Client {
+export class Client {
 
     functions = {}
 
@@ -109,7 +109,7 @@ class Client {
 
 }
 
-class User {
+export class User {
 
     id
 
@@ -119,7 +119,7 @@ class User {
 
 }
 
-class Member {
+export class Member {
 
     roles
 
@@ -145,7 +145,7 @@ class Member {
 
 }
 
-module.exports = {
+export default {
     Message,
     Client,
     Member,

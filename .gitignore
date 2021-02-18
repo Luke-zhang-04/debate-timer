@@ -125,4 +125,5 @@ dist
 .env.production.local
 lib/
 cli/lib
-bot.js
+bot.mjs
+.rollup.cache
