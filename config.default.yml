@@ -7,6 +7,7 @@ maxTimers: 10 # Maximum number of concurrent timers. -1 for infinite. Default 10
 maxTimersPerUser: 3 # Maximum number of concurrent timers per user. Default 3
 commandCooldown: 1 # Time gap between consecutive commands. Default 1
 maxMotions: 20 # Largest number of motions that can be fetched at once. Default 20
+defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 
 # URL of your server icon image, or any other image works too.
 # This doesn't actually set your picture. It just dictates what

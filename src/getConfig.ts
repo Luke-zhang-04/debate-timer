@@ -17,6 +17,7 @@ type FullConfig = {
     maxTimersPerUser: number,
     commandCooldown: number,
     maxMotions: number,
+    defaultTimeCtrl: number,
     serverIconUrl: string,
     botIconUrl: string,
     shouldDetectProfanity: boolean,
@@ -36,30 +37,7 @@ type FullConfig = {
 }
 
 // Configuration with optional options that are passed in
-type InputConfig = {
-    [key: string]: unknown,
-    prefix?: string,
-    maxTimers?: number,
-    maxTimersPerUser?: number,
-    commandCooldown?: number,
-    maxMotions?: number,
-    serverIconUrl?: string,
-    botIconUrl?: string,
-    shouldDetectProfanity?: boolean,
-    shouldUseFuzzyStringMatch?: boolean,
-    adminRoleName?: string,
-    emojis?: {
-        debating: {
-            name: string,
-            id?: string,
-        },
-        spectating: {
-            name: string,
-            id?: string,
-        },
-    },
-    whitelistedWords?: string[],
-}
+type InputConfig = Partial<FullConfig> & {[key: string]: unknown}
 
 // Default configuration values
 const defaultConfig: FullConfig = {
@@ -68,6 +46,7 @@ const defaultConfig: FullConfig = {
     maxTimersPerUser: 3,
     commandCooldown: 1,
     maxMotions: 20,
+    defaultTimeCtrl: 5,
     serverIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
@@ -152,18 +131,9 @@ if (!isValidConfig(inputConfig)) {
 }
 
 // Full configuration
-const fullConfig: InputConfig = {}
-
-/**
- * Check everything in passed in config and fill fullconfig with default or
- * passed in values
- */
-for (const [key, val] of Object.entries(defaultConfig)) {
-    if (key in inputConfig) {
-        fullConfig[key] = inputConfig[key]
-    } else {
-        fullConfig[key] = val
-    }
+const fullConfig: FullConfig = {
+    ...defaultConfig,
+    ...inputConfig,
 }
 
 export const {
@@ -172,6 +142,7 @@ export const {
     maxTimersPerUser,
     commandCooldown,
     maxMotions,
+    defaultTimeCtrl,
     serverIconUrl,
     botIconUrl,
     shouldDetectProfanity,
@@ -179,6 +150,6 @@ export const {
     adminRoleName,
     emojis,
     whitelistedWords,
-} = fullConfig as FullConfig
+} = fullConfig
 
-export default fullConfig as FullConfig
+export default fullConfig
