@@ -20,7 +20,7 @@
   },
   "license": "BSD-3-Clause",
   "dependencies": {
-    "@luke-zhang-04/dateplus": "^2.0.3",
+    "@luke-zhang-04/dateplus": "^3.0.0",
     "bad-words": "^3.0.3",
     "didyoumean": "^1.2.1",
     "discord.js": "^12.5.1",

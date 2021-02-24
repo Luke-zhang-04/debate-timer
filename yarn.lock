@@ -130,10 +130,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@luke-zhang-04/dateplus@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@luke-zhang-04/dateplus/-/dateplus-2.0.3.tgz#da9c17b6c8a4503aeafbd8c9371d913dc34b248e"
-  integrity sha512-NLZY4NzcQKsOsbgz4kWtq4v02ltE27Xd8lEcol5+rgSWK7bOH49JturJTjpnqu6e6VFNz57p3Ah72oCuazEG1Q==
+"@luke-zhang-04/dateplus@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@luke-zhang-04/dateplus/-/dateplus-3.0.0.tgz#6222d5dbd802f89c5f4482516b32d7ee3f7efe9b"
+  integrity sha512-O75jXrSn5TdcieT+skaz+RVaW9V8CT34E3rXcUfKh+GkqtuEJit7W3pVC0Km6RW7X5XFTJ9jk3jUzv6rNCS4Zg==
 
 "@nodelib/fs.scandir@2.1.4":
   version "2.1.4"
