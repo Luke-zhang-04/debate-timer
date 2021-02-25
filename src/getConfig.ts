@@ -169,6 +169,7 @@ export const {
     adminRoleName,
     emojis,
     whitelistedWords,
+    welcomeMessage,
 } = fullConfig
 
 export default fullConfig
