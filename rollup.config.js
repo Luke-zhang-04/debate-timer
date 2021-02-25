@@ -1,3 +1,4 @@
+import alias from "@rollup/plugin-alias"
 import progress from "rollup-plugin-progress"
 import resolve from "@rollup/plugin-node-resolve"
 import {terser} from "rollup-plugin-terser"
@@ -27,6 +28,14 @@ const config = {
     },
     plugins: [
         progress(),
+        alias({
+            entries: [
+                {
+                    find: "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs",
+                    replacement: "@luke-zhang-04/dateplus",
+                },
+            ],
+        }),
         typescript({
             tsconfig: "./tsconfig.rollup.json",
         }),
