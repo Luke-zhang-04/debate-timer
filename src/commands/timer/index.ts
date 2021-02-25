@@ -2,14 +2,14 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.4
+ * @version 1.5.0
  * @license BSD-3-Clause
  */
 
 import type {Message, User} from "discord.js"
+import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
 import {formatTime, muteUser, nextKey} from "./utils"
-import {maxTimers, maxTimersPerUser} from "../../getConfig"
-import DatePlus from "@luke-zhang-04/dateplus"
+import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 
 /* eslint-disable no-use-before-define */
 
@@ -381,9 +381,9 @@ export const start = (message: Message): void => {
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id))),
 
         // User defined time control (e.g 5 mins)
-        [timeCtrl] = message.content.split(" ")
+        timeCtrl = message.content.split(" ")
             .filter((content) => !isNaN(Number(content)))
-            .map((val) => Number(val))
+            .map((val) => Number(val))[0] ?? defaultTimeCtrl
 
     if (!isNaN(timeCtrl) && timeCtrl > 15) {
         message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")

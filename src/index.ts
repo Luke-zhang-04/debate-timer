@@ -2,16 +2,17 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.4
+ * @version 1.5.0
  * @license BSD-3-Clause
  */
+
 import {hostname, userInfo} from "os"
-import DatePlus from "@luke-zhang-04/dateplus"
+import {prefix, welcomeMessage} from "./getConfig"
+import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import Discord from "discord.js"
 import dotenv from "dotenv"
 import fs from "fs"
 import handleMessage from "./handleMessage"
-import {prefix} from "./getConfig"
 
 const readFile = (path: string): Promise<string> => (
         new Promise((resolve, reject) => {
@@ -81,10 +82,35 @@ client.once("ready", () => {
     client.user?.setPresence({
         status: "online",
         activity: {
-            name: `for a ${prefix}command`,
+            name: `for ${prefix}help`,
             type: "WATCHING",
         },
     })
+})
+
+client.on("guildMemberAdd", (member) => {
+    if (
+        welcomeMessage !== undefined &&
+        welcomeMessage !== null &&
+        welcomeMessage !== false &&
+        Object.keys(welcomeMessage).length >= 2
+    ) {
+        const {channel: channelId, message} =
+            welcomeMessage as {channel: string, message: string},
+
+            channel = client.channels.cache.find((chan) => chan.id === channelId)
+
+        if (!channel || !(channel instanceof Discord.TextChannel)) {
+            console.log(`Cannot find text channel with ID ${channelId}`)
+        } else {
+            channel.send(
+                message
+                    .replace(/%username% /gu, member.user.username)
+                    .replace(/%mention%/gu, `<@${member.user.id}>`)
+                    .replace(/%serverName%/gu, member.guild.name),
+            )
+        }
+    }
 })
 
 client.on("message", (message) => {

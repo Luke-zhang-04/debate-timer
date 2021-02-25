@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.4
+ * @version 1.5.0
  * @license BSD-3-Clause
  */
 
@@ -17,6 +17,7 @@ type FullConfig = {
     maxTimersPerUser: number,
     commandCooldown: number,
     maxMotions: number,
+    defaultTimeCtrl: number,
     serverIconUrl: string,
     botIconUrl: string,
     shouldDetectProfanity: boolean,
@@ -33,33 +34,14 @@ type FullConfig = {
         },
     },
     whitelistedWords: string[],
+    welcomeMessage?: false | null | {[key: string]: never} | {
+        channel: string,
+        message: string,
+    },
 }
 
 // Configuration with optional options that are passed in
-type InputConfig = {
-    [key: string]: unknown,
-    prefix?: string,
-    maxTimers?: number,
-    maxTimersPerUser?: number,
-    commandCooldown?: number,
-    maxMotions?: number,
-    serverIconUrl?: string,
-    botIconUrl?: string,
-    shouldDetectProfanity?: boolean,
-    shouldUseFuzzyStringMatch?: boolean,
-    adminRoleName?: string,
-    emojis?: {
-        debating: {
-            name: string,
-            id?: string,
-        },
-        spectating: {
-            name: string,
-            id?: string,
-        },
-    },
-    whitelistedWords?: string[],
-}
+type InputConfig = Partial<FullConfig> & {[key: string]: unknown}
 
 // Default configuration values
 const defaultConfig: FullConfig = {
@@ -68,6 +50,7 @@ const defaultConfig: FullConfig = {
     maxTimersPerUser: 3,
     commandCooldown: 1,
     maxMotions: 20,
+    defaultTimeCtrl: 5,
     serverIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
@@ -94,40 +77,55 @@ Object.freeze(defaultConfig)
  * @param obj - object to check
  * @returns if obj is type inputconfig
  */
-const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
-    (
-        typeof obj.prefix === "string" &&
+const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
+    const isValidPrefix = (
+            typeof obj.prefix === "string" &&
             obj.prefix !== "" && // Prefix isn't empty
             !obj.prefix.includes(" ") || // Prefix has no spaces
         obj.prefix === undefined
-    ) && (
-        typeof obj.maxTimers === "number" ||
-        obj.maxTimers === undefined
-    ) && (
-        typeof obj.maxCommandTimeGap === "number" ||
-        obj.maxCommandTimeGap === undefined
-    ) && (
-        typeof obj.serverIconUrl === "string" ||
-        obj.serverIconUrl === undefined
-    ) && (
-        typeof obj.botIconUrl === "string" ||
-        obj.botIconUrl === undefined
-    ) && (
-        typeof obj.shouldDetectProfanity === "boolean" ||
-        obj.shouldDetectProfanity === undefined
-    ) && (
-        typeof obj.shouldUseFuzzyStringMatch === "boolean" ||
-        obj.shouldUseFuzzyStringMatch === undefined
-    ) && (
-        typeof obj.adminRoleName === "string" ||
-        obj.adminRoleName === undefined
-    ) && (
-        typeof obj.emojis === "object" ||
-        typeof obj.emojis === undefined
-    ) && (
-        obj.whitelistedWords instanceof Array
-    )
-)
+        ),
+        isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array,
+        isValidEmojis = typeof obj.emojis === "object",
+        isValidWelcomeMessage =
+        obj.welcomeMessage === undefined ||
+        obj.welcomeMessage === null ||
+        obj.welcomeMessage === false ||
+        typeof obj.welcomeMessage === "object"
+
+    if (!isValidPrefix) {
+        throw new Error("Prefix should be type string, have no spaces, and not be empty")
+    } else if (!isValidWhitelistedWords) {
+        throw new Error("whitelistedWords should be array or undefined")
+    } else if (!isValidEmojis) {
+        throw new Error("emojis should be an object")
+    } else if (!isValidWelcomeMessage) {
+        throw new Error("welcomeMessage should be either undefined, null, false, or an object")
+    }
+
+    const singleVerificationKeys: (keyof Partial<FullConfig>)[] = [
+        "maxTimers",
+        "maxTimersPerUser",
+        "commandCooldown",
+        "maxMotions",
+        "defaultTimeCtrl",
+        "serverIconUrl",
+        "botIconUrl",
+        "shouldDetectProfanity",
+        "shouldUseFuzzyStringMatch",
+        "adminRoleName",
+    ]
+
+    for (const key of singleVerificationKeys) {
+        if (
+            obj[key] !== undefined &&
+            typeof defaultConfig[key] !== typeof obj[key]
+        ) {
+            return false
+        }
+    }
+
+    return true
+}
 /* eslint-enable complexity */
 
 // Try and get config.yml from root
@@ -152,18 +150,9 @@ if (!isValidConfig(inputConfig)) {
 }
 
 // Full configuration
-const fullConfig: InputConfig = {}
-
-/**
- * Check everything in passed in config and fill fullconfig with default or
- * passed in values
- */
-for (const [key, val] of Object.entries(defaultConfig)) {
-    if (key in inputConfig) {
-        fullConfig[key] = inputConfig[key]
-    } else {
-        fullConfig[key] = val
-    }
+const fullConfig: FullConfig = {
+    ...defaultConfig,
+    ...inputConfig,
 }
 
 export const {
@@ -172,6 +161,7 @@ export const {
     maxTimersPerUser,
     commandCooldown,
     maxMotions,
+    defaultTimeCtrl,
     serverIconUrl,
     botIconUrl,
     shouldDetectProfanity,
@@ -179,6 +169,7 @@ export const {
     adminRoleName,
     emojis,
     whitelistedWords,
-} = fullConfig as FullConfig
+    welcomeMessage,
+} = fullConfig
 
-export default fullConfig as FullConfig
+export default fullConfig

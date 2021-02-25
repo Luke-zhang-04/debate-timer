@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.4
+ * @version 1.5.0
  * @license BSD-3-Clause
  */
 
@@ -68,11 +68,17 @@ const timer = Object.freeze({
         forward: () => changeTime(message, 1),
         backward: () => changeTime(message, -1),
         makeDraw: () => teamGen.makeDraw(message),
+        draw: () => teamGen.makeDraw(message),
         makeTeams: () => teamGen.makeTeams(message),
+        teams: () => teamGen.makeTeams(message),
         makePartners: () => teamGen.makePartners(message),
+        partners: () => teamGen.makePartners(message),
         makeRound: () => teamGen.makeRound(message),
+        round: () => teamGen.makeRound(message),
         getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
+        motion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
         getMotions: () => motion.getRandomMotions(message),
+        motions: () => motion.getRandomMotions(message),
         systemInfo: async () => message.channel.send(await systemInfo()),
         poll: () => poll.makePoll(message, client),
         getPoll: () => poll.getPoll(message.channel),
