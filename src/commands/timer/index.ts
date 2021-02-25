@@ -7,8 +7,8 @@
  */
 
 import type {Message, User} from "discord.js"
-import {formatTime, muteUser, nextKey} from "./utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
+import {formatTime, muteUser, nextKey} from "./utils"
 import DatePlus from "@luke-zhang-04/dateplus"
 
 /* eslint-disable no-use-before-define */
