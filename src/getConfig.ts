@@ -34,7 +34,7 @@ type FullConfig = {
         },
     },
     whitelistedWords: string[],
-    welcomeMessage?: false | null | {} | {
+    welcomeMessage?: false | null | {[key: string]: never} | {
         channel: string,
         message: string,
     },

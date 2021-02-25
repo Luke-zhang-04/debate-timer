@@ -88,7 +88,7 @@ client.once("ready", () => {
     })
 })
 
-client.on("guildMemberAdd", async (member) => {
+client.on("guildMemberAdd", (member) => {
     if (
         welcomeMessage !== undefined &&
         welcomeMessage !== null &&
