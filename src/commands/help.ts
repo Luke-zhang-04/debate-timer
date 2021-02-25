@@ -191,8 +191,6 @@ This bot is in version ${version}
 > **\`${prefix}pause [id]\`**
 > **\`${prefix}list [global?]\`**
 >${" "}
-> **\`${prefix}give [id] [amt]\`**
-> **\`${prefix}take [id] [amt]\`**
 > **\`${prefix}backward [id] [amt]\`**
 > **\`${prefix}forward [id] [amt]\`**
 
@@ -203,12 +201,8 @@ This bot is in version ${version}
 > :speaking_head:
 > **\`${prefix}makeTeams [format?: bp | cp | worlds = bp]\`**
 > **\`${prefix}makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-> **\`${prefix}makeRound [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
 > **\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-
-> :bar_chart:
-> **\`${prefix}poll\`**
-> **\`${prefix}getPoll\`**
+> **\`${prefix}makeRound [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
 `
 
 /**
