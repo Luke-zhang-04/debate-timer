@@ -29,6 +29,13 @@ shoulddetectProfanity: true
 # Whitelisted words from profanity detection. Default empty.
 whitelistedWords: []
 
+# Welcome message to send when a new member joins
+welcomeMessage: null # An empty object, false, or null signifies no welcome message
+  # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
+
+  # Message contents. Use %username% for the username. You can access other properties too.
+  # message: ""
+
 # Automatically commands with near matches. Default true.
 shoulduseFuzzyStringMatch: true
 

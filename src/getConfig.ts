@@ -34,6 +34,10 @@ type FullConfig = {
         },
     },
     whitelistedWords: string[],
+    welcomeMessage?: false | null | {} | {
+        channel: string,
+        message: string,
+    },
 }
 
 // Configuration with optional options that are passed in
@@ -73,40 +77,55 @@ Object.freeze(defaultConfig)
  * @param obj - object to check
  * @returns if obj is type inputconfig
  */
-const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => (
-    (
+const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
+    const isValidPrefix = (
         typeof obj.prefix === "string" &&
             obj.prefix !== "" && // Prefix isn't empty
             !obj.prefix.includes(" ") || // Prefix has no spaces
         obj.prefix === undefined
-    ) && (
-        typeof obj.maxTimers === "number" ||
-        obj.maxTimers === undefined
-    ) && (
-        typeof obj.maxCommandTimeGap === "number" ||
-        obj.maxCommandTimeGap === undefined
-    ) && (
-        typeof obj.serverIconUrl === "string" ||
-        obj.serverIconUrl === undefined
-    ) && (
-        typeof obj.botIconUrl === "string" ||
-        obj.botIconUrl === undefined
-    ) && (
-        typeof obj.shouldDetectProfanity === "boolean" ||
-        obj.shouldDetectProfanity === undefined
-    ) && (
-        typeof obj.shouldUseFuzzyStringMatch === "boolean" ||
-        obj.shouldUseFuzzyStringMatch === undefined
-    ) && (
-        typeof obj.adminRoleName === "string" ||
-        obj.adminRoleName === undefined
-    ) && (
-        typeof obj.emojis === "object" ||
-        typeof obj.emojis === undefined
-    ) && (
-        obj.whitelistedWords instanceof Array
     )
-)
+    const isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array
+    const isValidEmojis = typeof obj.emojis === "object"
+    const isValidWelcomeMessage =
+        obj.welcomeMessage === undefined ||
+        obj.welcomeMessage === null ||
+        obj.welcomeMessage === false ||
+        typeof obj.welcomeMessage === "object"
+
+    if (!isValidPrefix) {
+        throw new Error("Prefix should be type string, have no spaces, and not be empty")
+    } else if (!isValidWhitelistedWords) {
+        throw new Error("whitelistedWords should be array or undefined")
+    } else if (!isValidEmojis) {
+        throw new Error("emojis should be an object")
+    } else if (!isValidWelcomeMessage) {
+        throw new Error("welcomeMessage should be either undefined, null, false, or an object")
+    }
+
+    const singleVerificationKeys: (keyof Partial<FullConfig>)[] = [
+        "maxTimers",
+        "maxTimersPerUser",
+        "commandCooldown",
+        "maxMotions",
+        "defaultTimeCtrl",
+        "serverIconUrl",
+        "botIconUrl",
+        "shouldDetectProfanity",
+        "shouldUseFuzzyStringMatch",
+        "adminRoleName",
+    ]
+
+    for (const key of singleVerificationKeys) {
+        if (
+            obj[key] !== undefined &&
+            typeof defaultConfig[key] !== typeof obj[key]
+        ) {
+            return false
+        }
+    }
+
+    return true
+}
 /* eslint-enable complexity */
 
 // Try and get config.yml from root
