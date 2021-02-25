@@ -88,11 +88,6 @@ client.once("ready", () => {
     })
 })
 
-console.log({welcomeMessage},         welcomeMessage !== undefined &&
-    welcomeMessage !== null &&
-    welcomeMessage !== false &&
-    Object.keys(welcomeMessage).length >= 2)
-
 client.on("guildMemberAdd", async (member) => {
     if (
         welcomeMessage !== undefined &&
@@ -100,11 +95,10 @@ client.on("guildMemberAdd", async (member) => {
         welcomeMessage !== false &&
         Object.keys(welcomeMessage).length >= 2
     ) {
-        console.log({welcomeMessage})
         const {channel: channelId, message} =
-            welcomeMessage as {channel: string, message: string}
+            welcomeMessage as {channel: string, message: string},
 
-        const channel = client.channels.cache.find((chan) => chan.id === channelId)
+            channel = client.channels.cache.find((chan) => chan.id === channelId)
 
         if (!channel || !(channel instanceof Discord.TextChannel)) {
             console.log(`Cannot find text channel with ID ${channelId}`)
