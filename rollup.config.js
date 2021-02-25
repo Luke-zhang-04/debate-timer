@@ -33,17 +33,12 @@ const config = {
         resolve({
             resolveOnly: [/^\.{0,2}\/|tslib/],
         }),
-        terser({
+        process.env.NODE_ENV === "dev" ? undefined : terser({
             format: {
                 comments: (_, {value}) => (
                     (!(/Luke Zhang/ui).test(value) || (/@preserve/ui).test(value)) &&
                     (/@preserve|li[cs]ense|copyright/ui).test(value)
                 ),
-            }
-        }),
-        terser({
-            format: {
-                comments: (_, {value}) => (/@preserve/ui).test(value),
             }
         }),
     ]
