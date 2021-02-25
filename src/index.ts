@@ -6,7 +6,7 @@
  * @license BSD-3-Clause
  */
 import {hostname, userInfo} from "os"
-import DatePlus from "@luke-zhang-04/dateplus"
+import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import Discord from "discord.js"
 import dotenv from "dotenv"
 import fs from "fs"
