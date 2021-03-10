@@ -21,7 +21,7 @@ import start from "./commands/timer"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
-type Commands = {[key: string]: (()=> unknown)}
+type Commands = {[key: string]: ((message: Message, client: Client)=> unknown)}
 
 // Swear words filter
 const filter = new Filter()
@@ -47,54 +47,47 @@ const timer = Object.freeze({
  * @param client - client object
  * @returns void
  */
-const getCommands = (message: Message, client: Client): Commands => ({
-    help: () => help(message),
-    man: () => help(message),
-    bruh: () => message.channel.send("", {files: [config.serverIconUrl]}),
-    coinflip: () => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
-    epic: () => message.channel.send("", {files: [config.botIconUrl]}),
-    start: () => timer.start(message),
-    kill: () => {
-        const shouldMute = message.content.split(" ")[2] === undefined ||
-            message.content.split(" ")[2] === "mute"
-
-        return timer.kill(
-            message, message.content.split(" ")[1], shouldMute,
-        )
-    },
-    list: () => list(message),
-    take: () => changeTime(message, 1),
-    give: () => changeTime(message, -1),
-    forward: () => changeTime(message, 1),
-    backward: () => changeTime(message, -1),
-    makeDraw: () => teamGen.makeDraw(message),
-    draw: () => teamGen.makeDraw(message),
-    makeTeams: () => teamGen.makeTeams(message),
-    teams: () => teamGen.makeTeams(message),
-    makePartners: () => teamGen.makePartners(message),
-    partners: () => teamGen.makePartners(message),
-    makeRound: () => teamGen.makeRound(message),
-    round: () => teamGen.makeRound(message),
-    getMotion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
-    motion: async () => message.channel.send(`:speaking_head: ${await motion.getRandomMotion()}`),
-    getMotions: () => motion.getRandomMotions(message),
-    motions: () => motion.getRandomMotions(message),
-    systemInfo: async () => message.channel.send(await systemInfo()),
-    poll: () => poll.makePoll(message, client),
-    getPoll: () => poll.getPoll(message.channel),
-    pause: () => {
+const commands: Commands = {
+    help,
+    man: help,
+    bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
+    coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+    epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
+    start: timer.start,
+    kill: timer.kill,
+    stop: timer.kill,
+    list,
+    take: (message) => changeTime(message, 1),
+    give: (message) => changeTime(message, -1),
+    forward: (message) => changeTime(message, 1),
+    backward: (message) => changeTime(message, -1),
+    makeDraw: teamGen.makeDraw,
+    draw: teamGen.makeDraw,
+    makeTeams: teamGen.makeTeams,
+    teams: teamGen.makeTeams,
+    makePartners: teamGen.makePartners,
+    partners: teamGen.makePartners,
+    makeRound: teamGen.makeRound,
+    round: teamGen.makeRound,
+    getMotion: motion.sendRandomMotion,
+    motion: motion.sendRandomMotion,
+    getMotions: motion.getRandomMotions,
+    motions: motion.getRandomMotions,
+    systemInfo: async (message) => message.channel.send(await systemInfo()),
+    poll: poll.makePoll,
+    getPoll: poll.getPoll,
+    pause: (message) => {
         timer.playPause(
             message, message.content.split(" ")[1], "pause",
         )
     },
-    resume: () => {
+    resume: (message) => {
         timer.playPause(
             message, message.content.split(" ")[1], "resume",
         )
     },
-})
+}
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
-
 
 /**
  * Handle a command (starts with !)
@@ -111,7 +104,6 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
 
     // Command name
     const [cmd] = message.content.slice(prefix.length).split(" ")
-    const commands = getCommands(message, client)
 
     if (config.shouldRespondToUnknownCommand && ((cmd ?? "") === "")) {
         message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
@@ -141,7 +133,7 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
                     })
                 }
 
-                await command()
+                await command(message, client)
 
                 return
             }

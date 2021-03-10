@@ -18,10 +18,13 @@ import {isauthorizedToModifyTimer} from "./utils"
  * @returns void
  */
 export const kill = async (
-    {author, member, channel}: Message,
-    id?: string,
-    shouldmute?: boolean,
+    message: Message,
 ): Promise<void> => {
+    const {author, member, channel} = message
+    const id = message.content.split(" ")[1]
+    const shouldMute =
+        message.content.split(" ")[2] === undefined ||
+        message.content.split(" ")[2] === "mute"
     const numericId = Number(id)
 
     if (id === undefined) { // Id was never provided. Terminate.
@@ -53,7 +56,7 @@ export const kill = async (
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
     } else if (isauthorizedToModifyTimer(member, author, timer)) {
-        timer.shouldmute = Boolean(shouldmute)
+        timer.shouldMute = Boolean(shouldMute)
         timer.kill() // Run the `kill()` function
     } else {
         const mentionedMessage = timer.mentionedUid

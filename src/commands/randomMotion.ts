@@ -80,6 +80,10 @@ export const getRandomMotion = async (): Promise<string> => {
     return `${infoSlide}${motion.toString()}`
 }
 
+export const sendRandomMotion = async (message: Message): Promise<Message> => (
+    message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
+)
+
 /**
  * Gets multiple random motions as defined in the message content
  * @param message - message object so we can get it's contents and send messages back
@@ -163,4 +167,5 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
 export default {
     getRandomMotion,
     getRandomMotions,
+    sendRandomMotion,
 }

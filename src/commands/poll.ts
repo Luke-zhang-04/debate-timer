@@ -8,14 +8,9 @@
 
 import type {
     Client,
-    DMChannel,
     Message,
-    NewsChannel,
-    TextChannel
 } from "discord.js"
 import {emojis} from "../getConfig"
-
-type Channel = TextChannel | DMChannel | NewsChannel
 
 // Two emojis for the polls
 const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`
@@ -70,7 +65,7 @@ export const makePoll = async (
  * @param channel - Discord channel
  * @returns void - sends the message in the function
  */
-export const getPoll = (channel: Channel): void => {
+export const getPoll = ({channel}: Message): void => {
     let debatersString = ""
     let spectatorsString = ""
 

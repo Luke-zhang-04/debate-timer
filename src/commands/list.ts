@@ -31,7 +31,7 @@ const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
 
     // Format each timer to a string
     const timersString = timers.map((timer, index) => (
-        `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.ispaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
+        `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.isPaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
     ))
 
     // Message title/header

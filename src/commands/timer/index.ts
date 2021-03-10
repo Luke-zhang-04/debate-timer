@@ -34,12 +34,12 @@ export class Timer {
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
-    public shouldmute = true
+    public shouldMute = true
 
     /**
      * If timer is currently paused
      */
-    public ispaused = false
+    public isPaused = false
 
     /**
      * Uid of mentioned user if provided
@@ -127,7 +127,7 @@ export class Timer {
             : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -188,13 +188,13 @@ export class Timer {
      */
     public start = (): void => {
         this._intervalId = setInterval(() => {
-            if (this.ispaused) {
+            if (this.isPaused) {
                 this._startTime += interval * 1000
 
                 if (Date.now() - this._trueStartTime > DatePlus.minsToSecs(20)) {
                     this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
 
-                    this.shouldmute = false
+                    this.shouldMute = false
                     this.kill()
                 }
 
@@ -223,7 +223,7 @@ export class Timer {
             clearInterval(this._intervalId)
         }
 
-        if (this._mentionedUser !== undefined && this.shouldmute) {
+        if (this._mentionedUser !== undefined && this.shouldMute) {
             muteUser(this.message.guild, this._mentionedUser)
         }
 
@@ -243,8 +243,8 @@ export class Timer {
      * @param playOrPause - if the timer should resume or pause
      */
     public playPause = (playOrPause?: "resume" | "pause"): void => {
-        this.ispaused = playOrPause === undefined
-            ? !this.ispaused
+        this.isPaused = playOrPause === undefined
+            ? !this.isPaused
             : playOrPause === "pause"
     }
 
@@ -283,7 +283,7 @@ export class Timer {
             : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
         msg.edit( // Edit the message with required information
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
 
         this._notifySpeechStatus()
