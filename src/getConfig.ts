@@ -34,6 +34,7 @@ type FullConfig = {
         },
     },
     whitelistedWords: string[],
+    blacklistedWords: string[],
     welcomeMessage?: false | null | {[key: string]: never} | {
         channel: string,
         message: string,
@@ -67,6 +68,7 @@ const defaultConfig: FullConfig = {
         },
     },
     whitelistedWords: [],
+    blacklistedWords: [],
 }
 
 Object.freeze(defaultConfig)
@@ -85,6 +87,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         obj.prefix === undefined
     )
     const isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array
+    const isValidBlacklistedWords = (obj.blackListedWords ?? []) instanceof Array
     const isValidEmojis = typeof obj.emojis === "object"
     const isValidWelcomeMessage =
         obj.welcomeMessage === undefined ||
@@ -96,6 +99,8 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         throw new Error("Prefix should be type string, have no spaces, and not be empty")
     } else if (!isValidWhitelistedWords) {
         throw new Error("whitelistedWords should be array or undefined")
+    } else if (!isValidBlacklistedWords) {
+        throw new Error("blacklistedWords should be array or undefined")
     } else if (!isValidEmojis) {
         throw new Error("emojis should be an object")
     } else if (!isValidWelcomeMessage) {
@@ -169,6 +174,7 @@ export const {
     adminRoleName,
     emojis,
     whitelistedWords,
+    blacklistedWords,
     welcomeMessage,
 } = fullConfig
 

@@ -31,6 +31,12 @@ whitelistedWords:
   - god
   - crap
   - hell
+  - piss
+
+blacklistedWords:
+  - dipshit
+  - dumbass
+
 
 # Welcome message to send when a new member joins
 welcomeMessage: # An empty object, false, or null signifies no welcome message

@@ -26,7 +26,7 @@ type Commands = {[key: string]: (()=> unknown)}
 // Swear words filter
 const filter = new Filter()
 
-filter.addWords("dipshit", "dumbass")
+filter.addWords(...config.blacklistedWords)
 filter.removeWords(...config.whitelistedWords)
 
 didyoumean.threshold = 0.6

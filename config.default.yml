@@ -29,6 +29,9 @@ shoulddetectProfanity: true
 # Whitelisted words from profanity detection. Default empty.
 whitelistedWords: []
 
+# Blacklisted words from profanity detection. Default empty.
+blacklistedWords: []
+
 # Welcome message to send when a new member joins
 welcomeMessage: null # An empty object, false, or null signifies no welcome message
   # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
