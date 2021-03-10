@@ -32,18 +32,18 @@ const runCommand = (cmd: string): Promise<string> => (
  */
 export default async (): Promise<string> => {
     // Hardware info
-    const version = await runCommand("cat /proc/version"),
+    const version = await runCommand("cat /proc/version")
 
-        // Platform name
-        uname = await runCommand("uname -a"),
+    // Platform name
+    const uname = await runCommand("uname -a")
 
-        // CPU info
-        cpu = await runCommand("lscpu | grep -E \"name\" | tr -s \" \""),
+    // CPU info
+    const cpu = await runCommand("lscpu | grep -E \"name\" | tr -s \" \"")
 
-        // Memory (RAM)
-        mem = await runCommand(
-            "cat /proc/meminfo | grep MemTotal | awk '$3==\"kB\"{$2=$2/1024^2;$3=\"GB\";} 1'",
-        )
+    // Memory (RAM)
+    const mem = await runCommand(
+        "cat /proc/meminfo | grep MemTotal | awk '$3==\"kB\"{$2=$2/1024^2;$3=\"GB\";} 1'",
+    )
 
     return `debate-timer-bot@${hostname()}\n\n${version}\n${cpu}${mem}\n${uname}`
 }

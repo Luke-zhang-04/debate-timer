@@ -18,12 +18,12 @@ import {emojis} from "../getConfig"
 type Channel = TextChannel | DMChannel | NewsChannel
 
 // Two emojis for the polls
-const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`,
-    emoji2 = emojis.spectating.id ? `<:${emojis.spectating.name}:${emojis.spectating.id}>` : `:${emojis.spectating.name}:`,
+const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`
+const emoji2 = emojis.spectating.id ? `<:${emojis.spectating.name}:${emojis.spectating.id}>` : `:${emojis.spectating.name}:`
 
-    // Arrays with debaters and spectators
-    debaters: string[] = [],
-    spectators: string[] = []
+// Arrays with debaters and spectators
+const debaters: string[] = []
+const spectators: string[] = []
 
 /**
  * Makes a poll
@@ -71,8 +71,8 @@ export const makePoll = async (
  * @returns void - sends the message in the function
  */
 export const getPoll = (channel: Channel): void => {
-    let debatersString = "",
-        spectatorsString = ""
+    let debatersString = ""
+    let spectatorsString = ""
 
     for (const debater of debaters) {
         debatersString += `<@${debater}> `

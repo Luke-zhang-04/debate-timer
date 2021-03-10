@@ -79,14 +79,14 @@ Object.freeze(defaultConfig)
  */
 const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
     const isValidPrefix = (
-            typeof obj.prefix === "string" &&
+        typeof obj.prefix === "string" &&
             obj.prefix !== "" && // Prefix isn't empty
             !obj.prefix.includes(" ") || // Prefix has no spaces
         obj.prefix === undefined
-        ),
-        isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array,
-        isValidEmojis = typeof obj.emojis === "object",
-        isValidWelcomeMessage =
+    )
+    const isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array
+    const isValidEmojis = typeof obj.emojis === "object"
+    const isValidWelcomeMessage =
         obj.welcomeMessage === undefined ||
         obj.welcomeMessage === null ||
         obj.welcomeMessage === false ||

@@ -45,10 +45,10 @@ export const kill = async (
     }
 
     // Array of timers from index
-    const {timers} = await import("."),
+    const {timers} = await import(".")
 
-        // The current timer
-        timer = timers[numericId]
+    // The current timer
+    const timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)

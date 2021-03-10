@@ -152,10 +152,10 @@ type Package = {
     engines?: {[key: string]: string},
 }
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package,
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
-    // Default help message
-    defaultMsg = `**Debate Timer Bot**
+// Default help message
+const defaultMsg = `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
@@ -234,8 +234,8 @@ export default (message: Message): void => {
     }
 
     if (correctedArg !== arg) {
-        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
-            content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
+        const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
 
         message.channel.send(content).then((_message) => {
             if (shouldTypo) {
