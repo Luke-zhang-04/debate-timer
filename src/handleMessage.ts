@@ -113,13 +113,10 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
     const [cmd] = message.content.slice(prefix.length).split(" ")
     const commands = getCommands(message, client)
 
-    switch (cmd) {
-        case null || undefined || "":
-            message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
+    if (config.shouldRespondToUnknownCommand && ((cmd ?? "") === "")) {
+        message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
-            return
-
-        default: break
+        return
     }
 
     const correctedCmd = config.shouldUseFuzzyStringMatch
@@ -152,16 +149,18 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
     }
     /* eslint-enable no-await-in-loop */
 
-    const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
-    const content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to ${shouldTypo ? "tpe" : "type"}.\nOtherwise, ${shouldTypo ? "tpye" : "type"} \`${prefix}help\` for help.`
+    if (config.shouldRespondToUnknownCommand) {
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
+        const content = `:confused: The command \`${message.content.slice(prefix.length)}\` is not recognized.\nIf this was a typo, learn to ${shouldTypo ? "tpe" : "type"}.\nOtherwise, ${shouldTypo ? "tpye" : "type"} \`${prefix}help\` for help.`
 
-    message.channel.send(content).then((_message) => {
-        if (shouldTypo) {
-            setTimeout(() => {
-                _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-            }, 2500)
-        }
-    })
+        message.channel.send(content).then((_message) => {
+            if (shouldTypo) {
+                setTimeout(() => {
+                    _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                }, 2500)
+            }
+        })
+    }
 }
 
 /* eslint-disable */
