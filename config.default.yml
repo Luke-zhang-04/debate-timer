@@ -24,7 +24,7 @@ botIconUrl:
   https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
 
 # Profanity detection. Default true
-shoulddetectProfanity: true
+shouldDetectProfanity: true
 
 # Whitelisted words from profanity detection. Default empty.
 whitelistedWords: []
@@ -41,7 +41,7 @@ welcomeMessage: null # An empty object, false, or null signifies no welcome mess
   # message: ""
 
 # Automatically commands with near matches. Default true.
-shoulduseFuzzyStringMatch: true
+shouldUseFuzzyStringMatch: true
 
 # Admin role in your server. Defaults to just "admin".
 # If you have no admin role, you can leave this value as it's default
