@@ -85,10 +85,18 @@ select {
   width: 100%;
   padding: 7px;
   border: none;
-  border-bottom: 1px solid #ddd;
-  background: transparent;
+  border-bottom: 0.0125rem solid mix($dark, $light, 75%);
+  background-color: #0000;
   margin-bottom: 10px;
   height: 45px;
+
+  transition: border-bottom 0.25s $transition-timing,
+    background-color 0.25s $transition-timing;
+
+  &:focus {
+    border-bottom: 0.125rem solid $light;
+    background-color: mix($dark, $light, 90%);
+  }
 }
 
 label,
