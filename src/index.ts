@@ -6,13 +6,15 @@
  * @license BSD-3-Clause
  */
 
-import "dotenv/config"
 import {hostname, userInfo} from "os"
 import {prefix, welcomeMessage} from "./getConfig"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import Discord from "discord.js"
+import dotenv from "dotenv"
 import fs from "fs"
 import handleMessage from "./handleMessage"
+
+dotenv.config()
 
 const readFile = (path: string): Promise<string> => (
     new Promise((resolve, reject) => {
