@@ -52,4 +52,16 @@ export const playPause = async (
     }
 }
 
+export const pause = (message: Message): void => {
+    playPause(
+        message, message.content.split(" ")[1], "pause",
+    )
+}
+
+export const resume = (message: Message): void => {
+    playPause(
+        message, message.content.split(" ")[1], "resume",
+    )
+}
+
 export default playPause

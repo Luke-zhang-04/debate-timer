@@ -7,6 +7,8 @@ All timer related things go here
 
 ## index
 Main entry points of timer.
+
+## start
 - Exports the the `start` function which can start a timer.
 
 ## kill

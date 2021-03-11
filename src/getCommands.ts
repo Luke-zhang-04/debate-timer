@@ -6,38 +6,20 @@
  * @license BSD-3-Clause
  */
 
+import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import help from "./commands/help"
-import kill from "./commands/timer/kill"
 import list from "./commands/list"
 import motion from "./commands/randomMotion"
-import playPause from "./commands/timer/playPause"
 import poll from "./commands/poll"
-import start from "./commands/timer"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
 type Commands = {[key: string]: ((message: Message, client: Client)=> unknown)}
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-
-const timer = Object.freeze({
-    changeTime,
-    kill,
-    pause: (message: Message) => {
-        playPause(
-            message, message.content.split(" ")[1], "pause",
-        )
-    },
-    resume: (message: Message) => {
-        playPause(
-            message, message.content.split(" ")[1], "resume",
-        )
-    },
-    start,
-})
 
 /**
  * All commands

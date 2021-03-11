@@ -8,7 +8,7 @@
 
 import type {
     Client,
-    Message,
+    Message
 } from "discord.js"
 import {emojis} from "../getConfig"
 
