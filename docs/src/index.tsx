@@ -129,6 +129,14 @@ class Timer extends DeStagnate.Component<{}, State> {
         })
     }
 
+    public onKeyDown = (event: KeyboardEvent) => {
+        if (event.key === " " || event.code == "Enter") {
+            this.spacebar()
+        } else if (event.key === "r") {
+            this.reset()
+        }
+    }
+
     public render = (): JSX.Element => {
         if (this.state.time === 0 && this.state.paused) {
             return <div class="container">
@@ -137,8 +145,9 @@ class Timer extends DeStagnate.Component<{}, State> {
 
                 <form
                     class="form"
-                    onSubmit={() => {
-                        console.log("SUBMIT")
+                    onSubmit={(event: Event) => {
+                        event.preventDefault()
+                        this.spacebar()
                     }}
                 >
                     <label for="time">Time</label>
@@ -180,14 +189,6 @@ if (root) {
     const timer = new Timer(root)
 
     timer.mount()
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === " ") {
-            timer.spacebar()
-        } else if (event.key === "r") {
-            timer.reset()
-        }
-    })
 } else {
     alert("Could not load timer. Something went wrong: #root not found x_x.")
 }
