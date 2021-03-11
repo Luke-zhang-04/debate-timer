@@ -6,11 +6,11 @@
  * @license BSD-3-Clause
  */
 
+import "dotenv/config"
 import {hostname, userInfo} from "os"
 import {prefix, welcomeMessage} from "./getConfig"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import Discord from "discord.js"
-import dotenv from "dotenv"
 import fs from "fs"
 import handleMessage from "./handleMessage"
 
@@ -67,8 +67,6 @@ const uncaughtException = async (err: Error): Promise<void> => {
         `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(0, 2_500_000),
     )
 }
-
-dotenv.config()
 
 console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
 
