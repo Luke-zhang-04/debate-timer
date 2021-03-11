@@ -33,7 +33,13 @@ const config = {
             tsconfig: `${__dirname}/tsconfig.json`,
         }),
         resolve(),
-        process.env.NODE_ENV === "dev" ? undefined : terser(),
+        process.env.NODE_ENV === "dev" ? undefined : terser({
+            mangle: {
+                properties: {
+                    regex: /^_/u, // Mangle private properties
+                },
+            },
+        }),
     ]
 }
 
