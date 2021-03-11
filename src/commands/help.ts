@@ -78,11 +78,11 @@ Parameters:
 
     getMotion: `>>> **\`getMotion\`**
 Gets a random motion from the hellomotions spreadsheet
-<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
+<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>`,
 
     getMotions: `>>> **\`getMotions [count?]\`**
 Gets multiple motions from the hellomotions spreadsheet
-<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>
+<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>
 Parameters:
     \`[count?]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than 20.
 E.g \`${prefix}getMotions 6\``,
