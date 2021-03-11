@@ -13,7 +13,7 @@ import {strictEqual} from "assert"
 import testHelpers from "./utils/helpers.js"
 
 export default () => {
-    context("Should start a timer properly", () => {
+    context("Should start a timer properly", async () => {
         const message = new Message(
             "!start @Tester",
             {
@@ -24,7 +24,7 @@ export default () => {
             },
         )
 
-        handleMessage.default(message)
+        await handleMessage.default(message)
 
         let returnMsg = message.newMessage.content,
             id
@@ -59,7 +59,7 @@ export default () => {
             }, 1000)
         })
 
-        context("Listing timers", () => {
+        context("Listing timers", async () => {
             for (let i = 0; i < 2; i++) {
                 const timerForList = new Message(
                     "!start @Tester",
@@ -72,7 +72,7 @@ export default () => {
                     },
                 )
 
-                handleMessage.default(timerForList)
+                await handleMessage.default(timerForList)
             }
 
             it("Should list 2 timers for global", async () => {
@@ -209,7 +209,7 @@ export default () => {
         })
     })
 
-    context("Time change commands", () => {
+    context("Time change commands", async () => {
         const myTimer = new Message(
             "!start @Tester",
             {
@@ -221,7 +221,7 @@ export default () => {
             },
         )
 
-        handleMessage.default(myTimer)
+        await handleMessage.default(myTimer)
 
         const id = myTimer.newMessage.content.split(" ")[9]
 
