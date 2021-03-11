@@ -7,10 +7,8 @@
  */
 
 import {Client, Message} from "discord.js"
-import Filter from "bad-words"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
-import didyoumean from "didyoumean"
 import help from "./commands/help"
 import kill from "./commands/timer/kill"
 import list from "./commands/list"
@@ -23,31 +21,31 @@ import teamGen from "./commands/teamGen"
 
 type Commands = {[key: string]: ((message: Message, client: Client)=> unknown)}
 
-// Swear words filter
-const filter = new Filter()
-
-filter.addWords(...config.blacklistedWords)
-filter.removeWords(...config.whitelistedWords)
-
-didyoumean.threshold = 0.6
-
-let lastCommand = 0
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 const timer = Object.freeze({
     changeTime,
     kill,
-    playPause,
+    pause: (message: Message) => {
+        playPause(
+            message, message.content.split(" ")[1], "pause",
+        )
+    },
+    resume: (message: Message) => {
+        playPause(
+            message, message.content.split(" ")[1], "resume",
+        )
+    },
     start,
 })
 
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /**
  * All commands
  * @param message - message object
  * @param client - client object
  * @returns void
  */
-const commands: Commands = {
+export const commands: Commands = {
     help,
     man: help,
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
@@ -76,15 +74,9 @@ const commands: Commands = {
     systemInfo: async (message) => message.channel.send(await systemInfo()),
     poll: poll.makePoll,
     getPoll: poll.getPoll,
-    pause: (message) => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "pause",
-        )
-    },
-    resume: (message) => {
-        timer.playPause(
-            message, message.content.split(" ")[1], "resume",
-        )
-    },
+    pause: timer.pause,
+    resume: timer.resume,
 }
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
+
+export default commands
