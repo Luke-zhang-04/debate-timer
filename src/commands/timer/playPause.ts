@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 
@@ -36,10 +36,10 @@ export const playPause = async (
     channel.send(`Looking for timer with id ${id}`)
 
     // Array of timers from index
-    const {timers} = await import("."),
+    const {timers} = await import(".")
 
-        // The current timer
-        timer = timers[numericId]
+    // The current timer
+    const timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
@@ -50,6 +50,18 @@ export const playPause = async (
     } else {
         channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only <@${timer.creator.id}> of the timer and those with the ${adminRoleName} role may modify this timer.`)
     }
+}
+
+export const pause = (message: Message): void => {
+    playPause(
+        message, message.content.split(" ")[1], "pause",
+    )
+}
+
+export const resume = (message: Message): void => {
+    playPause(
+        message, message.content.split(" ")[1], "resume",
+    )
 }
 
 export default playPause

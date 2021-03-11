@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 
@@ -21,21 +21,21 @@ import {formatTime} from "./timer/utils"
 const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
     // Get all the timers
     const timers = Object.values((await import("./timer")).timers)
-            .filter((timer, index) => (
-                index <= 10 && (
-                    user === undefined ||
+        .filter((timer, index) => (
+            index <= 10 && (
+                user === undefined ||
                     user.id === timer.creator.id ||
                     user.id === timer.mentionedUid
-                )
-            )),
+            )
+        ))
 
-        // Format each timer to a string
-        timersString = timers.map((timer, index) => (
-            `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.ispaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
-        )),
+    // Format each timer to a string
+    const timersString = timers.map((timer, index) => (
+        `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.isPaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
+    ))
 
-        // Message title/header
-        title = `${user?.id && `<@${user.id}>` || "global"}`
+    // Message title/header
+    const title = `${user?.id && `<@${user.id}>` || "global"}`
 
     channel.send(`**Timers for: ${title}**:\n${timersString.join("\n") || "None"}`)
 }

@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  * @file lets you send messages on the bots behalf
  */
@@ -19,16 +19,16 @@ export const cat = async (
     channel: Discord.TextChannel,
 ): Promise<string> => {
     const replaceFunc = ({content, mentions}: Discord.Message): string => {
-            let message = content
+        let message = content
 
-            for (const [_, user] of mentions.users) {
-                message = message.replace(new RegExp(`<@(!)?${user.id}>`, "gui"), `${colors.blue}@${user.username}${colors.reset}`)
-            }
+        for (const [_, user] of mentions.users) {
+            message = message.replace(new RegExp(`<@(!)?${user.id}>`, "gui"), `${colors.blue}@${user.username}${colors.reset}`)
+        }
 
-            return message
-        },
+        return message
+    }
 
-        messages = await channel.messages.fetch({limit: 15})
+    const messages = await channel.messages.fetch({limit: 15})
 
     return messages.map((message) => (
         `${colors.biWhite}${message.author.username}${colors.reset}: ${replaceFunc(message)}`

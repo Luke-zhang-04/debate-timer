@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 import type {
@@ -14,67 +14,68 @@ import type {Timer} from "."
 import {adminRoleName} from "../../getConfig"
 
 // One minute
-const minute = 60,
+const minute = 60
 
-    /* eslint-disable id-length */
-    /**
-     * Main shellsort function
-     * @see {@link https://github.com/Luke-zhang-04/Sorting-Algorithms/blob/master/shellSort/index.ts}
-     * @param array - array to sort
-     * @returns void; sorts in-place
-     */
-    shellSort = <T>(array: T[]): void => {
-        let gap = Math.floor(array.length / 2) // Alternate gap sequence 4**iterations + 3 * 2**iterations + 1
+/* eslint-disable id-length */
+/**
+ * Main shellsort function
+ * @see {@link https://github.com/Luke-zhang-04/Sorting-Algorithms/blob/master/shellSort/index.ts}
+ * @param array - array to sort
+ * @returns void; sorts in-place
+ */
+const shellSort = <T>(array: T[]): void => {
+    let gap = Math.floor(array.length / 2) // Alternate gap sequence 4**iterations + 3 * 2**iterations + 1
 
-        while (gap >= 1) {
-            for (let i = gap; i < array.length; i ++) { // Iterate through array, starting from gap
-                const comparator = array[i] // Make comparisons with this
-                let index, // In case of negative index
-                    output = 0 // For accessing x outside the array
+    while (gap >= 1) {
+        for (let i = gap; i < array.length; i ++) { // Iterate through array, starting from gap
+            const comparator = array[i] // Make comparisons with this
+            let index // In case of negative index
+            let output = 0 // For accessing x outside the array
 
-                for (let x = i; x > gap - 2; x -= gap) { // Iterate throguh array with gap as the step
-                    output = x // For accessing x outside the array
-                    if (x - gap < 0) { // In case of negative index
-                        index = array.length - x - gap
-                    } else {
-                        index = x - gap
-                    }
-
-                    if (array[index] <= comparator) { // Break when correct spot is found
-                        break
-                    } else { // Otherwise, move elements forward to make space
-                        array[x] = array[index]
-                    }
+            for (let x = i; x > gap - 2; x -= gap) { // Iterate throguh array with gap as the step
+                output = x // For accessing x outside the array
+                if (x - gap < 0) { // In case of negative index
+                    index = array.length - x - gap
+                } else {
+                    index = x - gap
                 }
-                array[output] = comparator // Insert comparator in the correct spot
+
+                if (array[index] <= comparator) { // Break when correct spot is found
+                    break
+                } else { // Otherwise, move elements forward to make space
+                    array[x] = array[index]
+                }
             }
-            gap = Math.floor(gap / 2) // Increment the gap
+            array[output] = comparator // Insert comparator in the correct spot
         }
+        gap = Math.floor(gap / 2) // Increment the gap
     }
+}
 /* eslint-enable id-length */
 
 /**
  * Turns seconds into human readable time
  * E.g `formatTime(90)` -> `"1:30"`
  * @param secs - seconds to format
+ * @param forceMinutes - force the minutes side to be shown even if it's zero
  * @returns the formatted time
  */
-export const formatTime = (secs: number): string => {
+export const formatTime = (secs: number, forceMinutes = false): string => {
     // Get the remainder seconds
-    const remainingSeconds = secs % minute,
+    const remainingSeconds = secs % minute
 
-        // Get the number of whole minutes
-        minutes = (secs - remainingSeconds) / minute,
+    // Get the number of whole minutes
+    const minutes = (secs - remainingSeconds) / minute
 
-        /**
-         * Add 0 to beginning if remainder seconds is less than 10
-         * E.g `"1:3"` -> `"1:03"`
-         */
-        remainingSecondsStr = remainingSeconds < 10
-            ? `0${remainingSeconds}`
-            : remainingSeconds.toString()
+    /**
+     * Add 0 to beginning if remainder seconds is less than 10
+     * E.g `"1:3"` -> `"1:03"`
+     */
+    const remainingSecondsStr = remainingSeconds < 10
+        ? `0${remainingSeconds}`
+        : remainingSeconds.toString()
 
-    return minutes > 0 // Return the seconds if no minutes have passed
+    return forceMinutes || minutes > 0 // Return the seconds if no minutes have passed
         ? `${minutes}:${remainingSecondsStr}`
         : secs.toString()
 }

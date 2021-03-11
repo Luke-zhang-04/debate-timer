@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  * @file lets you send messages on the bots behalf
  */
@@ -30,19 +30,19 @@ export type Channels = [
 
 const connected = new Promise<void>((resolve) => {
     client.once("ready", resolve)
-}),
+})
 
-    readFile = (path: string): Promise<string> => (
-        new Promise((resolve, reject) => {
-            fs.readFile(path, "utf-8", (err, data) => {
-                if (err) {
-                    return reject(err)
-                }
+const readFile = (path: string): Promise<string> => (
+    new Promise((resolve, reject) => {
+        fs.readFile(path, "utf-8", (err, data) => {
+            if (err) {
+                return reject(err)
+            }
 
-                return resolve(data)
-            })
+            return resolve(data)
         })
-    );
+    })
+);
 
 /* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
@@ -54,16 +54,16 @@ const connected = new Promise<void>((resolve) => {
     // Get CLI Version
     const {version} = JSON.parse(
         await readFile("package.json"),
-    ) as {version: string},
+    ) as {version: string}
 
-        // Current channel(s) that the user is on
-        channels: Channels = []
+    // Current channel(s) that the user is on
+    const channels: Channels = []
 
     // Fix some weird things when breaking a loop
-    let shouldcontinueRunning = true,
+    let shouldcontinueRunning = true
 
-        // Current working directory
-        cwd = "/"
+    // Current working directory
+    let cwd = "/"
 
 
     console.log(`\nCLI Version ${version}\n`)
@@ -81,8 +81,8 @@ const connected = new Promise<void>((resolve) => {
             continue
         }
 
-        const command = fullCommand.split(" ")[0], // Name of the command ONLY
-            currentChannel = channels[channels.length - 1]
+        const command = fullCommand.split(" ")[0] // Name of the command ONLY
+        const currentChannel = channels[channels.length - 1]
 
         switch (command) {
             case "exit":

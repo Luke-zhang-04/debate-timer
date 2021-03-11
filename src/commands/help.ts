@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 import {prefix, shouldUseFuzzyStringMatch} from "../getConfig"
@@ -78,11 +78,11 @@ Parameters:
 
     getMotion: `>>> **\`getMotion\`**
 Gets a random motion from the hellomotions spreadsheet
-<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>`,
+<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>`,
 
     getMotions: `>>> **\`getMotions [count?]\`**
 Gets multiple motions from the hellomotions spreadsheet
-<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit?usp=sharing>
+<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>
 Parameters:
     \`[count?]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than 20.
 E.g \`${prefix}getMotions 6\``,
@@ -152,10 +152,10 @@ type Package = {
     engines?: {[key: string]: string},
 }
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package,
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
-    // Default help message
-    defaultMsg = `**Debate Timer Bot**
+// Default help message
+const defaultMsg = `**Debate Timer Bot**
 
 This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
@@ -234,8 +234,8 @@ export default (message: Message): void => {
     }
 
     if (correctedArg !== arg) {
-        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75,
-            content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
+        const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
+        const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
 
         message.channel.send(content).then((_message) => {
             if (shouldTypo) {

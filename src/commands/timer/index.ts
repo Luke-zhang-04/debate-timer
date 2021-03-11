@@ -2,13 +2,12 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 
 import type {Message, User} from "discord.js"
-import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
-import {formatTime, muteUser, nextKey} from "./utils"
+import {formatTime, muteUser} from "./utils"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 
 /* eslint-disable no-use-before-define */
@@ -34,12 +33,12 @@ export class Timer {
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
-    public shouldmute = true
+    public shouldMute = true
 
     /**
      * If timer is currently paused
      */
-    public ispaused = false
+    public isPaused = false
 
     /**
      * Uid of mentioned user if provided
@@ -121,13 +120,13 @@ export class Timer {
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
-        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : "",
-            bar = process.env.NODE_ENV === "test"
-                ? ""
-                : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+        const bar = process.env.NODE_ENV === "test"
+            ? ""
+            : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -188,13 +187,13 @@ export class Timer {
      */
     public start = (): void => {
         this._intervalId = setInterval(() => {
-            if (this.ispaused) {
+            if (this.isPaused) {
                 this._startTime += interval * 1000
 
-                if (Date.now() - this._trueStartTime > DatePlus.minsToSecs(20)) {
+                if (Date.now() - this._trueStartTime > DatePlus.minsToMs(20)) {
                     this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
 
-                    this.shouldmute = false
+                    this.shouldMute = false
                     this.kill()
                 }
 
@@ -223,7 +222,7 @@ export class Timer {
             clearInterval(this._intervalId)
         }
 
-        if (this._mentionedUser !== undefined && this.shouldmute) {
+        if (this._mentionedUser !== undefined && this.shouldMute) {
             muteUser(this.message.guild, this._mentionedUser)
         }
 
@@ -231,7 +230,7 @@ export class Timer {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
-        (await this._msg).edit(`:white_check_mark: Speech Finished!`)
+        (await this._msg).edit(`:white_check_mark: Speech Finished at \`${formatTime(this.time, true)}\`!`)
 
         if (this._fakeId !== undefined) {
             Reflect.deleteProperty(timers, this._fakeId)
@@ -243,8 +242,8 @@ export class Timer {
      * @param playOrPause - if the timer should resume or pause
      */
     public playPause = (playOrPause?: "resume" | "pause"): void => {
-        this.ispaused = playOrPause === undefined
-            ? !this.ispaused
+        this.isPaused = playOrPause === undefined
+            ? !this.isPaused
             : playOrPause === "pause"
     }
 
@@ -252,38 +251,38 @@ export class Timer {
      * Update the message with the current time
      */
     private _updateStatus = async (): Promise<void> => {
-        const msg = await this._msg,
-            {_barWidth: barWidth, timeCtrl} = this
+        const msg = await this._msg
+        const {_barWidth: barWidth, timeCtrl} = this
 
         // Subtract current time from start time and round to nearest second
         this._time = Math.round((Date.now() - this._startTime) / 1000)
 
         // Mentioned user id
-        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : "",
+        const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
 
-            /**
-             * Progress bar
-             */
-            // Number of ticks so far
-            elapsedTicks = Math.floor(this._time / (timeCtrl / barWidth)),
+        /**
+         * Progress bar
+         */
+        // Number of ticks so far
+        const elapsedTicks = Math.floor(this._time / (timeCtrl / barWidth))
 
-            // Blocks and dashes for bar
-            blocks = "\u2588".repeat(Math.min(elapsedTicks, barWidth)),
-            dashes = "\u2014".repeat(Math.min(Math.max(barWidth - elapsedTicks, 0), barWidth)),
+        // Blocks and dashes for bar
+        const blocks = "\u2588".repeat(Math.min(elapsedTicks, barWidth))
+        const dashes = "\u2014".repeat(Math.min(Math.max(barWidth - elapsedTicks, 0), barWidth))
 
-            /**
-             * Percentage of the speech that is complete
-             */
-            percentage =
-                Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100),
+        /**
+         * Percentage of the speech that is complete
+         */
+        const percentage =
+                Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100)
 
-            // Progress bar with █ and —
-            bar = process.env.NODE_ENV === "test" // Ignore if testing
-                ? ""
-                : `\`[${blocks}${dashes}]\` ${percentage}%\n`
+        // Progress bar with █ and —
+        const bar = process.env.NODE_ENV === "test" // Ignore if testing
+            ? ""
+            : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
         msg.edit( // Edit the message with required information
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.ispaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
 
         this._notifySpeechStatus()
@@ -295,12 +294,12 @@ export class Timer {
      */
     private _notifySpeechStatus = (): void => {
         // Tagged user to notify
-        const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : "",
-            {channel} = this.message,
-            {time, timeCtrl} = this,
+        const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
+        const {channel} = this.message
+        const {time, timeCtrl} = this
 
-            // 3 minute speechs are all protected
-            hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
+        // 3 minute speechs are all protected
+        const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
 
         // The messages can be used as comments they're kinda self explanatory
         if (!this._stages[1] && hasProtectedTime && time >= 30) {
@@ -339,67 +338,7 @@ export class Timer {
 
 }
 
-/**
- * Checks if one user has exceeded the number of timers that can be run
- * @param user - user object
- * @returns {boolean} if user has exceeded the limit
- */
-const userTimersExceeded = (user: User): boolean => {
-    let timerCount = 0
-
-    for (const timer of Object.values(timers)) {
-        if (timer.creator.id === user.id) {
-            timerCount ++
-        }
-
-        // Break the loop early if possible
-        if (timerCount >= maxTimersPerUser) {
-            return true
-        }
-    }
-
-    return timerCount >= maxTimersPerUser
-}
-
-/**
- * Start a new timer in background
- * @param message - message object
- * @returns Promise<void>
- */
-export const start = (message: Message): void => {
-    if (maxTimers > -1 && Object.keys(timers).length >= maxTimers) { // Max number of timers reached
-        message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. The max timer count can be changed in the configuration file.`)
-
-        return
-    } else if (userTimersExceeded(message.author)) {
-        message.channel.send(`A maximum of ${maxTimersPerUser} are allowed for one user. Why tf do you even need ${maxTimersPerUser} at once? The max timers per user count can be changed in the configuration file.`)
-
-        return
-    }
-
-    // Fake id given to the user
-    const fakeId = nextKey(Object.keys(timers).map((id) => Number(id))),
-
-        // User defined time control (e.g 5 mins)
-        timeCtrl = message.content.split(" ")
-            .filter((content) => !isNaN(Number(content)))
-            .map((val) => Number(val))[0] ?? defaultTimeCtrl
-
-    if (!isNaN(timeCtrl) && timeCtrl > 15) {
-        message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
-
-        return
-    }
-
-    const timer = new Timer(
-        fakeId,
-        message,
-        DatePlus.minsToSecs(timeCtrl),
-    )
-
-    timer.start()
-
-    timers[fakeId] = timer
-}
-
-export default start
+export {resume, pause} from "./playPause"
+export {default as changeTime} from "./changeTime"
+export {kill} from "./kill"
+export {start} from "./start"

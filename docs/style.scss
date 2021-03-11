@@ -2,14 +2,18 @@
  * Discord Debate Timer
  * copyright 2020 Luke Zhang
  * author Luke Zhang luke-zhang-04.github.io/
- * version 1.5.0
+ * version 1.6.0
  * license BSD-3-Clause
  * file lets you send messages on the bots behalf
  */
 
+$light: #f4f4f4;
+$dark: #373737;
+$transition-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
+
 * {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-  color: #f4f4f4;
+  color: $light;
 }
 
 html,
@@ -18,7 +22,7 @@ body {
 }
 
 body {
-  background-color: #373737;
+  background-color: $dark;
 }
 
 .header,
@@ -30,11 +34,12 @@ body {
 
 .header {
   font-size: 7.5vw;
-  margin-top: 10vh;
+  margin-top: 0;
 }
 
 .subheader {
   font-size: 5vw;
+  margin-bottom: 0;
 }
 
 .container {
@@ -42,12 +47,13 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  height: 100vh;
 
   .time {
     font-size: 10vw;
     margin-bottom: 0;
     padding-bottom: 0;
-    margin-top: 30vh;
+    margin-top: 0;
     padding-top: 0;
   }
 
@@ -65,5 +71,61 @@ body {
     font-size: 1vw;
     margin-top: 0.25rem;
     text-align: center;
+  }
+}
+
+input,
+textarea,
+select {
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  margin-bottom: 10px;
+  height: 45px;
+}
+
+label,
+span {
+  display: block;
+}
+
+span {
+  font-size: max(0.75rem, 1vw);
+  font-weight: lighter;
+}
+
+label {
+  font-size: max(1rem, 1.5vw);
+  padding-top: 2.5vh;
+  font-weight: bold;
+}
+
+.form {
+  button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    display: block;
+
+    background-color: rgba(0, 0, 0, 0);
+    border: solid 0.125rem $light;
+    color: $light;
+
+    transition: $transition-timing, color 0.25s $transition-timing,
+      background-color 0.25s $transition-timing;
+
+    &:hover {
+      background-color: $light;
+      color: $dark;
+      cursor: pointer;
+    }
   }
 }

@@ -2,11 +2,11 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 
-import {GoogleSpreadsheet, GoogleSpreadsheetCell} from "google-spreadsheet"
+import {GoogleSpreadsheet} from "google-spreadsheet"
 import type {Message} from "discord.js"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
@@ -16,32 +16,32 @@ if (!process.env.APIKEY) {
 }
 
 // Google spreadsheet from hellomotions
-const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY"),
+const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY")
 
-    // We use this promise so we can tell when the document is loaded
-    docDidLoad = (async (): Promise<void> => {
-        try {
-            doc.useApiKey(process.env.APIKEY)
-            await doc.loadInfo()
+// We use this promise so we can tell when the document is loaded
+const docDidLoad = (async (): Promise<void> => {
+    try {
+        doc.useApiKey(process.env.APIKEY)
+        await doc.loadInfo()
 
-            return
-        } catch (err) {
-            console.error(err)
-        }
-    })(),
-
-    /**
-     * Get a random integer between min and max
-     * @param min - start number; inclusive
-     * @param max - end number; exclusive
-     * @returns random integer
-     */
-    randint = (min: number, max: number): number => {
-        const _min = Math.ceil(min),
-            _max = Math.floor(max)
-
-        return Math.floor(Math.random() * (_max - _min) + _min)
+        return
+    } catch (err) {
+        console.error(err)
     }
+})()
+
+/**
+ * Get a random integer between min and max
+ * @param min - start number; inclusive
+ * @param max - end number; exclusive
+ * @returns random integer
+ */
+const randint = (min: number, max: number): number => {
+    const _min = Math.ceil(min)
+    const _max = Math.floor(max)
+
+    return Math.floor(Math.random() * (_max - _min) + _min)
+}
 
 /**
  * Gets a random motion from the hellomotions motions spreadsheet
@@ -52,17 +52,17 @@ export const getRandomMotion = async (): Promise<string> => {
     await docDidLoad // Make sure doc was properly loaded
 
     // Final motion
-    let motion: string | number | boolean | null = null,
+    let motion: string | number | boolean | null = null
 
-        // Info slide if provided
-        infoSlide = ""
+    // Info slide if provided
+    let infoSlide = ""
 
     while (motion === null) {
         // Motions sheet
-        const sheet = doc.sheetsById["2007846678"],
+        const sheet = doc.sheetsById["2007846678"]
 
-            // Random row
-            row = randint(2, sheet.rowCount)
+        // Random row
+        const row = randint(2, sheet.rowCount)
 
         /* eslint-disable no-await-in-loop */
         // OK in this situation b/c the loop usually will run once
@@ -80,30 +80,61 @@ export const getRandomMotion = async (): Promise<string> => {
     return `${infoSlide}${motion.toString()}`
 }
 
+export const sendRandomMotion = async (message: Message): Promise<Message> => (
+    message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
+)
+
+/**
+ * Groups the motions into the largest size possible for the Discord API
+ * message size
+ * @param motions - array of motions
+ * @return chunked motions
+ */
+const motionsToChumks = (motions: string[]): string[] => {
+    const splitMotions = [":speaking_head: **Got random motions**:"]
+    const maxMessageLength = 2_000 // Discord's max message length
+    let index = 0
+
+    for (const motion of motions) {
+        if ( // The current chunk of motions will not exceed the message size limit
+            (splitMotions[index] ??= "").length + motion.length <
+                maxMessageLength
+        ) {
+            splitMotions[index] += `\n\n${motion}`
+        } else { // Adding a new motion will surpass the maximum, so we create a new chunk
+            index++
+            splitMotions.push(`_ _\n${motion}`)
+        }
+    }
+
+    return splitMotions
+}
+
 /**
  * Gets multiple random motions as defined in the message content
  * @param message - message object so we can get it's contents and send messages back
  * @returns Promise<void>
  */
-export const getRandomMotions = async (message: Message): Promise<void> => {
+export const sendRandomMotions = async (message: Message): Promise<void> => {
     await docDidLoad
 
-    type MotionResult = string | number | boolean | null | GoogleSpreadsheetCell
-
     // Array of motions
-    const motions: Promise<string | GoogleSpreadsheetCell>[] = [],
+    const motions: Promise<[
+        motion: string | null,
+        infoSlide: string | null,
+    ]>[] = []
 
-        // Keep track of rows used to prevent duplicates
-        rowsUsed: number[] = [],
+    // Keep track of rows used to prevent duplicates
+    const rowsUsed: number[] = []
 
-        // Motions sheet
-        sheet = doc.sheetsById["2007846678"]
+    // Motions sheet
+    const sheet = doc.sheetsById["2007846678"]
 
     // Final message that will be sent
-    let motionsString = "",
+    const motionsStrings: string[] = []
 
-        // Number of motions
-        amt = Number(message.content.split(" ")[1] ?? 5)
+    // Number of motions
+    let amt = Number(message.content.split(" ")[1] ?? 5)
 
     if (isNaN(amt)) {
         message.channel.send(`:1234: Could not parse \`${message.content.split(" ")[1]}\` as a number. Learn to count.`)
@@ -128,39 +159,45 @@ export const getRandomMotions = async (message: Message): Promise<void> => {
         rowsUsed.push(row)
 
         // Push a Promise with a random motion to motions
-        motions.push(sheet.loadCells(`S${row}:T${row}`).then(() => (
-            sheet.getCellByA1(`S${row}`)
-        )))
+        motions.push(sheet.loadCells(`S${row}:T${row}`).then(() => [
+            sheet.getCellByA1(`S${row}`).value?.toString(),
+            sheet.getCellByA1(`T${row}`).value?.toString(),
+        ]))
     }
 
     // Wait for Promises to resolve, then add them to motionsString
     await Promise.all(motions).then(async (_motions) => {
-        for (const [index, motion] of _motions.entries()) {
-            let formattedMotion: MotionResult = motion
+        for (const [index, [motion, infoSlide]] of _motions.entries()) {
+            let formattedMotion: string = infoSlide
+                ? `*Info Slide:* ${infoSlide}\n\n*Motion:* `
+                : ""
 
-            if (typeof formattedMotion !== "string") {
-                /* eslint-disable no-await-in-loop */
-                // OK in this situation b/c the loop usually will run once
-                formattedMotion =
-                    formattedMotion.value?.toString() ?? await getRandomMotion()
-                /* eslint-enable no-await-in-loop */
-            }
+            /* eslint-disable no-await-in-loop */
+            // OK in this situation b/c the loop usually will run once
+            formattedMotion += motion ?? await getRandomMotion()
+            /* eslint-enable no-await-in-loop */
 
-            motionsString += `\n\n${index + 1}. ${formattedMotion}`
+            motionsStrings.push(`**${index + 1}.** ${formattedMotion}`)
         }
     })
         .catch(() => "***Error :sweat_smile:***")
 
-    message.channel
-        .send(`:speaking_head: **Got random motions**: ${motionsString}`)
-        .catch((err) => (
-            err instanceof Error
-                ? message.channel.send(`${err.name}: ${err.message} Solution: try again.`)
-                : message.channel.send(JSON.stringify(err))
-        ))
+    for (const motion of motionsToChumks(motionsStrings)) {
+        /* eslint-disable no-await-in-loop */
+        // OK in this situation b/c the loop usually will run once or twice
+        await message.channel
+            .send(motion)
+            .catch((err) => (
+                err instanceof Error
+                    ? message.channel.send(`${err.name}: ${err.message} Solution: try again.`)
+                    : message.channel.send(JSON.stringify(err))
+            ))
+        /* eslint-enable no-await-in-loop */
+    }
 }
 
 export default {
     getRandomMotion,
-    getRandomMotions,
+    getRandomMotions: sendRandomMotions,
+    sendRandomMotion,
 }

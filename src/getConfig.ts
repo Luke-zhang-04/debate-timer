@@ -2,7 +2,7 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.5.0
+ * @version 1.6.0
  * @license BSD-3-Clause
  */
 
@@ -22,6 +22,7 @@ type FullConfig = {
     botIconUrl: string,
     shouldDetectProfanity: boolean,
     shouldUseFuzzyStringMatch: boolean,
+    shouldRespondToUnknownCommand: boolean,
     adminRoleName: string,
     emojis: {
         debating: {
@@ -34,6 +35,7 @@ type FullConfig = {
         },
     },
     whitelistedWords: string[],
+    blacklistedWords: string[],
     welcomeMessage?: false | null | {[key: string]: never} | {
         channel: string,
         message: string,
@@ -57,6 +59,7 @@ const defaultConfig: FullConfig = {
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
+    shouldRespondToUnknownCommand: true,
     adminRoleName: "admin",
     emojis: {
         debating: {
@@ -67,6 +70,7 @@ const defaultConfig: FullConfig = {
         },
     },
     whitelistedWords: [],
+    blacklistedWords: [],
 }
 
 Object.freeze(defaultConfig)
@@ -79,14 +83,15 @@ Object.freeze(defaultConfig)
  */
 const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
     const isValidPrefix = (
-            typeof obj.prefix === "string" &&
+        typeof obj.prefix === "string" &&
             obj.prefix !== "" && // Prefix isn't empty
             !obj.prefix.includes(" ") || // Prefix has no spaces
         obj.prefix === undefined
-        ),
-        isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array,
-        isValidEmojis = typeof obj.emojis === "object",
-        isValidWelcomeMessage =
+    )
+    const isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array
+    const isValidBlacklistedWords = (obj.blackListedWords ?? []) instanceof Array
+    const isValidEmojis = typeof obj.emojis === "object"
+    const isValidWelcomeMessage =
         obj.welcomeMessage === undefined ||
         obj.welcomeMessage === null ||
         obj.welcomeMessage === false ||
@@ -96,6 +101,8 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         throw new Error("Prefix should be type string, have no spaces, and not be empty")
     } else if (!isValidWhitelistedWords) {
         throw new Error("whitelistedWords should be array or undefined")
+    } else if (!isValidBlacklistedWords) {
+        throw new Error("blacklistedWords should be array or undefined")
     } else if (!isValidEmojis) {
         throw new Error("emojis should be an object")
     } else if (!isValidWelcomeMessage) {
@@ -112,6 +119,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         "botIconUrl",
         "shouldDetectProfanity",
         "shouldUseFuzzyStringMatch",
+        "shouldRespondToUnknownCommand",
         "adminRoleName",
     ]
 
@@ -166,9 +174,11 @@ export const {
     botIconUrl,
     shouldDetectProfanity,
     shouldUseFuzzyStringMatch,
+    shouldRespondToUnknownCommand,
     adminRoleName,
     emojis,
     whitelistedWords,
+    blacklistedWords,
     welcomeMessage,
 } = fullConfig
 

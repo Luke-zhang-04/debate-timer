@@ -24,13 +24,19 @@ botIconUrl:
   https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256
 
 # Profanity detection. Default true
-shoulddetectProfanity: true
+shouldDetectProfanity: true
 
 # Whitelisted words from profanity detection. Default empty.
 whitelistedWords:
   - god
   - crap
   - hell
+  - piss
+
+blacklistedWords:
+  - dipshit
+  - dumbass
+
 
 # Welcome message to send when a new member joins
 welcomeMessage: # An empty object, false, or null signifies no welcome message
@@ -41,7 +47,10 @@ welcomeMessage: # An empty object, false, or null signifies no welcome message
   message: "Hello %mention%! Welcome to %serverName%! Please wait for a <@&761698238398988298> to approve you to gain access to the rest of the server!"
 
 # Automatically commands with near matches. Default true.
-shoulduseFuzzyStringMatch: true
+shouldUseFuzzyStringMatch: true
+
+# If the bot should reply to an unknown command. Default true.
+shouldRespondToUnknownCommand: true
 
 # Admin role in your server. Defaults to just "admin".
 # If you have no admin role, you can leave this value as it's default
