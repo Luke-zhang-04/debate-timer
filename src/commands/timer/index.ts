@@ -190,7 +190,7 @@ export class Timer {
             if (this.isPaused) {
                 this._startTime += interval * 1000
 
-                if (Date.now() - this._trueStartTime > DatePlus.minsToSecs(20)) {
+                if (Date.now() - this._trueStartTime > DatePlus.minsToMs(20)) {
                     this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
 
                     this.shouldMute = false
