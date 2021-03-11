@@ -57,9 +57,10 @@ const shellSort = <T>(array: T[]): void => {
  * Turns seconds into human readable time
  * E.g `formatTime(90)` -> `"1:30"`
  * @param secs - seconds to format
+ * @param forceMinutes - force the minutes side to be shown even if it's zero
  * @returns the formatted time
  */
-export const formatTime = (secs: number): string => {
+export const formatTime = (secs: number, forceMinutes = false): string => {
     // Get the remainder seconds
     const remainingSeconds = secs % minute
 
@@ -74,7 +75,7 @@ export const formatTime = (secs: number): string => {
         ? `0${remainingSeconds}`
         : remainingSeconds.toString()
 
-    return minutes > 0 // Return the seconds if no minutes have passed
+    return forceMinutes || minutes > 0 // Return the seconds if no minutes have passed
         ? `${minutes}:${remainingSecondsStr}`
         : secs.toString()
 }

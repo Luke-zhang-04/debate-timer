@@ -230,7 +230,7 @@ export class Timer {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
-        (await this._msg).edit(`:white_check_mark: Speech Finished!`)
+        (await this._msg).edit(`:white_check_mark: Speech Finished at \`${formatTime(this.time, true)}\`!`)
 
         if (this._fakeId !== undefined) {
             Reflect.deleteProperty(timers, this._fakeId)
