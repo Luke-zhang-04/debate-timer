@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "destagnate": "^1.8.0",
+    "destagnate": "^2.0.0",
     "sass": "^1.29.0"
   }
 }

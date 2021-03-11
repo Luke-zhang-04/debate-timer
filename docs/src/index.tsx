@@ -2,11 +2,11 @@
  * Discord Debate Timer
  * @copyright 2020 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.4.1
+ * @version 1.5.0
  * @license BSD-3-Clause
  */
 
-declare const DeStagnate: typeof import("destagnate")
+import DeStagnate from "destagnate"
 
 const minute = 60
 
@@ -70,7 +70,7 @@ class Timer extends DeStagnate.Component<{}, State> {
         this._intervalId = Number(`${id}`)
     }
 
-    public speechStatus = (): HTMLElement | void => {
+    public speechStatus = (): JSX.Element | undefined => {
         if (
             this.state.time <= 30 ||
             this.state.time >= 270 && this.state.time < 300
@@ -79,6 +79,8 @@ class Timer extends DeStagnate.Component<{}, State> {
         } else if (this.state.time >= 300) {
             return <p class="status">Times up!</p>
         }
+
+        return
     }
 
     public reset = (): void => {
@@ -89,16 +91,16 @@ class Timer extends DeStagnate.Component<{}, State> {
         })
     }
 
-    public render = (): HTMLElement[] | HTMLElement => {
+    public render = (): JSX.Element => {
         if (this.state.time === 0 && this.state.paused) {
-            return [
+            return <>
                 <h1 class="header">Debate Timer</h1>,
-                <p class="subheader">Space to pause/start. r to restart.</p>,
-            ]
+                <p class="subheader">Space to pause/start. r to restart.</p>
+            </>
         }
 
         const status = this.speechStatus()
-        const content: HTMLElement = <div class="container">
+        const content = <div class="container">
             <p class="time">{formatTime(this.state.time)}</p>
             <p class="status">{this.state.paused ? "Paused" : ""}</p>
             {status ? status : null}
