@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "destagnate": "^2.0.0",
+    "prettier": "^2.2.1",
     "sass": "^1.29.0"
   }
 }
