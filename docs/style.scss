@@ -12,164 +12,164 @@ $dark: #373737;
 $transition-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
 
 * {
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    color: $light;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  color: $light;
 }
 
 html,
 body {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 body {
-    background-color: $dark;
+  background-color: $dark;
 }
 
 .header,
 .time,
 .status,
 .subheader {
-    text-align: center;
+  text-align: center;
 }
 
 .header {
-    font-size: 7.5vw;
-    margin-top: 0;
+  font-size: 7.5vw;
+  margin-top: 0;
 }
 
 .subheader {
-    font-size: 5vw;
-    margin-bottom: 0;
+  font-size: 5vw;
+  margin-bottom: 0;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
 
-    .time {
-        font-size: 10vw;
-        margin-bottom: 0;
-        padding-bottom: 0;
-        margin-top: 0;
-        padding-top: 0;
-    }
+  .time {
+    font-size: 10vw;
+    margin-bottom: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    padding-top: 0;
+  }
 
-    .status {
-        font-size: 2.5vw;
-    }
+  .status {
+    font-size: 2.5vw;
+  }
 }
 
 .copyright {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 
-    p {
-        font-size: 1vw;
-        margin-top: 0.25rem;
-        text-align: center;
-    }
+  p {
+    font-size: 1vw;
+    margin-top: 0.25rem;
+    text-align: center;
+  }
 }
 
 input,
 textarea,
 select {
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    outline: none;
-    display: block;
-    width: 100%;
-    padding: 7px;
-    border: none;
-    border-bottom: 1px solid #ddd;
-    background: transparent;
-    margin-bottom: 10px;
-    height: 45px;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  outline: none;
+  display: block;
+  width: 100%;
+  padding: 7px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: transparent;
+  margin-bottom: 10px;
+  height: 45px;
 }
 
 label,
 span {
-    display: block;
+  display: block;
 }
 
 span {
-    font-size: max(0.75rem, 1vw);
-    font-weight: lighter;
+  font-size: max(0.75rem, 1vw);
+  font-weight: lighter;
 }
 
 label {
-    font-size: max(1rem, 1.5vw);
-    padding-top: 2.5vh;
-    font-weight: bold;
+  font-size: max(1rem, 1.5vw);
+  padding-top: 2.5vh;
+  font-weight: bold;
 }
 
 .form {
-    button {
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        display: block;
+  button {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    display: block;
 
-        background-color: rgba(0, 0, 0, 0);
-        border: solid 0.125rem $light;
-        color: $light;
+    background-color: rgba(0, 0, 0, 0);
+    border: solid 0.125rem $light;
+    color: $light;
 
-        transition: $transition-timing, color 0.25s $transition-timing,
-            background-color 0.25s $transition-timing;
+    transition: $transition-timing, color 0.25s $transition-timing,
+      background-color 0.25s $transition-timing;
 
-        &:hover {
-            background-color: $light;
-            color: $dark;
-            cursor: pointer;
-        }
+    &:hover {
+      background-color: $light;
+      color: $dark;
+      cursor: pointer;
     }
+  }
 }
 
 .github-corner-container {
-    width: max(5rem, 7.5vw);
-    position: absolute;
-    top: 0;
-    right: 0;
+  width: max(5rem, 7.5vw);
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 .github-corner {
-    &:hover .octo-arm {
-        animation: octocat-wave 560ms ease-in-out;
-    }
+  &:hover .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
 
-    path {
-        color: $dark;
-    }
+  path {
+    color: $dark;
+  }
 }
 
 @keyframes octocat-wave {
-    0%,
-    100% {
-        transform: rotate(0);
-    }
+  0%,
+  100% {
+    transform: rotate(0);
+  }
 
-    20%,
-    60% {
-        transform: rotate(-25deg);
-    }
+  20%,
+  60% {
+    transform: rotate(-25deg);
+  }
 
-    40%,
-    80% {
-        transform: rotate(10deg);
-    }
+  40%,
+  80% {
+    transform: rotate(10deg);
+  }
 }
 
 @media (max-width: 500px) {
-    .github-corner:hover .octo-arm {
-        animation: none;
-    }
+  .github-corner:hover .octo-arm {
+    animation: none;
+  }
 
-    .github-corner .octo-arm {
-        animation: octocat-wave 560ms ease-in-out;
-    }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
 }
