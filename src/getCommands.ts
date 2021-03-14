@@ -14,6 +14,7 @@ import help from "./commands/help"
 import list from "./commands/list"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
+import {randint} from "./utils"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
@@ -33,6 +34,7 @@ export const commands: Commands = {
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
     coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
+    dice: (message) => message.channel.send(`:game_die: ${randint(1, 7)}`),
     start: timer.start,
     kill: timer.kill,
     stop: timer.kill,

@@ -10,6 +10,7 @@ import {GoogleSpreadsheet} from "google-spreadsheet"
 import type {Message} from "discord.js"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
+import {randint} from "../utils"
 
 if (!process.env.APIKEY) {
     dotenv.config()
@@ -29,19 +30,6 @@ const docDidLoad = (async (): Promise<void> => {
         console.error(err)
     }
 })()
-
-/**
- * Get a random integer between min and max
- * @param min - start number; inclusive
- * @param max - end number; exclusive
- * @returns random integer
- */
-const randint = (min: number, max: number): number => {
-    const _min = Math.ceil(min)
-    const _max = Math.floor(max)
-
-    return Math.floor(Math.random() * (_max - _min) + _min)
-}
 
 /**
  * Gets a random motion from the hellomotions motions spreadsheet
