@@ -95,10 +95,15 @@ client.on("guildMemberAdd", (member) => {
         welcomeMessage !== false &&
         Object.keys(welcomeMessage).length >= 2
     ) {
-        const {channel: channelId, message} =
-            welcomeMessage as {channel: string, message: string}
-        const channel = client.channels.cache
-            .find((chan) => chan.id === channelId)
+        const {channel: channelId, message} = welcomeMessage
+        const channelName =
+            welcomeMessage.channelName && new RegExp(welcomeMessage.channelName, "u")
+        const channel = member.guild.channels.cache
+            .find((chan) => chan.id === channelId) ??
+            (
+                channelName && member.guild.channels.cache
+                    .find((chan) => channelName.test(chan.name))
+            )
 
         if (!channel || !(channel instanceof Discord.TextChannel)) {
             console.log(`Cannot find text channel with ID ${channelId}`)

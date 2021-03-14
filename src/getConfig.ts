@@ -75,6 +75,7 @@ type FullConfig = {
     blacklistedWords: string[],
     welcomeMessage?: false | null | {[key: string]: never} | {
         channel: string,
+        channelName?: string,
         message: string,
     },
 }

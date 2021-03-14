@@ -41,6 +41,7 @@ blacklistedWords:
 # Welcome message to send when a new member joins
 welcomeMessage: # An empty object, false, or null signifies no welcome message
   channel: "814323208421507072" # Channel id for welcome messages. Must be quoted.
+  channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
 
   # Message contents. Use %username% for the username, %mention% to @ mention the user,
   # and %serverName% for the server name.
