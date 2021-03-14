@@ -44,7 +44,7 @@ type PermissionString =
 
 export const hasAdminPerms = (member: GuildMember | null): boolean => {
     if (adminRoleName.type === "permission") {
-        return  member?.hasPermission(
+        return member?.hasPermission(
             adminRoleName.value as PermissionString,
         ) ?? false
     }
