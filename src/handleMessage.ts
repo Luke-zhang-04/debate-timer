@@ -39,7 +39,7 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
     const [cmd] = message.content.slice(prefix.length).split(" ")
 
     if (config.shouldRespondToUnknownCommand && ((cmd ?? "") === "")) {
-        message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
+        await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
         return
     }
