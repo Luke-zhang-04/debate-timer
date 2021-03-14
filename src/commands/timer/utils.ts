@@ -11,7 +11,7 @@ import type {
     User
 } from "discord.js"
 import type {Timer} from "."
-import {adminRoleName} from "../../getConfig"
+import {hasAdminPerms} from "../../utils"
 
 // One minute
 const minute = 60
@@ -144,9 +144,9 @@ export const isauthorizedToModifyTimer = (
         return false
     }
 
-    const isAdmin = (
-        member?.roles.cache.find((role) => role.name === adminRoleName) ?? null
-    ) !== null
+    const isAdmin = hasAdminPerms(member)
+
+    console.log({isAdmin})
 
     return author.id === timer.mentionedUid ||
         author.id === timer.creator.id ||

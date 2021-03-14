@@ -63,7 +63,7 @@ export const kill = async (
             ? `, the mentioned user (${timer.mentionedUid}),`
             : ""
 
-        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only the timer creator (${timer.creator.username})${mentionedMessage} and those with the \`${adminRoleName}\` role may modify this timer.`)
+        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only the timer creator (${timer.creator.username})${mentionedMessage} and those with the \`${adminRoleName.value}\` ${adminRoleName.type === "name" ? "role" : "permission"} may modify this timer.`)
     }
 }
 

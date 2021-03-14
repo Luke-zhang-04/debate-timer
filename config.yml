@@ -52,9 +52,12 @@ shouldUseFuzzyStringMatch: true
 # If the bot should reply to an unknown command. Default true.
 shouldRespondToUnknownCommand: true
 
-# Admin role in your server. Defaults to just "admin".
+# Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default
-adminRoleName: "potato"
+# You can also delegate by permission. Use "hasPermission:PERMISSIONNAME"
+# To get a list of valid permission names
+# see https://discord.com/developers/docs/topics/permissions
+adminRoleName: "hasPermission:ADMINISTRATOR"
 
 # Emoji config for polls
 # Do not include :colons: around the emoji name

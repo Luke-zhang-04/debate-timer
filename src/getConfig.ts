@@ -10,6 +10,40 @@ import niceTry from "nice-try"
 import {readFileSync} from "fs"
 import yaml from "yaml"
 
+const permissions = [
+    "CREATE_INSTANT_INVITE",
+    "KICK_MEMBERS",
+    "BAN_MEMBERS",
+    "ADMINISTRATOR",
+    "MANAGE_CHANNELS",
+    "MANAGE_GUILD",
+    "ADD_REACTIONS",
+    "VIEW_AUDIT_LOG",
+    "PRIORITY_SPEAKER",
+    "STREAM",
+    "VIEW_CHANNEL",
+    "SEND_MESSAGES",
+    "SEND_TTS_MESSAGES",
+    "MANAGE_MESSAGES",
+    "EMBED_LINKS",
+    "ATTACH_FILES",
+    "READ_MESSAGE_HISTORY",
+    "MENTION_EVERYONE",
+    "USE_EXTERNAL_EMOJIS",
+    "VIEW_GUILD_INSIGHTS",
+    "CONNECT",
+    "SPEAK",
+    "MUTE_MEMBERS",
+    "DEAFEN_MEMBERS",
+    "MOVE_MEMBERS",
+    "USE_VAD",
+    "CHANGE_NICKNAME",
+    "MANAGE_NICKNAMES",
+    "MANAGE_ROLES",
+    "MANAGE_WEBHOOKS",
+    "MANAGE_EMOJIS",
+]
+
 // Full configuration object
 type FullConfig = {
     prefix: string,
@@ -23,7 +57,10 @@ type FullConfig = {
     shouldDetectProfanity: boolean,
     shouldUseFuzzyStringMatch: boolean,
     shouldRespondToUnknownCommand: boolean,
-    adminRoleName: string,
+    adminRoleName: {
+        type: "name" | "permission",
+        value: string,
+    },
     emojis: {
         debating: {
             name: string,
@@ -60,7 +97,10 @@ const defaultConfig: FullConfig = {
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
     shouldRespondToUnknownCommand: true,
-    adminRoleName: "admin",
+    adminRoleName: {
+        type: "permission",
+        value: "ADMINISTRATOR",
+    },
     emojis: {
         debating: {
             name: "speaking_head",
@@ -120,7 +160,6 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         "shouldDetectProfanity",
         "shouldUseFuzzyStringMatch",
         "shouldRespondToUnknownCommand",
-        "adminRoleName",
     ]
 
     for (const key of singleVerificationKeys) {
@@ -129,6 +168,31 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
             typeof defaultConfig[key] !== typeof obj[key]
         ) {
             return false
+        }
+    }
+
+    if (typeof obj.adminRoleName === "string") {
+        const {adminRoleName: roleName} = obj
+
+        if (
+            (/^hasPermission:(?<permissionName>[A-Z]|_)/u)
+                .test(roleName)
+        ) {
+            const permission = roleName.slice("hasPermission:".length)
+
+            if (permissions.includes(permission)) {
+                obj.adminRoleName = {
+                    type: "permission",
+                    value: permission,
+                }
+            } else {
+                throw new Error(`adminRoleName permission after hasPermission: must be one of the following:\n\n${permissions.join(", ")}`)
+            }
+        } else {
+            obj.adminRoleName = {
+                type: "name",
+                value: roleName,
+            }
         }
     }
 
