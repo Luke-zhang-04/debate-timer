@@ -347,6 +347,8 @@
                     }
                 }],
                 "@typescript-eslint/member-ordering": "error",
+                "no-shadow": "off",
+                "@typescript-eslint/no-shadow": "error",
                 "@typescript-eslint/naming-convention": ["error", {
                     "selector": "default",
                     "format": ["camelCase"]
@@ -371,6 +373,9 @@
                     "selector": "parameter",
                     "format": ["camelCase"],
                     "leadingUnderscore": "allow"
+                }, {
+                    "selector": "enumMember",
+                    "format": ["camelCase", "PascalCase", "snake_case", "UPPER_CASE"]
                 }],
 
                 "no-dupe-class-members": "off",
