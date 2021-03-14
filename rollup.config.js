@@ -1,5 +1,6 @@
 import alias from "@rollup/plugin-alias"
 import progress from "rollup-plugin-progress"
+import replace from "@rollup/plugin-replace"
 import resolve from "@rollup/plugin-node-resolve"
 import {terser} from "rollup-plugin-terser"
 import typescript from "@rollup/plugin-typescript"
@@ -38,6 +39,9 @@ const config = {
         }),
         typescript({
             tsconfig: "./tsconfig.rollup.json",
+        }),
+        replace({
+            "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV ?? "prod"),
         }),
         resolve({
             resolveOnly: [/^\.{0,2}\/|tslib/],

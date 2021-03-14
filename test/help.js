@@ -19,9 +19,9 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "!start")
-        testHelpers.includes(returnMsg, "!getMotion")
-        testHelpers.includes(returnMsg, "!makeTeams")
+        testHelpers.includes(returnMsg, "start")
+        testHelpers.includes(returnMsg, "getMotion")
+        testHelpers.includes(returnMsg, "makeTeams")
     })
 
     it("Should show help message on !man", () => {
@@ -31,9 +31,9 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "!start")
-        testHelpers.includes(returnMsg, "!getMotion")
-        testHelpers.includes(returnMsg, "!makeTeams")
+        testHelpers.includes(returnMsg, "start")
+        testHelpers.includes(returnMsg, "getMotion")
+        testHelpers.includes(returnMsg, "makeTeams")
     })
 
     it("Should have a manual entry for bruh", () => {
@@ -83,7 +83,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Kills a timer")
+        testHelpers.includes(returnMsg, "Stops a timer")
     })
 
     it("Should have a manual entry for list", () => {
@@ -103,7 +103,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Continues a timer")
+        testHelpers.includes(returnMsg, "Resumes a timer")
     })
 
     it("Should have a manual entry for pause", () => {
