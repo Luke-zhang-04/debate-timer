@@ -68,10 +68,6 @@ export const getRandomMotion = async (): Promise<string> => {
     return `${infoSlide}${motion.toString()}`
 }
 
-export const sendRandomMotion = async (message: Message): Promise<Message> => (
-    message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
-)
-
 /**
  * Groups the motions into the largest size possible for the Discord API
  * message size
@@ -181,6 +177,17 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
                     : message.channel.send(JSON.stringify(err))
             ))
         /* eslint-enable no-await-in-loop */
+    }
+}
+
+export const sendRandomMotion = async (message: Message): Promise<void> => {
+    const numberArg = Number(message.content.split(" ")[1])
+
+    if (isNaN(numberArg)) {
+        message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
+    } else {
+        message.channel.send("You ran the command `getMotion` (singular) with a number. Assuming user meant `getMotions`.")
+        sendRandomMotions(message)
     }
 }
 
