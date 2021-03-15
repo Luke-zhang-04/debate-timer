@@ -55,6 +55,10 @@ class Timer extends DeStagnate.Component<{}, State> {
 
     private _intervalId = 0
 
+    private _startTime: number | undefined
+
+    private _pausedTime: number | undefined
+
     public constructor (parent: HTMLElement) {
         super(parent)
 
@@ -69,8 +73,14 @@ class Timer extends DeStagnate.Component<{}, State> {
         }
     }
 
+    public shouldComponentUpdate = (): boolean => this.stateDidChange(["time", "paused"])
+
     public spacebar = (): void => {
         if (this.state.paused) {
+            if (this._pausedTime !== undefined) {
+                this._startTime = (this._startTime ??= Date.now()) + (Date.now() - this._pausedTime)
+            }
+
             this.startTimer()
 
             if (this.state.time === 0) {
@@ -90,16 +100,25 @@ class Timer extends DeStagnate.Component<{}, State> {
                     })
                 }
             }
+
+            this._pausedTime = undefined
         } else {
             clearInterval(this._intervalId)
+            this._pausedTime = Date.now()
         }
 
         this.setState({paused: !this.state.paused})
     }
 
     public startTimer = (): void => {
+        this.setState({
+            time: Math.round((Date.now() - (this._startTime ??= Date.now())) / 1000)
+        })
+
         const id = setInterval(() => {
-            this.setState({time: this.state.time + 1})
+            this.setState({
+                time: Math.round((Date.now() - (this._startTime ??= Date.now())) / 1000)
+            })
         }, 1000)
 
         this._intervalId = Number(`${id}`)
@@ -123,6 +142,7 @@ class Timer extends DeStagnate.Component<{}, State> {
 
     public reset = (): void => {
         clearInterval(this._intervalId)
+        this._startTime = undefined
         this.setState({
             paused: true,
             time: 0,
