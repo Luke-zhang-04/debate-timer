@@ -143,7 +143,7 @@ export default () => {
                         id: "user2",
                     },
                 },
-                new Member([], "user2"),
+                new Member("user2", []),
             )
 
             await handleMessage.default(message2)
@@ -163,7 +163,7 @@ export default () => {
                             id: "user1",
                         },
                     },
-                    new Member([], "user1"),
+                    new Member("user1", []),
                 )
 
                 await handleMessage.default(message2)

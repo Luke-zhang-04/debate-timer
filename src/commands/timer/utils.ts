@@ -144,13 +144,9 @@ export const isauthorizedToModifyTimer = (
         return false
     }
 
-    const isAdmin = hasAdminPerms(member)
-
-    console.log({isAdmin})
-
     return author.id === timer.mentionedUid ||
         author.id === timer.creator.id ||
-        isAdmin
+        hasAdminPerms(member)
 }
 
 export default {

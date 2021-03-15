@@ -6,6 +6,8 @@
  * @license BSD-3-Clause
  */
 
+import { PermissionOverwrites } from "discord.js"
+
 export class Reaction {
 
     emoji
@@ -125,7 +127,9 @@ export class Member {
 
     user
 
-    constructor (roles, id) {
+    permission
+
+    constructor (id, roles = [], permissions = []) {
         this.roles = {
             roles,
             cache: {
@@ -141,6 +145,15 @@ export class Member {
             },
         }
         this.user = new User(id)
+        this.permissions = permissions
+    }
+
+    hasPermission = (permission) => {
+        if (typeof permission === "string") {
+            permission = [permission]
+        }
+
+        return this.permissions.find((val) => permission.includes(val)) !== undefined
     }
 
 }
