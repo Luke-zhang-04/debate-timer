@@ -7,6 +7,7 @@
  */
 
 import type {Message} from "discord.js"
+import crypto from "crypto"
 import {getRandomMotion} from "./randomMotion"
 
 export type Formats = "bp" | "cp" | "worlds"
@@ -53,7 +54,7 @@ const basePositions: Record<Formats, string[]> = {
 const shuffle = <T>(array: T[], cycles = 1): void => {
     for (let _ = 0; _ < cycles; _++) {
         for (let index = array.length - 1; index > 0; index--) {
-            const randonIndex = Math.floor(Math.random() * (index + 1))
+            const randonIndex = crypto.randomInt(0, (index + 1))
             const temp = array[index]
 
             array[index] = array[randonIndex]

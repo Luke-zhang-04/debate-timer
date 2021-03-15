@@ -10,10 +10,10 @@ import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
+import crypto from "crypto"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
-import {randint} from "./utils"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
@@ -30,7 +30,7 @@ const microCommands: Commands = {
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
     coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
-    dice: (message) => message.channel.send(`:game_die: ${randint(1, 7)}`),
+    dice: (message) => message.channel.send(`:game_die: ${crypto.randomInt(1, 7)}`),
     ping: (message, client) => message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     systemInfo: async (message) => message.channel.send(await systemInfo()),
 }

@@ -8,9 +8,9 @@
 
 import {GoogleSpreadsheet} from "google-spreadsheet"
 import type {Message} from "discord.js"
+import crypto from "crypto"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
-import {randint} from "../utils"
 
 if (!process.env.APIKEY) {
     dotenv.config()
@@ -50,7 +50,7 @@ export const getRandomMotion = async (): Promise<string> => {
         const sheet = doc.sheetsById["2007846678"]
 
         // Random row
-        const row = randint(2, sheet.rowCount)
+        const row = crypto.randomInt(2, sheet.rowCount)
 
         /* eslint-disable no-await-in-loop */
         // OK in this situation b/c the loop usually will run once
@@ -134,10 +134,10 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
     }
 
     for (let _ = 0; _ < amt; _++) {
-        let row = randint(2, sheet.rowCount)
+        let row = crypto.randomInt(2, sheet.rowCount)
 
         while (rowsUsed.includes(row)) { // Make sure random row hasn't already been used
-            row = randint(2, sheet.rowCount)
+            row = crypto.randomInt(2, sheet.rowCount)
         }
 
         rowsUsed.push(row)

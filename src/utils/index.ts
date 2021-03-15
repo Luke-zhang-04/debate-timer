@@ -53,16 +53,3 @@ export const hasAdminPerms = (member: GuildMember | null): boolean => {
         role.name === adminRoleName.value
     )) ?? null) !== null
 }
-
-/**
- * Get a random integer between min and max
- * @param min - start number; inclusive
- * @param max - end number; exclusive
- * @returns random integer
- */
-export const randint = (min: number, max: number): number => {
-    const _min = Math.ceil(min)
-    const _max = Math.floor(max)
-
-    return Math.floor(Math.random() * (_max - _min) + _min)
-}
