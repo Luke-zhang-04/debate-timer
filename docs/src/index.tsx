@@ -8,7 +8,9 @@
 
 import DeStagnate from "destagnate"
 
-const minute = 60
+const enum Time {
+    Minute = 60,
+}
 
 const parseNumber = (val: unknown): number | undefined => {
     const number = Number(val ?? undefined)
@@ -24,8 +26,8 @@ const parseNumber = (val: unknown): number | undefined => {
  * @returns the formatted time
  */
 const formatTime = (secs: number): string => {
-    const remainingSeconds = secs % minute // Get the remainder seconds
-    const minutes = (secs - remainingSeconds) / minute // Get the number of whole minutes
+    const remainingSeconds = secs % Time.Minute // Get the remainder seconds
+    const minutes = (secs - remainingSeconds) / Time.Minute // Get the number of whole minutes
 
     /**
      * Add 0 to beginning if remainder seconds is less than 10
