@@ -11,7 +11,6 @@ import {Client, Message} from "discord.js"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import help from "./commands/help"
-import list from "./commands/list"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
 import {randint} from "./utils"
@@ -44,7 +43,7 @@ const timerCommands: Commands = {
     timer: timer.start,
     kill: timer.kill,
     stop: timer.kill,
-    list,
+    list: timer.list,
     take: (message) => changeTime(message, 1),
     give: (message) => changeTime(message, -1),
     forward: (message) => changeTime(message, 1),
