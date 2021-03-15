@@ -18,23 +18,28 @@ import {randint} from "./utils"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
-type Commands = {[key: string]: ((message: Message, client: Client)=> unknown)}
+type Commands = Readonly<
+    {[key: string]: ((message: Message, client: Client)=> unknown)}
+>
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 /**
- * All commands
- * @param message - message object
- * @param client - client object
- * @returns void
+ * Commands which use are written inline and don't require much code
  */
-export const commands: Commands = {
-    help,
-    man: help,
+const microCommands: Commands = {
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
     coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
     dice: (message) => message.channel.send(`:game_die: ${randint(1, 7)}`),
+    ping: (message, client) => message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
+    systemInfo: async (message) => message.channel.send(await systemInfo()),
+}
+
+/**
+ * Timer related commands
+ */
+const timerCommands: Commands = {
     start: timer.start,
     timer: timer.start,
     kill: timer.kill,
@@ -45,6 +50,14 @@ export const commands: Commands = {
     forward: (message) => changeTime(message, 1),
     backward: (message) => changeTime(message, -1),
     back: (message) => changeTime(message, -1),
+    pause: timer.pause,
+    resume: timer.resume,
+}
+
+/**
+ * Team generation related commands
+ */
+const teamGenCommands: Commands = {
     makeDraw: teamGen.makeDraw,
     draw: teamGen.makeDraw,
     makeTeams: teamGen.makeTeams,
@@ -53,16 +66,41 @@ export const commands: Commands = {
     partners: teamGen.makePartners,
     makeRound: teamGen.makeRound,
     round: teamGen.makeRound,
+}
+
+/**
+ * Motion related commands
+ */
+const motionCommands: Commands = {
     getMotion: motion.sendRandomMotion,
     motion: motion.sendRandomMotion,
     getMotions: motion.getRandomMotions,
     motions: motion.getRandomMotions,
-    systemInfo: async (message) => message.channel.send(await systemInfo()),
+}
+
+/**
+ * Poll related commands
+ */
+const pollCommands: Commands = {
     poll: poll.makePoll,
     getPoll: poll.getPoll,
-    pause: timer.pause,
-    resume: timer.resume,
 }
+
+/**
+ * All commands
+ * @param message - message object
+ * @param client - client object
+ * @returns void
+ */
+export const commands: Commands = Object.freeze({
+    help,
+    man: help,
+    ...microCommands,
+    ...timerCommands,
+    ...teamGenCommands,
+    ...motionCommands,
+    ...pollCommands,
+})
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 export default commands

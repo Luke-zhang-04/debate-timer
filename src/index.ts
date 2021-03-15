@@ -120,12 +120,6 @@ client.on("guildMemberAdd", (member) => {
 
 client.on("message", async (message) => {
     try {
-        if (message.content === `${prefix}ping`) {
-            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
-
-            return
-        }
-
         await handleMessage(message, client)
     } catch (err: unknown) {
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
