@@ -6,7 +6,7 @@
  * @license BSD-3-Clause
  */
 
-import niceTry from "nice-try"
+import {niceTry} from "./utils"
 import {readFileSync} from "fs"
 import yaml from "yaml"
 

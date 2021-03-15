@@ -27,7 +27,6 @@
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.1.15",
-    "nice-try": "^3.0.0",
     "ora": "^5.3.0",
     "prompts": "^2.4.0",
     "yaml": "^1.10.0"
@@ -41,7 +40,6 @@
     "@types/didyoumean": "^1.2.0",
     "@types/dotenv": "^8.2.0",
     "@types/google-spreadsheet": "^3.0.2",
-    "@types/nice-try": "^2.1.0",
     "@types/node": "^14.14.33",
     "@types/prompts": "^2.0.9",
     "@types/yaml": "^1.9.7",

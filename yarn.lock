@@ -264,11 +264,6 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/nice-try@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@types/nice-try/-/nice-try-2.1.0.tgz#6f044b4fd2a8a878154c77d5fca0a2f4aea8b774"
-  integrity sha512-pJaR/8Ijp4SbMJfzNLc/BgvkfbYTIvDiaheb5yGrdF4AeqPPQJq2K/Gk2tL4WasRITUAWXSa6+MvB8yyjQQnlQ==
-
 "@types/node@*":
   version "14.14.28"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.28.tgz#cade4b64f8438f588951a6b35843ce536853f25b"
@@ -2418,11 +2413,6 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-
-nice-try@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-3.0.0.tgz#38f7584ae0d3703cde8317bb78fdbc4ef6dffe40"
-  integrity sha512-JVAWBFZ6kFO/c6jtbcYAM4aAJK5XnAOyWAgBZ53V1HUNTfIjJdjXa96oWhDpegeQSRhTQXpOwU5bpYbzkkrcSA==
 
 node-fetch@^2.3.0, node-fetch@^2.6.1:
   version "2.6.1"

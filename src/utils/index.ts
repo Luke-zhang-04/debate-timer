@@ -53,3 +53,11 @@ export const hasAdminPerms = (member: GuildMember | null): boolean => {
         role.name === adminRoleName.value
     )) ?? null) !== null
 }
+
+export const niceTry = <T>(func: ()=> T): T | undefined => {
+    try {
+        return func()
+    } catch (_) {
+        return
+    }
+}
