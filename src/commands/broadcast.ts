@@ -18,8 +18,6 @@ import {adminRoleName} from "../getConfig"
 export const broadcast = async (
     message: Message,
 ): Promise<void> => {
-    console.log(message.content)
-
     if (message.reference === null || message.reference.messageID === null) {
         await message.channel.send("No message given. Make sure you reply to the message you want to broadcast.")
 
