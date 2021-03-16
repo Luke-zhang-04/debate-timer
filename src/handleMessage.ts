@@ -30,7 +30,7 @@ let lastCommand = 0
  */
 const handleCmd = async (message: Message, client: Client): Promise<void> => {
     // Trip duplicate spaces to just one space
-    message.content = message.content.replace(/  +/gui, " ")
+    message.content = message.content.replace(/  +/gui, " ").trim()
 
     // Bot command prefix
     const {prefix} = config
@@ -94,9 +94,12 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
  * @param message - message object
  * @returns void
  */
-export default async (message: Message, client: Client): Promise<void> => {
+export const handleMessage = async (
+    message: Message,
+    client: Client,
+): Promise<void> => {
     if (!message.author.bot) {
-        if (message.content.startsWith(config.prefix)) {
+        if (message.content.trim().startsWith(config.prefix)) {
             const timeGap = config.commandCooldown * 1000
 
             if (
@@ -130,3 +133,5 @@ export default async (message: Message, client: Client): Promise<void> => {
     }
 }
 /* eslint-enable */
+
+export default handleMessage
