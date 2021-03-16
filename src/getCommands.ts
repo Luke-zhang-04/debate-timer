@@ -92,7 +92,7 @@ const pollCommands: Commands = {
  * @param client - client object
  * @returns void
  */
-export const commands: Commands = Object.freeze({
+export const commands: Readonly<Commands> = {
     help,
     man: help,
     broadcast,
@@ -101,7 +101,7 @@ export const commands: Commands = Object.freeze({
     ...teamGenCommands,
     ...motionCommands,
     ...pollCommands,
-})
+}
 /* eslint-enable @typescript-eslint/explicit-function-return-type */
 
 export default commands
