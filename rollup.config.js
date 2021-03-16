@@ -26,6 +26,7 @@ const config = {
         file: "./bot.mjs",
         format: "esm",
         banner,
+        inlineDynamicImports: true,
     },
     plugins: [
         progress(),
@@ -42,6 +43,7 @@ const config = {
         }),
         replace({
             "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV ?? "prod"),
+            preventAssignment: true,
         }),
         resolve({
             resolveOnly: [/^\.{0,2}\/|tslib/],
