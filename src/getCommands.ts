@@ -8,7 +8,7 @@
 
 import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
-import broadcast from "./commands/boardcast"
+import broadcast from "./commands/broadcast"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import crypto from "crypto"
