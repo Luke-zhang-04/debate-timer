@@ -236,6 +236,7 @@ label {
 
     @for $index from 1 through 2 {
       .progress-bar-overlay:nth-child(#{$index}) {
+        // prettier-ignore
         animation:
           over
           #{$over-animation-time}s
