@@ -27,10 +27,14 @@ botIconUrl:
 shouldDetectProfanity: true
 
 # Whitelisted words from profanity detection. Default empty.
-whitelistedWords: []
+whitelistedWords:
+  # you can add words like this
+  # - word
 
 # Blacklisted words from profanity detection. Default empty.
-blacklistedWords: []
+blacklistedWords:
+  # you can add words like this
+  # - word
 
 # Welcome message to send when a new member joins
 welcomeMessage: null # An empty object, false, or null signifies no welcome message
@@ -50,13 +54,12 @@ shouldRespondToUnknownCommand: true
 # Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default
 # You can also delegate by permission. Use "hasPermission:PERMISSIONNAME"
-# To get a list of valid permission names
-# see https://discord.com/developers/docs/topics/permissions
+# To get a list of valid permission names, see https://discord.com/developers/docs/topics/permissions
 adminRoleName: "hasPermission:ADMINISTRATOR"
 
 # Emoji config for polls
 # Do not include :colons: around the emoji name
-# ID is only required for custom emojis
+# id is only required for custom emojis
 # ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
 emojis:
   debating:
