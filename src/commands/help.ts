@@ -336,6 +336,28 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
             },
         ],
     },
+
+    broadcast: {
+        name: `\`${prefix}broadcast [regex] [amt? = Infinity]\``,
+        value: "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[regex]\` - required - regex restraint of channel names for bot to send to
+- \`[amt? = Infinity]\` - optional - max number of channels to broadcast to. Default Infinity.`,
+            },
+            {
+                name: "Notes",
+                value: `- Parameter order does not matter :smiley:
+- You must reply to a message, and that message will be broadcasted`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}broadcast round-[0-9]+
+${prefix}broadcast 3 .*\`\`\``,
+            },
+        ]
+    }
 }
 
 type Package = {
@@ -376,7 +398,8 @@ E.g ${prefix}help getMotion`,
             value: `- bruh
 - coinfilp
 - epic
-- dice`,
+- dice
+- broadcast [regex] [amt? = Infinity]`,
         },
         {
             name: ":timer: Timer",

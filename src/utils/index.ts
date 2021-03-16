@@ -61,3 +61,13 @@ export const niceTry = <T>(func: ()=> T): T | undefined => {
         return
     }
 }
+
+export const inlineTry = <T>(func: ()=> T): T | Error => {
+    try {
+        return func()
+    } catch (err: unknown) {
+        return err instanceof Error
+            ? err
+            : new Error(typeof err === "string" ? err : String(err))
+    }
+}

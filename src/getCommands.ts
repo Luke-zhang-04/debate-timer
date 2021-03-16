@@ -8,6 +8,7 @@
 
 import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
+import broadcast from "./commands/boardcast"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import crypto from "crypto"
@@ -94,6 +95,7 @@ const pollCommands: Commands = {
 export const commands: Commands = Object.freeze({
     help,
     man: help,
+    broadcast,
     ...microCommands,
     ...timerCommands,
     ...teamGenCommands,
