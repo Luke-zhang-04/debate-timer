@@ -185,3 +185,67 @@ label {
     animation: octocat-wave 560ms ease-in-out;
   }
 }
+
+@keyframes over {
+  0% {
+    width: 0;
+    opacity: 1;
+  }
+
+  50% {
+    width: 100%;
+    opacity: 1;
+  }
+
+  100% {
+    width: 100%;
+    opacity: 0;
+  }
+}
+
+.progress-bar-container {
+  width: 100%;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .progress-bar,
+  .progress-bar-overlay {
+    background-color: $light;
+    height: 0.5rem;
+    transition: width 1s linear;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &.red {
+    $over-animation-time: 2.5;
+    $bar-overlays: 3;
+
+    .progress-bar {
+      background-color: rgb(223, 70, 85);
+    }
+
+    .progress-bar-overlay {
+      background-color: mix(rgb(223, 70, 85), $light, 90%);
+      box-shadow: 0 0 0.5rem 0.05rem rgb(218, 102, 113, 1);
+      animation: over #{$over-animation-time}s $transition-timing infinite;
+    }
+
+    @for $index from 1 through 2 {
+      .progress-bar-overlay:nth-child(#{$index}) {
+        animation:
+          over
+          #{$over-animation-time}s
+          #{$over-animation-time / ($bar-overlays - 1) * ($index - 1)}s
+          $transition-timing infinite;
+      }
+    }
+  }
+}
+
+.text-red {
+  color: rgb(223, 70, 85);
+}

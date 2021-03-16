@@ -16,6 +16,8 @@ import handleMessage from "./handleMessage"
 
 dotenv.config()
 
+import("./garbageCollector").then(({register}) => register())
+
 const readFile = (path: string): Promise<string> => (
     new Promise((resolve, reject) => {
         fs.readFile(path, "utf-8", (err, data) => {

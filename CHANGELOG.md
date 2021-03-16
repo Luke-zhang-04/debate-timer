@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.0] - unreleased
 
 ## Added
+- feat: add broadcast feature
 - feat: for `adminRoleName`, allow `hasPermission:PERM`
 - feat: alias `backwards` and `start` commands
 - feat: add dice command

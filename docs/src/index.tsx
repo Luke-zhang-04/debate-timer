@@ -135,8 +135,11 @@ class Timer extends DeStagnate.Component<{}, State> {
                 this.state.time < totalTime
         ) {
             return <p class="status">Protected Time</p>
-        } else if (this.state.time >= totalTime) {
-            return <p class="status">Times up!</p>
+        } else if (
+            this.state.time >= totalTime &&
+            this.state.time <= totalTime + 15
+        ) {
+            return <p class="status">Grace Time</p>
         }
 
         return
@@ -145,6 +148,7 @@ class Timer extends DeStagnate.Component<{}, State> {
     public reset = (): void => {
         clearInterval(this._intervalId)
         this._startTime = undefined
+        this._pausedTime = undefined
         this.setState({
             paused: true,
             time: 0,
@@ -160,11 +164,28 @@ class Timer extends DeStagnate.Component<{}, State> {
     }
 
     public render = (): JSX.Element => {
+        const corner = document.getElementById("github-corner")
+        const barContainer =
+            document.querySelector<HTMLElement>(".progress-bar-container")
+        const bar = barContainer?.querySelector<HTMLElement>(".progress-bar")
+
         if (this.state.time === 0 && this.state.paused) {
+            if (corner) {
+                corner.style.display = "block"
+            }
+
+            if (bar) {
+                bar.style.width = "0"
+                bar.style.display = "none"
+            }
+
+            if (barContainer) {
+                barContainer.classList.remove("red")
+            }
+
             return <div class="container">
                 <h1 class="header">Debate Timer</h1>
                 <p class="subheader">Space to pause/start. r to restart.</p>
-
                 <form
                     class="form"
                     onSubmit={(event: Event) => {
@@ -195,9 +216,30 @@ class Timer extends DeStagnate.Component<{}, State> {
         }
 
         const status = this.speechStatus()
+        const totalTime = this.state.totalTime * 60
+
+        if (corner) {
+            corner.style.display = "none"
+        }
+
+        if (bar) {
+            bar.style.width = `${(this.state.time / (this.state.totalTime * 60)) * 100}%`
+            bar.style.display = "block"
+        }
+
+        if (barContainer) {
+            if (this.state.time >= totalTime) {
+                barContainer.classList.add("red")
+            } else {
+                barContainer.classList.remove("red")
+            }
+        }
 
         return <div class="container">
-            <p class="time">{formatTime(this.state.time)}</p>
+            {this.state.time <= totalTime + 15
+                ? <p class="time">{formatTime(this.state.time)}</p>
+                : <p class="time text-red">Time&apos;s Up!</p>
+            }
             <p class="status">{this.state.paused ? "Paused" : ""}</p>
             {status ? status : null}
         </div>
