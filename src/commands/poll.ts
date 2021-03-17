@@ -7,18 +7,76 @@
  */
 
 import type {
-    Client,
-    Message
+    Message,
+    User,
 } from "discord.js"
 import {emojis} from "../getConfig"
 
-// Two emojis for the polls
-const emoji1 = emojis.debating.id ? `<:${emojis.debating.name}:${emojis.debating.id}>` : `:${emojis.debating.name}:`
-const emoji2 = emojis.spectating.id ? `<:${emojis.spectating.name}:${emojis.spectating.id}>` : `:${emojis.spectating.name}:`
+const pollOptions: {[key: string]: string[]} = {}
 
-// Arrays with debaters and spectators
-const debaters: string[] = []
-const spectators: string[] = []
+for (const emoji of Object.keys(emojis)) {
+    pollOptions[emoji] = []
+}
+
+const getEmojiUsage = (
+    emoji: string,
+    id: string | null = null,
+): string | undefined => {
+    for (const [role, info] of Object.entries(emojis)) {
+        if (emoji === info.name && (!id && !info.id || id === info.id)) {
+            return role
+        }
+    }
+
+    return undefined
+}
+
+class Poll {
+
+    public readonly createdAt = Date.now()
+
+    public readonly user: User
+
+    public constructor (
+        userMessage: Message,
+        public readonly message: Message,
+    ) {
+        this.user = userMessage.author
+    }
+
+    public get data (): {[key: string]: string[]} {
+        const data = {...pollOptions}
+
+        for (const [_, {emoji, users}] of this.message.reactions.cache) {
+            const usage = getEmojiUsage(emoji.name, emoji.id)
+
+            if (usage) {
+                (data[usage] ??= []).push(...users.cache.map((user) => user.id))
+            }
+        }
+
+        return data
+    }
+
+    public getDataByKey = (key: string): string[] | undefined => {
+        for (const [_, {emoji, users}] of this.message.reactions.cache) {
+            const usage = getEmojiUsage(emoji.name, emoji.id)
+
+            if (usage && usage === key) {
+                return users.cache.map((user) => user.id)
+            }
+        }
+
+        return pollOptions[key] === undefined ? undefined : []
+    }
+
+}
+
+/**
+ * Object with polls for each user
+ * Each key is the user id, and the values are the poll class
+ */
+export const polls: {[key: string]: Poll} = {}
 
 /**
  * Makes a poll
@@ -28,36 +86,20 @@ const spectators: string[] = []
  */
 export const makePoll = async (
     message: Message,
-    client: Client,
 ): Promise<void> => {
-    const msg = await message.channel.send(`**Starting a poll**\nReact here for your choice of participation today. Debating spots are first come first serve.\n\nDebateur: ${emoji1}\nSpectateur: ${emoji2}`)
+    const newMessage = await message.channel.send(`**Poll**
+React here for what you feel like doing today. Here are your options:
 
-    debaters.length = 0
-    spectators.length = 0
+${Object.entries(emojis).map(([role, emoji]) => {
+    const formattedEmoji = emoji.id
+        ? `<:${emoji.name}:${emoji.id}>`
+        : emoji.name
 
-    client.on("messageReactionAdd", async (reaction) => {
-        if (reaction.message.id === msg.id) {
-            const reacted = await reaction.fetch()
+    return `${role}: ${formattedEmoji}`
+}).join("\n")}`
+    )
 
-            if (reacted.emoji.name === emojis.debating.name) {
-                if (debaters.length >= 8) {
-                    message.channel.send("Sorry, there are already 8 debaters.")
-                } else {
-                    debaters.length = 0
-
-                    for (const [uid] of reacted.users.cache) {
-                        debaters.push(uid)
-                    }
-                }
-            } else if (reacted.emoji.name === emojis.spectating.name) {
-                spectators.length = 0
-
-                for (const [uid] of reacted.users.cache) {
-                    spectators.push(uid)
-                }
-            }
-        }
-    })
+    polls[message.author.id] = new Poll(message, newMessage)
 }
 
 /**
@@ -65,19 +107,38 @@ export const makePoll = async (
  * @param channel - Discord channel
  * @returns void - sends the message in the function
  */
-export const getPoll = ({channel}: Message): void => {
-    let debatersString = ""
-    let spectatorsString = ""
+export const getPoll = (message: Message): void => {
+    const userPoll = polls[message.author.id]
 
-    for (const debater of debaters) {
-        debatersString += `<@${debater}> `
+    if (userPoll === undefined) {
+        message.channel.send(`Sorry <@${message.author.id}>, but I couldn't find your poll. Maybe your poll expired?`)
+
+        return
     }
 
-    for (const spectator of spectators) {
-        spectatorsString += `<@${spectator}> `
-    }
+    const key = message.content.split(" ")[1]
 
-    channel.send(`Debaters: ${debatersString}\nSpectators: ${spectatorsString}`)
+    if (!key) {
+        message.channel.send(`<@${message.author.id}>'s Poll
+
+${Object.entries(userPoll.data).map(([usage, users]) => (
+    `- **${usage}**: ${users.map((userId) => `<@${userId}>`).join(" ")}`
+)).join("\n")}`)
+    } else {
+        const reactions = userPoll.getDataByKey(key)
+
+        if (reactions === undefined) {
+            message.channel.send(
+                `No such poll option \`${key}\`. Your options are: \`${Object.keys(pollOptions).join(", ")}.\``,
+            )
+        } else if (reactions.length === 0) {
+            message.channel.send("*empty*")
+        } else {
+            message.channel.send(
+                reactions.map((userId) => `<@${userId}>`).join(" "),
+            )
+        }
+    }
 }
 
 export default {

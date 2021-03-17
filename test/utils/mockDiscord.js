@@ -24,7 +24,7 @@ export class Reaction {
             name: this.emoji,
         },
         users: {
-            cache: this.message.reactedUsers.filter((val) => (
+            cache: this.message.reactedEmojis.filter((val) => (
                 val[1] === this.emoji ? [val[0]] : false
             )),
         },
@@ -48,7 +48,7 @@ export class Message {
 
     id
 
-    reactedUsers = []
+    reactedEmojis = {}
 
     author = {
         bot: false,
@@ -79,6 +79,17 @@ export class Message {
         }
     }
 
+    reactions = {
+        // Hacky way of getting around `this` binding to getterw
+        getEmojis: () => {
+            return this.reactedEmojis
+        },
+
+        get cache() {
+            return Object.entries(this.getEmojis())
+        }
+    }
+
     channel = {
         send: async (contents, options) => {
             this.newMessage = new Message(contents, options)
@@ -91,11 +102,19 @@ export class Message {
         this.content = val
     }
 
-    react = async (username, emoji, client) => {
-        this.reactedUsers.push([username, emoji])
-
-        if (client.functions.messageReactionAdd !== undefined) {
-            await client.functions.messageReactionAdd(new Reaction(emoji, this))
+    react = async (username, emoji, emojiId) => {
+        if (this.reactedEmojis[emoji]) {
+            this.reactedEmojis[emoji].users.cache.push(new User(username))
+        } else {
+            this.reactedEmojis[emoji] = {
+                users: {
+                    cache: [new User(username)],
+                },
+                emoji: {
+                    id: emojiId,
+                    name: emoji,
+                },
+            }
         }
     }
 

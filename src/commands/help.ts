@@ -75,9 +75,9 @@ const manual: Manual = {
             },
             {
                 name: "Usage",
-                value: `${prefix}start @debate-timer
+                value: `\`\`\`${prefix}start @debate-timer
 ${prefix}start 7
-${prefix}start 3 @debate-timer`,
+${prefix}start 3 @debate-timer\`\`\``,
             },
         ],
     },
@@ -281,13 +281,13 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
 
     poll: {
         name: `\`${prefix}poll\``,
-        value: "Creates a poll for debating and spectating",
+        value: "Creates a poll",
         fields: [
             {
                 name: "Notes",
                 value: `- Only one poll can run at a time per user
-- Creating a new poll will erase the data in other polls
-- Polls delete themselves after 1 hour of inactivity`,
+- Creating a new poll will erase a user's old poll
+- Polls delete themselves after around at least 1 hour of creation`,
             },
             {
                 name: "Usage",
@@ -297,12 +297,17 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
     },
 
     getPoll: {
-        name: `\`${prefix}getPoll\``,
-        value: "Gets data from current poll. If no poll has been made, data will be empty.",
+        name: `\`${prefix}getPoll [option?]\``,
+        value: "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
         fields: [
             {
+                name: "Parameters",
+                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`
+            },
+            {
                 name: "Usage",
-                value: `\`${prefix}getPoll\``,
+                value: `\`\`\`${prefix}getPoll
+${prefix}getPoll debating\`\`\``,
             },
         ],
     },

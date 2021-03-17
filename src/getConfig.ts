@@ -6,7 +6,7 @@
  * @license BSD-3-Clause
  */
 
-import {niceTry} from "./utils"
+import {emojify, niceTry} from "./utils"
 import {readFileSync} from "fs"
 import yaml from "yaml"
 
@@ -61,16 +61,10 @@ type FullConfig = {
         type: "name" | "permission",
         value: string,
     },
-    emojis: {
-        debating: {
-            name: string,
-            id?: string,
-        },
-        spectating: {
-            name: string,
-            id?: string,
-        },
-    },
+    emojis: {[key: string]: {
+        name: string,
+        id?: string,
+    }},
     whitelistedWords: string[],
     blacklistedWords: string[],
     welcomeMessage?: false | null | {[key: string]: never} | {
@@ -227,6 +221,14 @@ const fullConfig: FullConfig = {
     ...defaultConfig,
     ...inputConfig,
 }
+
+for (const [usage, info] of Object.entries(fullConfig.emojis)) {
+    if (!info.id && !/[^\u0000-\u00ff]/u.test(info.name)) {
+        fullConfig.emojis[usage].name = emojify(`:${info.name}:`)
+    }
+}
+
+Object.freeze(fullConfig)
 
 export const {
     prefix,

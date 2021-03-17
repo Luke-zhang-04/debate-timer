@@ -7,18 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.0] - unreleased
 
 ## Added
+- feat: trim incoming messages
 - feat: add broadcast feature
 - feat: for `adminRoleName`, allow `hasPermission:PERM`
 - feat: alias `backwards` and `start` commands
 - feat: add dice command
 
 ## Changed
+- fix: use 60 seconds of protected time if speech is 7 minutes or longer
 - feat: send multiple motions if a number argument is supplied
 - feat: use `Discord.MessageEmbed` for help messages
 - reduce default cooldown time
 
 ## Fixed
-- fix: use 60 seconds of protected time if speech is 7 minutes or longer
 - fix welcome message and add new config option
 
 

@@ -60,7 +60,9 @@ shouldRespondToUnknownCommand: true
 adminRoleName: "hasPermission:ADMINISTRATOR"
 
 # Emoji config for polls
+# You can use the emojis name (smile). Note that newer emojis are not supported using this method.
 # Do not include :colons: around the emoji name
+# You can also use the emoji itself or its unicode (😃)
 # id is only required for custom emojis
 # ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
 emojis:
@@ -70,3 +72,9 @@ emojis:
   spectating:
     name: emoji_2
     id: "762112564787675156"
+  judging:
+    name: judge
+  other:
+    name: 🤖
+  lazy:
+    name: pizza

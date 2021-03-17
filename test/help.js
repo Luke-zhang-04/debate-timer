@@ -185,7 +185,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Gets data from current poll")
+        testHelpers.includes(returnMsg, "Gets data from user's current poll")
     })
 
     it("Should not have a manual entry for unknown command", () => {

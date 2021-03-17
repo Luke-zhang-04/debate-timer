@@ -26,7 +26,7 @@ export const broadcast = async (
         await message.channel.send("Can't broadcast without a server")
 
         return
-    } else if (!hasAdminPerms(message.member)) {
+    } else if (!hasAdminPerms(message.member, adminRoleName)) {
         const {author} = message
         const randVal = Math.random()
         let msg = `Sorry <@${author.id}>, but you're not authorized to use this command.`

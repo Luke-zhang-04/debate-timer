@@ -7,7 +7,7 @@
  */
 
 import type {GuildMember} from "discord.js"
-import {adminRoleName} from "../getConfig"
+import {emojify as _emojify} from "node-emoji"
 
 type PermissionString =
     | "CREATE_INSTANT_INVITE"
@@ -42,7 +42,13 @@ type PermissionString =
     | "MANAGE_WEBHOOKS"
     | "MANAGE_EMOJIS"
 
-export const hasAdminPerms = (member: GuildMember | null): boolean => {
+export const hasAdminPerms = (
+    member: GuildMember | null,
+    adminRoleName: {
+        type: "permission" | "name";
+        value: string;
+    },
+): boolean => {
     if (adminRoleName.type === "permission") {
         return member?.hasPermission(
             adminRoleName.value as PermissionString,
@@ -71,3 +77,7 @@ export const inlineTry = <T>(func: ()=> T): T | Error => {
             : new Error(typeof err === "string" ? err : String(err))
     }
 }
+
+export const emojify = (str: string): string => _emojify(
+    str.replace(/:judge:/gu, "🧑‍⚖️"),
+)

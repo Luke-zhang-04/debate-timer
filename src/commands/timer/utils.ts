@@ -11,6 +11,7 @@ import type {
     User
 } from "discord.js"
 import type {Timer} from "."
+import {adminRoleName} from "../../getConfig"
 import {hasAdminPerms} from "../../utils"
 
 // One minute
@@ -146,7 +147,7 @@ export const isauthorizedToModifyTimer = (
 
     return author.id === timer.mentionedUid ||
         author.id === timer.creator.id ||
-        hasAdminPerms(member)
+        hasAdminPerms(member, adminRoleName)
 }
 
 export default {
