@@ -72,9 +72,3 @@ emojis:
   spectating:
     name: emoji_2
     id: "762112564787675156"
-  judging:
-    name: judge
-  other:
-    name: 🤖
-  lazy:
-    name: pizza
