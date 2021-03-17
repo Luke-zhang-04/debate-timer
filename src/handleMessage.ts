@@ -11,6 +11,7 @@ import Filter from "bad-words"
 import commands from "./getCommands"
 import config from "./getConfig"
 import didyoumean from "didyoumean"
+import {prefix} from "./getConfig"
 
 // Swear words filter
 const filter = new Filter()
@@ -113,6 +114,10 @@ export const handleMessage = async (
             }
 
             message.channel.send(`The configured command cooldown is ${config.commandCooldown}s. Since this bot is hosted on either some crappy server or Luke's laptop, there needs to be a cooldown. The cooldown time can be changed in the configuration file.`)
+        } else if (
+            new RegExp(`^<@(\\!)?${client.user?.id}>$`).test(message.content.trim())
+        ) {
+            await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
         } else if (
             config.shouldDetectProfanity &&
             filter.isProfane(message.content)
