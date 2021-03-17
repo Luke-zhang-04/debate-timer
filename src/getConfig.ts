@@ -64,7 +64,7 @@ type FullConfig = {
     emojis: {[key: string]: {
         name: string,
         id?: string,
-    }},
+    }, },
     whitelistedWords: string[],
     blacklistedWords: string[],
     welcomeMessage?: false | null | {[key: string]: never} | {
@@ -222,11 +222,13 @@ const fullConfig: FullConfig = {
     ...inputConfig,
 }
 
+/* eslint-disable no-control-regex */ // Need to test for emojis
 for (const [usage, info] of Object.entries(fullConfig.emojis)) {
-    if (!info.id && !/[^\u0000-\u00ff]/u.test(info.name)) {
+    if (!info.id && !(/[^\u0000-\u00ff]/u).test(info.name)) {
         fullConfig.emojis[usage].name = emojify(`:${info.name}:`)
     }
 }
+/* eslint-enable no-control-regex */
 
 Object.freeze(fullConfig)
 

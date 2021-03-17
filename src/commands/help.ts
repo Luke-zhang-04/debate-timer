@@ -302,7 +302,7 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
         fields: [
             {
                 name: "Parameters",
-                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`
+                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`,
             },
             {
                 name: "Usage",
@@ -361,8 +361,8 @@ ${prefix}getPoll debating\`\`\``,
                 value: `\`\`\`${prefix}broadcast round-[0-9]+
 ${prefix}broadcast 3 .*\`\`\``,
             },
-        ]
-    }
+        ],
+    },
 }
 
 type Package = {

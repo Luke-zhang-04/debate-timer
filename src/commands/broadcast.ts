@@ -10,6 +10,7 @@ import {Message, TextChannel} from "discord.js"
 import {hasAdminPerms, inlineTry} from "../utils"
 import {adminRoleName} from "../getConfig"
 
+/* eslint-disable max-statements */ // Code will get messier if I try to split it
 /**
  * Broadcasts referenced message to all channels with regex
  * @param message - message object
@@ -98,5 +99,6 @@ export const broadcast = async (
         await message.channel.send(`An error occured. Reason:\n\`\`\`${error.name}\n${error.message}\`\`\``)
     }
 }
+/* eslint-enable max-statements */
 
 export default broadcast

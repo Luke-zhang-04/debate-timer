@@ -8,7 +8,7 @@
 
 import type {
     Message,
-    User,
+    User
 } from "discord.js"
 import {emojis} from "../getConfig"
 
@@ -91,12 +91,13 @@ export const makePoll = async (
 React here for what you feel like doing today. Here are your options:
 
 ${Object.entries(emojis).map(([role, emoji]) => {
-    const formattedEmoji = emoji.id
-        ? `<:${emoji.name}:${emoji.id}>`
-        : emoji.name
+        const formattedEmoji = emoji.id
+            ? `<:${emoji.name}:${emoji.id}>`
+            : emoji.name
 
-    return `${role}: ${formattedEmoji}`
-}).join("\n")}`
+        return `${role}: ${formattedEmoji}`
+    })
+        .join("\n")}`,
     )
 
     polls[message.author.id] = new Poll(message, newMessage)
@@ -118,13 +119,7 @@ export const getPoll = (message: Message): void => {
 
     const key = message.content.split(" ")[1]
 
-    if (!key) {
-        message.channel.send(`<@${message.author.id}>'s Poll
-
-${Object.entries(userPoll.data).map(([usage, users]) => (
-    `- **${usage}**: ${users.map((userId) => `<@${userId}>`).join(" ")}`
-)).join("\n")}`)
-    } else {
+    if (key) {
         const reactions = userPoll.getDataByKey(key)
 
         if (reactions === undefined) {
@@ -138,6 +133,13 @@ ${Object.entries(userPoll.data).map(([usage, users]) => (
                 reactions.map((userId) => `<@${userId}>`).join(" "),
             )
         }
+    } else {
+        message.channel.send(`<@${message.author.id}>'s Poll
+
+${Object.entries(userPoll.data).map(([usage, users]) => (
+        `- **${usage}**: ${users.map((userId) => `<@${userId}>`).join(" ")}`
+    ))
+        .join("\n")}`)
     }
 }
 

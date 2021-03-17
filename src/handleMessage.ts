@@ -7,11 +7,10 @@
  */
 
 import {Client, Message} from "discord.js"
+import config, {prefix} from "./getConfig"
 import Filter from "bad-words"
 import commands from "./getCommands"
-import config from "./getConfig"
 import didyoumean from "didyoumean"
-import {prefix} from "./getConfig"
 
 // Swear words filter
 const filter = new Filter()
@@ -32,9 +31,6 @@ let lastCommand = 0
 const handleCmd = async (message: Message, client: Client): Promise<void> => {
     // Trip duplicate spaces to just one space
     message.content = message.content.replace(/  +/gui, " ").trim()
-
-    // Bot command prefix
-    const {prefix} = config
 
     // Command name
     const [cmd] = message.content.slice(prefix.length).split(" ")
