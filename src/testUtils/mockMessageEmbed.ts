@@ -20,19 +20,19 @@ export class MockMessageEmbed {
 
     private _content = ""
 
-    public addField = (
+    public addField (
         name: Stringable,
         value: Stringable,
         _?: boolean,
-    ): this => {
+    ): this {
         this._content += `\n${name.toString()}\n${value.toString()}`
 
         return this
     }
 
-    public addFields = (
+    public addFields (
         ...fields: EmbedFieldData[] | EmbedFieldData[][]
-    ): this => {
+    ): this {
         for (const field of fields) {
             if (field instanceof Array) {
                 this.addFields(field)
@@ -48,10 +48,10 @@ export class MockMessageEmbed {
         return this
     }
 
-    public setAuthor = (
+    public setAuthor (
         name: Stringable,
         ..._: Stringable[]
-    ): this => {
+    ): this {
         this._content += `\n${name.toString()}`
 
         return this
@@ -59,32 +59,40 @@ export class MockMessageEmbed {
 
     public setColor = (..._: Stringable[]): this => this
 
-    public setDescription = (desc: Stringable): this => {
+    public setDescription (desc: Stringable): this {
         this._content += `\n${desc.toString()}`
 
         return this
     }
 
-    public setFooter = (text: Stringable, ..._: Stringable[]): this => {
+    public setFooter (text: Stringable, ..._: Stringable[]): this {
         this._content += `\n${text.toString()}`
 
         return this
     }
 
-    public setImage = (_: string): this => this
+    public setImage (_: string): this {
+        return this
+    }
 
     /* eslint-disable @typescript-eslint/member-ordering */
     public setThumbnail = this.setImage
 
-    public setTimestamp = (_?: Date | number): this => this
+    public setTimestamp (_?: Date | number): this {
+        return this
+    }
 
     public setTitle = this.setDescription
 
     /* eslint-enable @typescript-eslint/member-ordering */
 
-    public setURL = (_: string): this => this
+    public setURL (_: string): this {
+        return this
+    }
 
-    public toString = (): string => this._content
+    public toString (): string {
+        return this._content
+    }
 
 }
 

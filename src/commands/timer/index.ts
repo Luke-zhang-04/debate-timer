@@ -164,7 +164,7 @@ export class Timer {
      * Changes the current time of this timer by changing the start time
      * @param amt - amount to wind FORWARD by
      */
-    public changeTime = async (amt: number): Promise<void> => {
+    public async changeTime (amt: number): Promise<void> {
         this._startTime -= amt * 1000 // Wind the start time the opposite direction
 
         const now = Date.now()
@@ -205,7 +205,7 @@ export class Timer {
     /**
      * Start the timer and interval
      */
-    public start = (): void => {
+    public start (): void {
         this._intervalId = setInterval(() => {
             if (this.isPaused) {
                 this._startTime += Values.Interval * 1000
@@ -237,7 +237,7 @@ export class Timer {
      * End of life for this timer. Once this is called, the timer is gone.
      * @param sendMsg - if "killed timer" message should be sent to channel
      */
-    public kill = async (sendMsg = true): Promise<void> => {
+    public async kill (sendMsg = true): Promise<void> {
         if (this._intervalId !== null) {
             clearInterval(this._intervalId)
         }
@@ -274,7 +274,7 @@ export class Timer {
     /**
      * Update the message with the current time
      */
-    private _updateStatus = async (): Promise<void> => {
+    private async _updateStatus (): Promise<void> {
         const msg = await this._msg
         const {_barWidth: barWidth, timeCtrl} = this
 
@@ -316,7 +316,7 @@ export class Timer {
      * Sends a message to the channel to notify everyone that an important time
      * has passed, such as protected times
      */
-    private _notifySpeechStatus = (): void => {
+    private _notifySpeechStatus (): void {
         // Tagged user to notify
         const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
         const {channel} = this.message

@@ -58,7 +58,7 @@ class Poll {
         return data
     }
 
-    public getDataByKey = (key: string): string[] | undefined => {
+    public getDataByKey (key: string): string[] | undefined {
         for (const [_, {emoji, users}] of this.message.reactions.cache) {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 
