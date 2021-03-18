@@ -1,24 +1,74 @@
-# Debate timer bot
+<h1 align="center">Debate Timer Bot</h1>
 
-A discord bot and web timer
+<p align="center">A flexible, powerful, and user-friendly general-purpose debate Discord Bot</p>
+
+<p align="center"><a href="https://luke-zhang-04.github.io/debate-timer/">Web Timer</a></p>
 
 <p align="center">
     <a href="https://aws.amazon.com/"><img src="https://img.shields.io/badge/Runs%20on-AWS%20EC2-orange?style=for-the-badge&logo=amazon-aws&logoColor=orange" alt="AWS EC2"/></a>
+    <br/>
     <a href="https://github.com/Luke-zhang-04/debate-timer/actions"><img src="https://img.shields.io/github/workflow/status/luke-zhang-04/debate-timer/Node.js%20CI?label=Build%20and%20Tests&logo=Github" alt="workflow badge"/></a>
+    <a href="#nodejs-versions"><img src="https://img.shields.io/node/v/discord.js" alt="node versions"/></a>
+    <a href="https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE"><img src="https://img.shields.io/github/license/Luke-zhang-04/debate-timer" alt="license"/></a>
 </p>
 
-[Web timer](https://luke-zhang-04.github.io/debate-timer/)
 
-![Screenshot](./assets/screenshot1.png)
-![Screenshot](./assets/screenshot2.png)
+<p align="center">
+    <a href="#feature-list">Features</a> •
+    <a href="#compared-to-other-bots">Compared to Other Bots</a> •
+    <a href="#nodejs-versions">NodeJS Compatibility</a> •
+    <a href="#setup">Setup</a>
+    <p align="center"><img width="90%" src="./assets/timer.png" alt="Timer"/></p>
+</p>
+
+And more!
+
+## Table of Contents
+1. [Features](#feature-list)
+2. [Compared to Other Bots](#compared-to-other-bots)
+3. [NodeJS Compatibility](#nodejs-versions)
+4. [Setup](#setup)
+
+
+## Feature List
+- Coinfip and dice (self explanitory)
+- Broadcasting
+    - Reply to a message and broadcast it to all channels that match a [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) argument
+    - For example, you can reply to a motion and run `!broadcast poi`. This will broadcast a message too all chats which match the [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) `poi`
+    - Admin only
+- Timer
+    - You can start, stop, pause, and resume timers
+    - You can wind timers forwards or backwards
+- Motions
+    - Get up to 20 motions by default, complete with info slides and ensuring messages don't exceed Discord message maximums
+    - All motions are from the [HelloMotions spreadsheet](https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678)
+- Team Generation
+    - Generate random teams, partners, and create draws and rounds
+- Fuzzy String Matching
+    - Automatically corrects typos (e.g `hekp` -> `help`, `star` -> `start`)
+- Simple Syntax
+    - Straightforward syntax makes this bot easy to use (e.g `!start 5` instead of `+start {5}`)
+
+
+## Compared to Other Bots
+Why use this bot over other existing bots?
+Namely the widely used bot [CUDS NotTDBot](https://github.com/spiltbeans/NotTDBot)
+
+1. **Get current time of speech** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time. Unlike the NotTDBot, this bot can reliabily time you and can replace your phone.
+2. **Configurable** - host the bot yourself and configure it to your liking with YAML
+3. **User Friendly** - created with ease of use in mind
+    1. Simple autocorrect (e.g `hekp` -> `help`, `star` -> `start`)
+    2. Syntax is straighforward (e.g `!start 5` instead of `+start {5}`)
+4. **Other Functions** - features such as random motions, team generation, and some other useful debate commands are included.
+
 
 ## NodeJS Versions
 This bot only works on Node JS >= 12. This is because Discord JS only supports Node >= 12. Therefore, we don't test for, nor support Node JS 10 or 8.
 
 When installing Node JS for the first time with a package manager such as Yum or DNF, it may install Node 10. Make sure you install Node 12.
 
-## Using the bot
-***These steps are applicable to \*nix systems only, including Unix, Linux, and MacOS, but NOT WINDOWS***
+## Setup
+***These steps are applicable to Linux and MacOS, but not necessarily Windows, unless you're using something like git-Bash***
 If you're using Windows, you'll have to do everything yourself.
 
 Make sure you have git installed. If not, you can download this package to a zip file.
@@ -69,15 +119,3 @@ node cli
 ```
 
 And type `help` for help
-
-### Compared to other bots
-Why use this bot over other existing bots?
-Namely the most used bot [CUDS NotTDBot](https://github.com/spiltbeans/NotTDBot)
-
-1. **Get current time of speech** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time
-2. **Configurable** - host the bot yourself and configure it to your liking with YAML
-3. **Lax syntax** - created with ease of use in mind
-    1. Simple autocorrect (e.g `hekp` -> `help`, `star` -> `start`)
-    2. Syntax is straighforward (e.g `!start` instead of `+start {5}`)
-4. **Timer limits** - users can't create too many timers to prevent RAM overuse from one timer
-5. **Other functions** - including random motions, team generation, and some other useful commands
