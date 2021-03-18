@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.0] - unreleased
 
 ## Added
+- feat: allow replying for teamGen arguments
+- feat: bot will attempt to get timer id by user
 - feat: add improved polls
     - each user gets their own poll
     - specific categories can be taken from polls
