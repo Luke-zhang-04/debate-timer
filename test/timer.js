@@ -8,7 +8,7 @@
 
 import {Message, Member} from "./utils/mockDiscord.js"
 import handleMessage from "../lib/handleMessage.js"
-import listCmd from "../lib/commands/list.js"
+import listCmd from "../lib/commands/timer/list.js"
 import {strictEqual} from "assert"
 import testHelpers from "./utils/helpers.js"
 
