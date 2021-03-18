@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.0] - unreleased
 
 ## Added
+- feat: add improved polls
+    - each user gets their own poll
+    - specific categories can be taken from polls
 - feat: trim incoming messages
 - feat: add broadcast feature
 - feat: for `adminRoleName`, allow `hasPermission:PERM`

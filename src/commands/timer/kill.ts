@@ -6,10 +6,10 @@
  * @license BSD-3-Clause
  */
 
-
+import {deriveTimerId, isAuthorizedToModifyTimer} from "./utils"
 import type {Message} from "discord.js"
 import {adminRoleName} from "../../getConfig"
-import {isauthorizedToModifyTimer} from "./utils"
+import {timers} from "."
 
 /**
  * Kills a timer with id
@@ -17,20 +17,28 @@ import {isauthorizedToModifyTimer} from "./utils"
  * @param id - timermessage.member.roles id - could be undefined, but shouldn't be
  * @returns void
  */
-export const kill = async (
+export const kill = (
     message: Message,
-): Promise<void> => {
+): void => {
     const {author, member, channel} = message
-    const id = message.content.split(" ")[1]
+    let id = message.content.split(" ")[1]
     const shouldMute =
         message.content.split(" ")[2] === undefined ||
         message.content.split(" ")[2] === "mute"
-    const numericId = Number(id)
+    let numericId = Number(id)
 
     if (id === undefined) { // Id was never provided. Terminate.
-        channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
+        const derivedId = deriveTimerId(timers, author.id)
+        const derivedNumericId = Number(derivedId)
 
-        return
+        if (derivedId === undefined || isNaN(derivedNumericId)) {
+            channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
+
+            return
+        }
+
+        numericId = derivedNumericId
+        id = derivedId
     } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
         channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
 
@@ -47,15 +55,12 @@ export const kill = async (
         channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
     }
 
-    // Array of timers from index
-    const {timers} = await import(".")
-
     // The current timer
     const timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
-    } else if (isauthorizedToModifyTimer(member, author, timer)) {
+    } else if (isAuthorizedToModifyTimer(member, author, timer)) {
         timer.shouldMute = Boolean(shouldMute)
         timer.kill() // Run the `kill()` function
     } else {

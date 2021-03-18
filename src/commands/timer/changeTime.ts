@@ -6,10 +6,10 @@
  * @license BSD-3-Clause
  */
 
-
+import {deriveTimerId, isAuthorizedToModifyTimer} from "./utils"
 import type {Message} from "discord.js"
 import {adminRoleName} from "../../getConfig"
-import {isauthorizedToModifyTimer} from "./utils"
+import {timers} from "."
 
 /**
  * Changes the time of a timer with id
@@ -24,8 +24,8 @@ export const changeTime = async (
     id?: string,
     amt?: string,
 ): Promise<void> => {
-    const numericId = Number(id)
-    const numericAmt = Number(amt) * multiply
+    let numericId = Number(id)
+    let numericAmt = Number(amt) * multiply
 
     if (id === undefined) { // Id was never provided. Terminate.
         channel.send(":confused: Argument [id] not provided. For help using this command, run the `!help` command.")
@@ -38,9 +38,17 @@ export const changeTime = async (
     }
 
     if (amt === undefined) {
-        channel.send(":confused: Argument [amt] not provided. For help using this command, run the `!help` command.")
+        const derivedId = deriveTimerId(timers, author.id)
+        const derivedNumericId = Number(derivedId)
 
-        return
+        if (derivedId === undefined || isNaN(derivedNumericId)) {
+            channel.send(":confused: Argument [amt] not provided. For help using this command, run the `!help` command.")
+
+            return
+        }
+
+        numericAmt = numericId * multiply
+        numericId = derivedNumericId
     } else if (isNaN(numericAmt)) { // Id couldn't be parsed as a number. Terminate.
         channel.send(`:1234: Could not parse \`${amt}\` as a number. Learn to count.`)
 
@@ -53,15 +61,12 @@ export const changeTime = async (
         return
     }
 
-    // Array of timers from index
-    const {timers} = await import(".")
-
     // The current timer
     const timer = timers[numericId]
 
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
-    } else if (isauthorizedToModifyTimer(member, author, timer)) {
+    } else if (isAuthorizedToModifyTimer(member, author, timer)) {
         if (numericAmt > 0) {
             channel.send(`Winding timer ${id} forward by ${numericAmt} seconds`)
         } else {

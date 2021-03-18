@@ -111,10 +111,6 @@ export const handleMessage = async (
 
             message.channel.send(`The configured command cooldown is ${config.commandCooldown}s. Since this bot is hosted on either some crappy server or Luke's laptop, there needs to be a cooldown. The cooldown time can be changed in the configuration file.`)
         } else if (
-            new RegExp(`^<@(\\!)?${client.user?.id}>$`).test(message.content.trim())
-        ) {
-            await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
-        } else if (
             config.shouldDetectProfanity &&
             filter.isProfane(message.content)
         ) { // Swear word detected
@@ -130,6 +126,10 @@ export const handleMessage = async (
             } else {
                 message.channel.send(`<@${author}>`, {files: ["https://stayhipp.com/wp-content/uploads/2019/02/you-better-watch.jpg"]})
             }
+        } else if (
+            new RegExp(`^<@(\\!)?${client.user?.id}>$`).test(message.content.trim())
+        ) {
+            await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
         }
     }
 }

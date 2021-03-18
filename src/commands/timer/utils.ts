@@ -136,7 +136,7 @@ export const muteUser = async (
  * @param author - author of timer is allowed to modify the timer
  * @param timer - the timer object itself
  */
-export const isauthorizedToModifyTimer = (
+export const isAuthorizedToModifyTimer = (
     member: GuildMember | null,
     author: User,
     timer: Timer,
@@ -150,7 +150,21 @@ export const isauthorizedToModifyTimer = (
         hasAdminPerms(member, adminRoleName)
 }
 
-export default {
-    formatTime,
-    nextKey,
+export const deriveTimerId = (
+    timers: {[key: number]: Timer},
+    userId: string,
+): string | undefined => {
+    let key: string | undefined
+
+    for (const [id, timer] of Object.entries(timers)) {
+        if (timer.creator.id === userId) {
+            if (key) {
+                return
+            }
+
+            key = id
+        }
+    }
+
+    return key
 }
