@@ -14,24 +14,15 @@
 
 
 <p align="center">
-    <a href="#feature-list">Features</a> •
+    <a href="#features-rundown">Features</a> •
     <a href="#compared-to-other-bots">Compared to Other Bots</a> •
     <a href="#nodejs-versions">NodeJS Compatibility</a> •
     <a href="#setup">Setup</a>
     <p align="center"><img width="90%" src="./assets/timer.png" alt="Timer"/></p>
 </p>
 
-And more!
-
-## Table of Contents
-1. [Features](#feature-list)
-2. [Compared to Other Bots](#compared-to-other-bots)
-3. [NodeJS Compatibility](#nodejs-versions)
-4. [Setup](#setup)
-
-
-## Feature List
-- Coinfip and dice (self explanitory)
+## Features Rundown
+- Coinfip and dice
 - Broadcasting
     - Reply to a message and broadcast it to all channels that match a [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) argument
     - For example, you can reply to a motion and run `!broadcast poi`. This will broadcast a message too all chats which match the [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) `poi`
