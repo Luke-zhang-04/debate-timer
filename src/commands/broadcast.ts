@@ -59,7 +59,7 @@ export const broadcast = async (
     ))
 
     if (regex instanceof Error) {
-        await message.channel.send(`Cannot broadcast message. Reason:\n\`\`\`${regex.name}\n${regex.message}\`\`\`\n${Math.random() > 0.5 ? "Smooth brain" : "Brainlet"}, learn to regex. <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>`)
+        await message.channel.send(`Cannot broadcast message. Reason:\n\`\`\`${regex.name}\n${regex.message}\`\`\`\n${Math.random() > 0.5 ? "Smooth brain" : "Brainlet"}, learn to regex. <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>, or run \`!help regex\``)
 
         return
     }

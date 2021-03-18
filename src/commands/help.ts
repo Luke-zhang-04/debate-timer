@@ -65,6 +65,16 @@ const manual: Manual = {
         value: "Roll a dice",
     },
 
+    regex: {
+        name: "Regular Expression Help",
+        value: `Basic intro to regular expressions. Find out more here: <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.
+You can use regex to match most text channel names. For an example, you can match all chats names \`poi\` with \`poi\`.
+But you can do more with regex.
+- If you have rooms names \`poi-1\`, \`poi-2\`, etc. you can match them with \`poi-.*\`. The \`.*\` will match anything after \`poi-\`.
+- You can also use \`poi-[0-9]+\` to match \`poi-\` then one or more of any number.
+- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`
+    },
+
     start: {
         name: `\`${prefix}start [@mention?] [timeControl? = 5]\``,
         value: `Starts a timer with a default length of 5 minutes.
