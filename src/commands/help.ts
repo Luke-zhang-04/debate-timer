@@ -5,6 +5,9 @@
  * @version 1.7.0
  * @license BSD-3-Clause
  */
+
+/* eslint-disable max-lines */
+
 import {Message, MessageEmbed} from "discord.js"
 import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
 import MockMessageEmbed from "../testUtils/mockMessageEmbed"
@@ -45,6 +48,11 @@ const manual: Manual = {
     coinflip: {
         name: `\`${prefix}coinflip\``,
         value: "Flip a coin",
+    },
+
+    based: {
+        name: `\`${prefix}based\``,
+        value: "No comment.",
     },
 
     epic: {
@@ -401,8 +409,9 @@ E.g ${prefix}help getMotion`,
         {
             name: ":computer: Misc",
             value: `- bruh
-- coinfilp
+- based
 - epic
+- coinfilp
 - dice
 - broadcast [regex] [amt? = Infinity]`,
         },

@@ -10,18 +10,23 @@ maxMotions: 20 # Largest number of motions that can be fetched at once. Keep thi
 defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 
 # URL of your server icon image, or any other image works too.
-# This doesn't actually set your picture. It just dictates what
-# To display on the command for !bruh
+# This doesn't actually set your picture. It just dictates what to display on
+# the command for !bruh
 # Defaults to the GitHub logo
 serverIconUrl:
   https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256
 
 # Url of your bot's icon image, or any other image works too.
-# This doesn't actually set your picture. It just dictates what
-# To display on the command for !epic
+# This doesn't actually set your picture. It just dictates what to display on
+# the command for !epic
 # Defaults to the Discord logo
 botIconUrl:
   https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256
+
+# Random image
+# What to display on the command for !based
+# Defaults to the Discord logo
+otherImageUrl: https://pbs.twimg.com/media/DDWeiW_UQAAVVF7.jpg
 
 # Profanity detection. Default true
 shouldDetectProfanity: true

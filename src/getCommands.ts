@@ -29,6 +29,7 @@ type Commands = Readonly<
  */
 const microCommands: Commands = {
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
+    based: (message) => message.channel.send("", {files: [config.otherImageUrl]}),
     coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
     dice: (message) => message.channel.send(`:game_die: ${crypto.randomInt(1, 7)}`),

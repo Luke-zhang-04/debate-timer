@@ -54,6 +54,7 @@ type FullConfig = {
     defaultTimeCtrl: number,
     serverIconUrl: string,
     botIconUrl: string,
+    otherImageUrl: string,
     shouldDetectProfanity: boolean,
     shouldUseFuzzyStringMatch: boolean,
     shouldRespondToUnknownCommand: boolean,
@@ -88,6 +89,8 @@ const defaultConfig: FullConfig = {
     serverIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
     botIconUrl:
+        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
+    otherImageUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
@@ -240,6 +243,7 @@ export const {
     maxMotions,
     defaultTimeCtrl,
     serverIconUrl,
+    otherImageUrl,
     botIconUrl,
     shouldDetectProfanity,
     shouldUseFuzzyStringMatch,
