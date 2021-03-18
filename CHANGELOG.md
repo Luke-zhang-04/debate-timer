@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: add dice command
 
 ### Changed
+- feat: use more accurate time to show when timer ended
 - fix: use 60 seconds of protected time if speech is 7 minutes or longer
 - feat: send multiple motions if a number argument is supplied
 - feat: use `Discord.MessageEmbed` for help messages
