@@ -1,141 +1,386 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
-import {prefix, shouldUseFuzzyStringMatch} from "../getConfig"
-import type {Message} from "discord.js"
+
+/* eslint-disable max-lines */
+
+import {Message, MessageEmbed} from "discord.js"
+import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
+import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
 import fs from "fs"
 
+const makeMessageEmbed = (): MessageEmbed | MockMessageEmbed => (
+    (
+        process.env.NODE_ENV === "test"
+            ? new MockMessageEmbed()
+            : new MessageEmbed()
+    )
+        .setColor("#f4f4f4")
+        .setAuthor("Debate Timer", botIconUrl, "https://github.com/Luke-zhang-04/debate-timer")
+        .setFooter("Copyright (C) 2020 - 2021 Luke Zhang")
+)
+
 /* eslint-disable no-sync */
 
+type Manual = {
+    [key: string]: {
+        name: string,
+        value: string,
+        fields?: {
+            name: string,
+            value: string,
+        }[],
+    },
+}
+
 // Object with all the mafullConfignual entries
-const manual: {[key: string]: string} = {
-    bruh: `>>> **\`${prefix}bruh\`**
-B R U H.`,
+const manual: Manual = {
+    bruh: {
+        name: `\`${prefix}bruh\``,
+        value: "B R U H",
+    },
 
-    coinflip: `>>> **\`${prefix}coinflip\`**
-Flip a coin`,
+    coinflip: {
+        name: `\`${prefix}coinflip\``,
+        value: "Flip a coin",
+    },
 
-    epic: `>>> **\`${prefix}epic\`**
-Ok, this is epic.`,
+    based: {
+        name: `\`${prefix}based\``,
+        value: "No comment.",
+    },
 
-    start: `>>> **\`${prefix}start [@mention?] [timeControl?: 3 | 5 | 7 = 5]\`**
-Starts a timer with a default length of 5 minutes.
-If the speech is 5 or 7 minutes, there is 30 seconds protected time at the start and end of the speech.
-All lengths include 15 seconds grace time.
-Parameters:
-    \`[@mention?]\` - optional - @mention for current speaker
-    \`[timeControl?: 3 | 5 | 7 = 5]\` - optional - speech length in minutes, must be 3, 5, or 7. Default value of 5.
-Note that parameter order does not matter :smiley:
-Will ping \`[@mention]\` for important times if included
-Will also mute \`[@mention]\` after 5:15
-E.g \`${prefix}start @debate-timer\``,
+    epic: {
+        name: `\`${prefix}epic\``,
+        value: "Ok, this is epic.",
+    },
 
-    kill: `>>> **\`${prefix}kill [id] [shouldMute?: noMute | mute | undefined]\`**
-Kills a timer with id of \`[id]\`
-Parameters:
-    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-    \`[shouldMute?]\` - optional - you can skip this parameter or pass in "mute" to mute the user after their speech, or pass in "noMute" to make sure the user doesn't get muted after killin the timer.
-E.g \`${prefix}kill 254\``,
+    dice: {
+        name: `\`${prefix}dice\``,
+        value: "Roll a dice",
+    },
 
-    list: `>>> **\`list [global?: global | undefined]\`**
-Lists the currently stored timers
-Parameters:
-    \`[global?]\` - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.
-E.g \`${prefix}list global\``,
+    regex: {
+        name: "Regular Expression Help",
+        value: `Basic intro to regular expressions. Find out more here: <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.
+You can use regex to match most text channel names. For an example, you can match all chats names \`poi\` with \`poi\`.
+But you can do more with regex.
+- If you have rooms names \`poi-1\`, \`poi-2\`, etc. you can match them with \`poi-.*\`. The \`.*\` will match anything after \`poi-\`.
+- You can also use \`poi-[0-9]+\` to match \`poi-\` then one or more of any number.
+- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`
+    },
 
-    give: `>>> ** \`give [id] [amt]\`**
-Gives \`[amt]\` amount of seconds to timer with id \`[id]\`
-Parameters:
-   \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-   \`[amt]\` - required - amount in seconds to wind the timer back
-E.g \`${prefix}give 0 10\``,
+    start: {
+        name: `\`${prefix}start [@mention?] [timeControl? = 5]\``,
+        value: `Starts a timer with a default length of 5 minutes.
+        If the speech is 5 minutes, there is 30 seconds protected time at the start and end of the speech. If the speech if 7 or 8 minutes, there is a minute of proteced time.
+        All lengths include 15 seconds grace time.`,
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[@mention?]\` - optional - @mention for current speaker
+- \`[timeControl?: = 5]\` - optional - speech length in minutes. Default value of 5.`,
+            },
+            {
+                name: "Notes",
+                value: `- Parameter order does not matter :smiley:
+- Will ping \`[@mention]\` for important times if included`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}start @debate-timer
+${prefix}start 7
+${prefix}start 3 @debate-timer\`\`\``,
+            },
+        ],
+    },
 
-    take: `>>> ** \`take [id] [amt]\`**
-Takes \`[amt]\` amount of seconds from timer with id \`[id]\`
-Parameters:
-   \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-   \`[amt]\` - required - amount in seconds to wind the timer forward
-E.g \`${prefix}take 0 10\``,
+    timer: {
+        name: `\`${prefix}timer [@mention?] [timeControl? = 5]\``,
+        value: `Functionally equivalent to \`${prefix}start\`.`,
+    },
 
-    backward: `>>> ** \`backward [id] [amt]\`**
-Functionally equivalent to \`give\`
-Winds timer with id \`[id]\` backward by \`[amt]\`
-Parameters:
-   \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-   \`[amt]\` - required - amount in seconds to wind the timer back`,
+    kill: {
+        name: `\`${prefix}kill [id]\``,
+        value: "Stops a timer with id of `[id]`",
+        fields: [
+            {
+                name: "Parameters",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}kill 3\``,
+            },
+        ],
+    },
 
-    forward: `>>> ** \`take [id] [amt]\`**
-Functionally equivalent to \`take\`
-Winds timer with id \`[id]\` forward by \`[amt]\`
-Parameters:
-   \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-   \`[amt]\` - required - amount in seconds to wind the timer forward`,
+    stop: {
+        name: `\`${prefix}stop [id]\``,
+        value: `Functionally equivalent to \`${prefix}kill\`.`,
+    },
 
-    getMotion: `>>> **\`getMotion\`**
-Gets a random motion from the hellomotions spreadsheet
+    list: {
+        name: `\`${prefix}list [global?: global | undefined]\``,
+        value: "Lists the currently stored timers",
+        fields: [
+            {
+                name: "Parameters",
+                value: "- [global?] - optional - if \"global\" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.",
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}list
+${prefix}list global\`\`\``,
+            },
+        ],
+    },
+
+    backward: {
+        name: `\`${prefix}backward [id] [amt]\``,
+        value: "Winds timer with id `[id]` back `[amt]` seconds",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[id]\` - required - integer value for timer id. Will be displayed under a timer.
+- \`[amt]\` - required - amount in seconds to wind the timer back. Can be negative.`,
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}backward 0 10\` winds timer 0 backwards by 10 seconds`,
+            },
+        ],
+    },
+
+    forward: {
+        name: `\`${prefix}forward [id] [amt]\``,
+        value: "Winds timer with id `[id]` forward `[amt]` seconds",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[id]\` - required - integer value for timer id. Will be displayed under a timer.
+- \`[amt]\` - required - amount in seconds to wind the timer forward. Can be negative.`,
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}foward 0 10\` winds timer 0 forward by 10 seconds`,
+            },
+        ],
+    },
+
+    give: {
+        name: `\`${prefix}give [id] [amt]\``,
+        value: `Functionally equivalent to \`${prefix}backward\`.`,
+    },
+
+    back: {
+        name: `\`${prefix}back [id] [amt]\``,
+        value: `Functionally equivalent to \`${prefix}backward\`.`,
+    },
+
+    take: {
+        name: `\`${prefix}take [id] [amt]\``,
+        value: `Functionally equivalent to \`${prefix}forward\`.`,
+    },
+
+    getMotion: {
+        name: `\`${prefix}getMotion\``,
+        value: `Gets a random motion from the hellomotions spreadsheet
 <https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>`,
+        fields: [
+            {
+                name: "Usage",
+                value: `\`${prefix}getMotion\``,
+            },
+        ],
+    },
 
-    getMotions: `>>> **\`getMotions [count?]\`**
-Gets multiple motions from the hellomotions spreadsheet
-<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>
-Parameters:
-    \`[count?]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than 20.
-E.g \`${prefix}getMotions 6\``,
+    motion: {
+        name: `\`${prefix}motion\``,
+        value: `Functionally equivalent to \`${prefix}getMotion\`.`,
+    },
 
-    makeTeams: `>>> **\`${prefix}makeTeams [format?: bp | cp | worlds = bp]\`**
-Makes random teams with \`Team A\` \`Team B\` \`Team C\` and \`Team D\`
-Parameters:
-    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
-E.g \`${prefix}\`makeTeams bp`,
+    getMotions: {
+        name: `\`${prefix}getMotions [count? = 5]\``,
+        value: `Gets multiple motions from the hellomotions spreadsheet
+<https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678>`,
+        fields: [
+            {
+                name: "Parameters",
+                value: `\`[count? = 5]\` - optional - integer value for number of motions to get. Default is 5. Won't do more than ${maxMotions}.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}getMotions
+${prefix}getMotions 6\`\`\``,
+            },
+        ],
+    },
 
-    makePartners: `>>> **\`${prefix}makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-Makes random partners
-Parameters:
-    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
-    \`[debater1]\` - required - @mention of debater 1
-    \`[debater2]\` - required - @mention of debater 2
-    ...
-The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
-E.g \`${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\``,
+    motions: {
+        name: `\`${prefix}motions [count? = 5]\``,
+        value: `Functionally equivalent to \`${prefix}getMotions\`.`,
+    },
 
-    makeRound: `>>> **\`${prefix}makeRound \`[format?: bp | cp | worlds = bp]\` - optional [debater1] [debater2]\`**
-Creates random draw, and chooses a random motion
-Similar to \`makeDraw\`.`,
+    makePartners: {
+        name: `\`makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: "Makes random partners",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
+- \`[debater1]\` - required - debater 1
+- \`[debater2]\` - required - debater 2
+...
+- \`[debater n]\` - debater *n*. n must be greater than or equal to the number of debaters specified by your chosen format.`,
+            },
+            {
+                name: "Notes",
+                value: `- The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
+- Parameter order does not matter :smiley:. However, if you enter "bp", "cp", or "worlds" as the name of a debater, the command will not work.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}makePartners worlds debater1 debater2 debater3 debater4 debater5 debater6
+${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\`\`\``,
+            },
+        ],
+    },
 
-    makeDraw: `>>> **\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-Makes random draw, which includes positions and teams.
-Parameters:
-    \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
-    \`[debater1]\` - required - @mention of debater 1
-    \`[debater2]\` - required - @mention of debater 2
-    ...
-The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
-E.g \`${prefix}makePartners @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\``,
+    partners: {
+        name: `\`${prefix}partners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: `Functionally equivalent to \`${prefix}makePartners\`.`,
+    },
 
-    poll: `>>> **\`${prefix}poll\`**
-Creates a poll for debating and spectating
-Only one poll can run at a time
-Creating a new poll will erase the data in any other polls`,
+    makeRound: {
+        name: `\`${prefix}makeRound [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: `Creates a random draw, and then chooses a random motion. Refer to \`makeDraw\`.`,
+    },
 
-    getPoll: `>>> **\`${prefix}getPoll\`**
-Gets data from current poll. If no poll has been made, data will be empty.`,
+    round: {
+        name: `\`${prefix}round [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: `Creates a random draw, and then chooses a random motion. Refer to \`makeDraw\`.`,
+    },
 
-    resume: `>>> **\`${prefix}resume [id]\`**
-Continues a timer with id of \`[id]\`
-Parameters:
-    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-E.g \`${prefix}resume 254\``,
+    makeDraw: {
+        name: `\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: "Makes random draw, which includes positions and teams.",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[format?: bp | cp | worlds = bp]\` - optional - the debate format to make teams for. Default value of bp.
+- \`[debater1]\` - required - debater 1
+- \`[debater2]\` - required - debater 2
+...
+- \`[debater n]\` - debater *n*. n must be greater than or equal to the number of debaters specified by your chosen format.`,
+            },
+            {
+                name: "Notes",
+                value: `- The number of required debaters is dependent on the format of choice. Adding extra debaters will result in randomly excluded debaters.
+- Parameter order does not matter :smiley:. However, if you enter "bp", "cp", or "worlds" as the name of a debater, the command will not work.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}makeDraw worlds debater1 debater2 debater3 debater4 debater5 debater6
+${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 debater7 debater8 debater9 bp\`\`\``,
+            },
+        ],
+    },
 
-    pause: `>>> **\`${prefix}pause [id]\`**
-Pauses a timer with id of \`[id]\`
-Parameters:
-    \`[id]\` - required - integer value for timer id. Should be displayed under a timer.
-E.g \`${prefix}pause 254\``,
+    draw: {
+        name: `\`${prefix}draw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\``,
+        value: `Functionally equivalent to \`${prefix}makeDraw\`.`,
+    },
+
+    poll: {
+        name: `\`${prefix}poll\``,
+        value: "Creates a poll",
+        fields: [
+            {
+                name: "Notes",
+                value: `- Only one poll can run at a time per user
+- Creating a new poll will erase a user's old poll
+- Polls delete themselves after around at least 1 hour of creation`,
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}poll\``,
+            },
+        ],
+    },
+
+    getPoll: {
+        name: `\`${prefix}getPoll [option?]\``,
+        value: "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}getPoll
+${prefix}getPoll debating\`\`\``,
+            },
+        ],
+    },
+
+    pause: {
+        name: `\`${prefix}pause [id]\``,
+        value: "Pauses a timer with id of `[id]`",
+        fields: [
+            {
+                name: "Parameters",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}pause 3\``,
+            },
+        ],
+    },
+
+    resume: {
+        name: `\`${prefix}resume [id]\``,
+        value: "Resumes a timer with id of `[id]`",
+        fields: [
+            {
+                name: "Parameters",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}resume 3\``,
+            },
+        ],
+    },
+
+    broadcast: {
+        name: `\`${prefix}broadcast [regex] [amt? = Infinity]\``,
+        value: "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[regex]\` - required - regex restraint of channel names for bot to send to
+- \`[amt? = Infinity]\` - optional - max number of channels to broadcast to. Default Infinity.`,
+            },
+            {
+                name: "Notes",
+                value: `- Parameter order does not matter :smiley:
+- You must reply to a message, and that message will be broadcasted`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}broadcast round-[0-9]+
+${prefix}broadcast 3 .*\`\`\``,
+            },
+        ],
+    },
 }
 
 type Package = {
@@ -154,56 +399,65 @@ type Package = {
 
 const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
-// Default help message
-const defaultMsg = `**Debate Timer Bot**
-
-This project is open source.
+const defaultParams = {
+    title: "Debate Timer Bot",
+    desc: `This project is open source.
 You can contribute to it at <https://github.com/Luke-zhang-04/debate-timer>
 Found a bug? Report it at <https://github.com/Luke-zhang-04/debate-timer/issues/new>
 
 The configured prefix is \`${prefix}\`
-This bot is in version ${version}
+This bot is in version ${version}`,
+    fields: [
+        {
+            name: "Help",
+            value: `:book: \`help [command?]\`
+Get some help
+**Parameters**
+- \`[command?]\` - optional - name of command to get more detailed help with. Doesn't have to include \`${prefix}\`.
+E.g ${prefix}help getMotion`,
+        },
+        {
+            name: ":computer: Misc",
+            value: `- bruh
+- based
+- epic
+- coinfilp
+- dice
+- broadcast [regex] [amt? = Infinity]`,
+        },
+        {
+            name: ":timer: Timer",
+            value: `- start [@mention?] [timeControl?]
+- kill [id] [shouldMute?]
 
-> :book: **\`${prefix}help [command?]\`**
-> Get some help
-> Parameters:
->     [command?] - optional - name of command to get more detailed help with. Doesn't have to include \`${prefix}\`.
-> E.g ${prefix}help getMotion
-> E.g ${prefix}man ${prefix}start
+- resume [id]
+- pause [id]
 
-> :book: **\`${prefix}man [command?]\`**
-> Stands for manual
-> Functionally equivalent to \`help\`
+- list [global?]
 
-**Commands:**
-> **\`${prefix}bruh\`**
-> **\`${prefix}coinfilp\`**
-> **\`${prefix}epic\`**
+- backward [id] [amt]
+- forward [id] [amt]`,
+        },
+        {
+            name: ":newspaper: Motions",
+            value: `- getMotion
+- getMotions [count?]`,
+        },
+        {
+            name: ":speaking_head: Team Formation",
+            value: `- makeTeams [format?]
+- makePartners [format?] [debater1] [debater2] ...
+- makeDraw [format?] [debater1] [debater2] ...
+- makeRound [format?] [debater1] [debater2] ...`,
+        },
+    ],
+}
 
-> :computer:
-> **\`${prefix}ping\`**
-> **\`${prefix}systemInfo\`**
-
-> :timer:
-> **\`${prefix}start [@mention?] [timeControl?: 3 | 5 | 7 = 5]\`**
-> **\`${prefix}kill [id] [shouldMute?]\`**
-> **\`${prefix}resume [id]\`**
-> **\`${prefix}pause [id]\`**
-> **\`${prefix}list [global?]\`**
->${" "}
-> **\`${prefix}backward [id] [amt]\`**
-> **\`${prefix}forward [id] [amt]\`**
-
-> :newspaper:
-> **\`${prefix}getMotion\`**
-> **\`${prefix}getMotions [count?]\`**
-
-> :speaking_head:
-> **\`${prefix}makeTeams [format?: bp | cp | worlds = bp]\`**
-> **\`${prefix}makePartners [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-> **\`${prefix}makeDraw [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-> **\`${prefix}makeRound [format?: bp | cp | worlds = bp] [debater1] [debater2] ...\`**
-`
+const defaultMsg = makeMessageEmbed()
+    .setTitle(defaultParams.title)
+    .setDescription(defaultParams.desc)
+    .addFields(...defaultParams.fields)
+    .setURL("https://github.com/Luke-zhang-04/debate-timer")
 
 /**
  * Help command invoked with !help
@@ -214,7 +468,11 @@ export default (message: Message): void => {
     let arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
-        message.channel.send(defaultMsg)
+        message.channel.send(
+            defaultMsg instanceof MessageEmbed
+                ? defaultMsg
+                : defaultMsg.toString(),
+        )
 
         return
     }
@@ -224,7 +482,7 @@ export default (message: Message): void => {
     }
 
     const correctedArg = shouldUseFuzzyStringMatch
-        ? didyoumean(arg, Object.keys(manual))
+        ? didyoumean(arg, Object.keys(manual)) as string
         : arg
 
     if (correctedArg === null) {
@@ -246,5 +504,15 @@ export default (message: Message): void => {
         })
     }
 
-    message.channel.send(`:book: **Debate Timer Bot**\n${manual[correctedArg as string]}`)
+    const manualEntry = manual[correctedArg]
+    const helpMsg = makeMessageEmbed()
+        .setTitle(manualEntry.name)
+        .setDescription(manualEntry.value)
+        .addFields(...(manualEntry.fields ?? []))
+
+    message.channel.send(
+        helpMsg instanceof MessageEmbed
+            ? helpMsg
+            : helpMsg.toString(),
+    )
 }

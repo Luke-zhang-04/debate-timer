@@ -1,8 +1,8 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 import type {
@@ -12,6 +12,7 @@ import type {
 } from "discord.js"
 import type {Timer} from "."
 import {adminRoleName} from "../../getConfig"
+import {hasAdminPerms} from "../../utils"
 
 // One minute
 const minute = 60
@@ -135,7 +136,7 @@ export const muteUser = async (
  * @param author - author of timer is allowed to modify the timer
  * @param timer - the timer object itself
  */
-export const isauthorizedToModifyTimer = (
+export const isAuthorizedToModifyTimer = (
     member: GuildMember | null,
     author: User,
     timer: Timer,
@@ -144,16 +145,26 @@ export const isauthorizedToModifyTimer = (
         return false
     }
 
-    const isAdmin = (
-        member?.roles.cache.find((role) => role.name === adminRoleName) ?? null
-    ) !== null
-
     return author.id === timer.mentionedUid ||
         author.id === timer.creator.id ||
-        isAdmin
+        hasAdminPerms(member, adminRoleName)
 }
 
-export default {
-    formatTime,
-    nextKey,
+export const deriveTimerId = (
+    timers: {[key: number]: Timer},
+    userId: string,
+): string | undefined => {
+    let key: string | undefined
+
+    for (const [id, timer] of Object.entries(timers)) {
+        if (timer.creator.id === userId) {
+            if (key) {
+                return
+            }
+
+            key = id
+        }
+    }
+
+    return key
 }

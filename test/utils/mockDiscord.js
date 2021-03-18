@@ -1,10 +1,12 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
+
+import { PermissionOverwrites } from "discord.js"
 
 export class Reaction {
 
@@ -22,7 +24,7 @@ export class Reaction {
             name: this.emoji,
         },
         users: {
-            cache: this.message.reactedUsers.filter((val) => (
+            cache: this.message.reactedEmojis.filter((val) => (
                 val[1] === this.emoji ? [val[0]] : false
             )),
         },
@@ -46,7 +48,7 @@ export class Message {
 
     id
 
-    reactedUsers = []
+    reactedEmojis = {}
 
     author = {
         bot: false,
@@ -77,6 +79,17 @@ export class Message {
         }
     }
 
+    reactions = {
+        // Hacky way of getting around `this` binding to getterw
+        getEmojis: () => {
+            return this.reactedEmojis
+        },
+
+        get cache() {
+            return Object.entries(this.getEmojis())
+        }
+    }
+
     channel = {
         send: async (contents, options) => {
             this.newMessage = new Message(contents, options)
@@ -89,11 +102,19 @@ export class Message {
         this.content = val
     }
 
-    react = async (username, emoji, client) => {
-        this.reactedUsers.push([username, emoji])
-
-        if (client.functions.messageReactionAdd !== undefined) {
-            await client.functions.messageReactionAdd(new Reaction(emoji, this))
+    react = async (username, emoji, emojiId) => {
+        if (this.reactedEmojis[emoji]) {
+            this.reactedEmojis[emoji].users.cache.push(new User(username))
+        } else {
+            this.reactedEmojis[emoji] = {
+                users: {
+                    cache: [new User(username)],
+                },
+                emoji: {
+                    id: emojiId,
+                    name: emoji,
+                },
+            }
         }
     }
 
@@ -125,7 +146,9 @@ export class Member {
 
     user
 
-    constructor (roles, id) {
+    permission
+
+    constructor (id, roles = [], permissions = []) {
         this.roles = {
             roles,
             cache: {
@@ -141,6 +164,15 @@ export class Member {
             },
         }
         this.user = new User(id)
+        this.permissions = permissions
+    }
+
+    hasPermission = (permission) => {
+        if (typeof permission === "string") {
+            permission = [permission]
+        }
+
+        return this.permissions.find((val) => permission.includes(val)) !== undefined
     }
 
 }

@@ -1,8 +1,8 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
@@ -10,7 +10,7 @@ import {
     Message,
     User
 } from "discord.js"
-import {formatTime} from "./timer/utils"
+import {formatTime} from "./utils"
 
 /**
  * Lists timers and prints them to message.channel
@@ -20,7 +20,7 @@ import {formatTime} from "./timer/utils"
  */
 const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
     // Get all the timers
-    const timers = Object.values((await import("./timer")).timers)
+    const timers = Object.values((await import(".")).timers)
         .filter((timer, index) => (
             index <= 10 && (
                 user === undefined ||
@@ -45,8 +45,10 @@ const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
  * @param message - Discord message
  * @returns void - sends message in function
  */
-export default (message: Message): Promise<void> => {
+export const list = (message: Message): Promise<void> => {
     const param = message.content.split(" ")[1]
 
     return listTimers(message, param === "global" ? undefined : message.author)
 }
+
+export default list

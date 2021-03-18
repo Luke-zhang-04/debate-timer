@@ -1,8 +1,8 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
@@ -19,9 +19,9 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "!start")
-        testHelpers.includes(returnMsg, "!getMotion")
-        testHelpers.includes(returnMsg, "!makeTeams")
+        testHelpers.includes(returnMsg, "start")
+        testHelpers.includes(returnMsg, "getMotion")
+        testHelpers.includes(returnMsg, "makeTeams")
     })
 
     it("Should show help message on !man", () => {
@@ -31,9 +31,9 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "!start")
-        testHelpers.includes(returnMsg, "!getMotion")
-        testHelpers.includes(returnMsg, "!makeTeams")
+        testHelpers.includes(returnMsg, "start")
+        testHelpers.includes(returnMsg, "getMotion")
+        testHelpers.includes(returnMsg, "makeTeams")
     })
 
     it("Should have a manual entry for bruh", () => {
@@ -83,7 +83,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Kills a timer")
+        testHelpers.includes(returnMsg, "Stops a timer")
     })
 
     it("Should have a manual entry for list", () => {
@@ -103,7 +103,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Continues a timer")
+        testHelpers.includes(returnMsg, "Resumes a timer")
     })
 
     it("Should have a manual entry for pause", () => {
@@ -185,7 +185,7 @@ export default () => {
 
         const returnMsg = message.newMessage.content
 
-        testHelpers.includes(returnMsg, "Gets data from current poll")
+        testHelpers.includes(returnMsg, "Gets data from user's current poll")
     })
 
     it("Should not have a manual entry for unknown command", () => {

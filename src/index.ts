@@ -1,8 +1,8 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
@@ -15,6 +15,8 @@ import fs from "fs"
 import handleMessage from "./handleMessage"
 
 dotenv.config()
+
+import("./garbageCollector").then(({register}) => register())
 
 const readFile = (path: string): Promise<string> => (
     new Promise((resolve, reject) => {
@@ -95,10 +97,15 @@ client.on("guildMemberAdd", (member) => {
         welcomeMessage !== false &&
         Object.keys(welcomeMessage).length >= 2
     ) {
-        const {channel: channelId, message} =
-            welcomeMessage as {channel: string, message: string}
-        const channel = client.channels.cache
-            .find((chan) => chan.id === channelId)
+        const {channel: channelId, message} = welcomeMessage
+        const channelName =
+            welcomeMessage.channelName && new RegExp(welcomeMessage.channelName, "u")
+        const channel = member.guild.channels.cache
+            .find((chan) => chan.id === channelId) ??
+            (
+                channelName && member.guild.channels.cache
+                    .find((chan) => channelName.test(chan.name))
+            )
 
         if (!channel || !(channel instanceof Discord.TextChannel)) {
             console.log(`Cannot find text channel with ID ${channelId}`)
@@ -113,15 +120,9 @@ client.on("guildMemberAdd", (member) => {
     }
 })
 
-client.on("message", (message) => {
+client.on("message", async (message) => {
     try {
-        if (message.content === `${prefix}ping`) {
-            message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`)
-
-            return
-        }
-
-        handleMessage(message, client)
+        await handleMessage(message, client)
     } catch (err: unknown) {
         message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
 

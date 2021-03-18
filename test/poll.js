@@ -1,13 +1,12 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
 import {Client, Message} from "./utils/mockDiscord.js"
-import assert from "assert"
 import handleMessage from "../lib/handleMessage.js"
 import poll from "../lib/commands/poll.js"
 import testHelpers from "./utils/helpers.js"
@@ -21,7 +20,6 @@ export default () => {
 
         const returnMsg = msg.newMessage.content
 
-        testHelpers.includes(returnMsg, "Starting a poll")
         testHelpers.includes(returnMsg, "React here")
     })
 
@@ -37,7 +35,7 @@ export default () => {
                 msg.newMessage.react(
                     `user${userNum}`,
                     userNum <= 7 ? "emoji_1" : "emoji_2",
-                    client,
+                    userNum <= 7 ? "762110857550757888" : "762112564787675156",
                 ),
             )
         }
@@ -46,33 +44,21 @@ export default () => {
 
         const newMsg = new Message("!getPoll")
 
-        handleMessage.default(newMsg, client)
+        await handleMessage.default(newMsg, client)
 
         const returnMsg = newMsg.newMessage.content
 
-        testHelpers.includes(returnMsg, "Debaters: <@user0>")
+        testHelpers.includes(returnMsg, "**debating**: <@user0>")
         testHelpers.includes(returnMsg, "<@user6>")
-        testHelpers.includes(returnMsg, "Spectators: <@user8>")
+        testHelpers.includes(returnMsg, "**spectating**: <@user8>")
         testHelpers.includes(returnMsg, "<@user9>")
-    })
 
-    it("Should not take more than 8 debaters", async () => {
-        const client = new Client()
-        const msg = new Message("!poll")
-        const reactPromises = []
+        const newMsg2 = new Message("!getPoll spectating")
 
-        await poll.makePoll(msg, client)
+        await handleMessage.default(newMsg2, client)
 
-        for (let userNum = 0; userNum < 9; userNum++) {
-            reactPromises.push(
-                msg.newMessage.react(`user${userNum}`, "emoji_1", client),
-            )
-        }
+        testHelpers.includes(newMsg2.newMessage.content, "<@user9>")
 
-        await Promise.all(reactPromises)
-
-        const returnMsg = msg.newMessage.content
-
-        assert.strictEqual(returnMsg, "Sorry, there are already 8 debaters.")
+        await handleMessage.default(newMsg, client)
     })
 }

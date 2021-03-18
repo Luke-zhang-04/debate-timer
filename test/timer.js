@@ -1,14 +1,14 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
 import {Message, Member} from "./utils/mockDiscord.js"
 import handleMessage from "../lib/handleMessage.js"
-import listCmd from "../lib/commands/list.js"
+import listCmd from "../lib/commands/timer/list.js"
 import {strictEqual} from "assert"
 import testHelpers from "./utils/helpers.js"
 
@@ -143,7 +143,7 @@ export default () => {
                         id: "user2",
                     },
                 },
-                new Member([], "user2"),
+                new Member("user2", []),
             )
 
             await handleMessage.default(message2)
@@ -163,7 +163,7 @@ export default () => {
                             id: "user1",
                         },
                     },
-                    new Member([], "user1"),
+                    new Member("user1", []),
                 )
 
                 await handleMessage.default(message2)

@@ -1,13 +1,14 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
 import {GoogleSpreadsheet} from "google-spreadsheet"
 import type {Message} from "discord.js"
+import crypto from "crypto"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
 
@@ -31,19 +32,6 @@ const docDidLoad = (async (): Promise<void> => {
 })()
 
 /**
- * Get a random integer between min and max
- * @param min - start number; inclusive
- * @param max - end number; exclusive
- * @returns random integer
- */
-const randint = (min: number, max: number): number => {
-    const _min = Math.ceil(min)
-    const _max = Math.floor(max)
-
-    return Math.floor(Math.random() * (_max - _min) + _min)
-}
-
-/**
  * Gets a random motion from the hellomotions motions spreadsheet
  * @see {@link https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678}
  * @returns promise with a motion
@@ -62,7 +50,7 @@ export const getRandomMotion = async (): Promise<string> => {
         const sheet = doc.sheetsById["2007846678"]
 
         // Random row
-        const row = randint(2, sheet.rowCount)
+        const row = crypto.randomInt(2, sheet.rowCount)
 
         /* eslint-disable no-await-in-loop */
         // OK in this situation b/c the loop usually will run once
@@ -79,10 +67,6 @@ export const getRandomMotion = async (): Promise<string> => {
 
     return `${infoSlide}${motion.toString()}`
 }
-
-export const sendRandomMotion = async (message: Message): Promise<Message> => (
-    message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
-)
 
 /**
  * Groups the motions into the largest size possible for the Discord API
@@ -150,10 +134,10 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
     }
 
     for (let _ = 0; _ < amt; _++) {
-        let row = randint(2, sheet.rowCount)
+        let row = crypto.randomInt(2, sheet.rowCount)
 
         while (rowsUsed.includes(row)) { // Make sure random row hasn't already been used
-            row = randint(2, sheet.rowCount)
+            row = crypto.randomInt(2, sheet.rowCount)
         }
 
         rowsUsed.push(row)
@@ -193,6 +177,17 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
                     : message.channel.send(JSON.stringify(err))
             ))
         /* eslint-enable no-await-in-loop */
+    }
+}
+
+export const sendRandomMotion = async (message: Message): Promise<void> => {
+    const numberArg = Number(message.content.split(" ")[1])
+
+    if (isNaN(numberArg)) {
+        message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
+    } else {
+        message.channel.send("You ran the command `getMotion` (singular) with a number. Assuming user meant `getMotions`.")
+        sendRandomMotions(message)
     }
 }
 

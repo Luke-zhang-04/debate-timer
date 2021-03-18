@@ -1,15 +1,15 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
 import {Client, Message} from "discord.js"
+import config, {prefix} from "./getConfig"
 import Filter from "bad-words"
 import commands from "./getCommands"
-import config from "./getConfig"
 import didyoumean from "didyoumean"
 
 // Swear words filter
@@ -30,16 +30,13 @@ let lastCommand = 0
  */
 const handleCmd = async (message: Message, client: Client): Promise<void> => {
     // Trip duplicate spaces to just one space
-    message.content = message.content.replace(/  +/gui, " ")
-
-    // Bot command prefix
-    const {prefix} = config
+    message.content = message.content.replace(/  +/gui, " ").trim()
 
     // Command name
     const [cmd] = message.content.slice(prefix.length).split(" ")
 
     if (config.shouldRespondToUnknownCommand && ((cmd ?? "") === "")) {
-        message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
+        await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
 
         return
     }
@@ -94,9 +91,12 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
  * @param message - message object
  * @returns void
  */
-export default async (message: Message, client: Client): Promise<void> => {
+export const handleMessage = async (
+    message: Message,
+    client: Client,
+): Promise<void> => {
     if (!message.author.bot) {
-        if (message.content.startsWith(config.prefix)) {
+        if (message.content.trim().startsWith(config.prefix)) {
             const timeGap = config.commandCooldown * 1000
 
             if (
@@ -126,7 +126,13 @@ export default async (message: Message, client: Client): Promise<void> => {
             } else {
                 message.channel.send(`<@${author}>`, {files: ["https://stayhipp.com/wp-content/uploads/2019/02/you-better-watch.jpg"]})
             }
+        } else if (
+            new RegExp(`^<@(\\!)?${client.user?.id}>$`).test(message.content.trim())
+        ) {
+            await message.channel.send(`:wave: Hey there! Yes, I'm alive. If you need help using me, type \`${prefix}help\`!`)
         }
     }
 }
 /* eslint-enable */
+
+export default handleMessage

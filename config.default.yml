@@ -6,35 +6,46 @@ prefix: "!" # Prefix for command. Default "!".
 maxTimers: 10 # Maximum number of concurrent timers. -1 for infinite. Default 10
 maxTimersPerUser: 3 # Maximum number of concurrent timers per user. Default 3
 commandCooldown: 1 # Time gap between consecutive commands. Default 1
-maxMotions: 20 # Largest number of motions that can be fetched at once. Default 20
+maxMotions: 20 # Largest number of motions that can be fetched at once. Keep this value low. Default 20
 defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 
 # URL of your server icon image, or any other image works too.
-# This doesn't actually set your picture. It just dictates what
-# To display on the command for !bruh
+# This doesn't actually set your picture. It just dictates what to display on
+# the command for !bruh
 # Defaults to the GitHub logo
 serverIconUrl:
   https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
 
 # Url of your bot's icon image, or any other image works too.
-# This doesn't actually set your picture. It just dictates what
-# To display on the command for !epic
+# This doesn't actually set your picture. It just dictates what to display on
+# the command for !epic
 # Defaults to the Discord logo
 botIconUrl:
+  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+
+# Random image
+# What to display on the command for !based
+# Defaults to the Discord logo
+otherImageUrl:
   https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
 
 # Profanity detection. Default true
 shouldDetectProfanity: true
 
 # Whitelisted words from profanity detection. Default empty.
-whitelistedWords: []
+whitelistedWords:
+  # you can add words like this
+  # - word
 
 # Blacklisted words from profanity detection. Default empty.
-blacklistedWords: []
+blacklistedWords:
+  # you can add words like this
+  # - word
 
 # Welcome message to send when a new member joins
 welcomeMessage: null # An empty object, false, or null signifies no welcome message
   # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
+  # channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
 
   # Message contents. Use %username% for the username, %mention% to @ mention the user,
   # and %serverName% for the server name.
@@ -46,13 +57,15 @@ shouldUseFuzzyStringMatch: true
 # If the bot should reply to an unknown command. Default true.
 shouldRespondToUnknownCommand: true
 
-# Admin role in your server. Defaults to just "admin".
+# Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default
-adminRoleName: "admin"
+# You can also delegate by permission. Use "hasPermission:PERMISSIONNAME"
+# To get a list of valid permission names, see https://discord.com/developers/docs/topics/permissions
+adminRoleName: "hasPermission:ADMINISTRATOR"
 
 # Emoji config for polls
 # Do not include :colons: around the emoji name
-# ID is only required for custom emojis
+# id is only required for custom emojis
 # ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
 emojis:
   debating:

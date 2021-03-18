@@ -1,8 +1,8 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 Luke Zhang
+ * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.6.1
+ * @version 1.7.0
  * @license BSD-3-Clause
  */
 
@@ -21,12 +21,21 @@ export const timers: {[key: number]: Timer} = {}
 
 /* eslint-enable no-use-before-define */
 
-/**
- * How often the timer should update in seconds
- * 5 seconds is fine because of server latency
- * Anything smaller might cause issues
- */
-const interval = 5
+
+const enum Values {
+
+    /**
+     * How often the timer should update in seconds
+     * 5 seconds is fine because of server latency
+     * Anything smaller might cause issues
+     */
+    Interval = 5,
+
+    /**
+     * Grace time before a speech in seconds
+     */
+    GraceTime = 15,
+}
 
 export class Timer {
 
@@ -54,6 +63,11 @@ export class Timer {
      * Timer length
      */
     public readonly timeCtrl: number
+
+    /**
+     * Protected time in seconds
+     */
+    public readonly protectedTime: number
 
     /**
      * Real start time which is readonly
@@ -118,6 +132,10 @@ export class Timer {
             ? DatePlus.minsToSecs(5)
             : timeCtrl
 
+        this.protectedTime = this.timeCtrl >= DatePlus.minsToSecs(7)
+            ? 60
+            : 30
+
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
@@ -146,7 +164,7 @@ export class Timer {
      * Changes the current time of this timer by changing the start time
      * @param amt - amount to wind FORWARD by
      */
-    public changeTime = async (amt: number): Promise<void> => {
+    public async changeTime (amt: number): Promise<void> {
         this._startTime -= amt * 1000 // Wind the start time the opposite direction
 
         const now = Date.now()
@@ -157,27 +175,29 @@ export class Timer {
          */
         if (this._startTime > now) {
             this._startTime = now
-        } else if (this._startTime < now - (this.timeCtrl + 15) * 1000) {
-            this._startTime = now - (this.timeCtrl + 15) * 1000
+        } else if (
+            this._startTime < now - (this.timeCtrl + Values.GraceTime) * 1000
+        ) {
+            this._startTime = now - (this.timeCtrl + Values.GraceTime) * 1000
         }
 
         await this._updateStatus()
 
         const {_time: time, timeCtrl} = this
 
-        if (time < timeCtrl + 15 && this._stages[5]) {
+        if (time < timeCtrl + Values.GraceTime && this._stages[5]) { // Grace time
             this._stages[5] = false
         }
-        if (time < timeCtrl && this._stages[4]) {
+        if (time < timeCtrl && this._stages[4]) { // End of speech
             this._stages[4] = false
         }
-        if (time < timeCtrl - 30 && this._stages[3]) {
+        if (time < timeCtrl - this.protectedTime && this._stages[3]) { // Ending protected time
             this._stages[3] = false
         }
-        if (time < timeCtrl / 2 && this._stages[2]) {
+        if (time < timeCtrl / 2 && this._stages[2]) { // Halfway
             this._stages[2] = false
         }
-        if (time < 30 && this._stages[1]) {
+        if (time < this.protectedTime && this._stages[1]) { // Starting procteded
             this._stages[1] = false
         }
     }
@@ -185,10 +205,10 @@ export class Timer {
     /**
      * Start the timer and interval
      */
-    public start = (): void => {
+    public start (): void {
         this._intervalId = setInterval(() => {
             if (this.isPaused) {
-                this._startTime += interval * 1000
+                this._startTime += Values.Interval * 1000
 
                 if (Date.now() - this._trueStartTime > DatePlus.minsToMs(20)) {
                     this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
@@ -204,12 +224,12 @@ export class Timer {
 
             // If speech surpasses time
             if (
-                this.time >= this.timeCtrl + 15 ||
+                this.time >= this.timeCtrl + Values.GraceTime ||
                 this.time > DatePlus.minsToSecs(20)
             ) {
                 this.kill(false)
             }
-        }, interval * 1000)
+        }, Values.Interval * 1000)
     }
 
     /**
@@ -217,7 +237,7 @@ export class Timer {
      * End of life for this timer. Once this is called, the timer is gone.
      * @param sendMsg - if "killed timer" message should be sent to channel
      */
-    public kill = async (sendMsg = true): Promise<void> => {
+    public async kill (sendMsg = true): Promise<void> {
         if (this._intervalId !== null) {
             clearInterval(this._intervalId)
         }
@@ -230,7 +250,11 @@ export class Timer {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
-        (await this._msg).edit(`:white_check_mark: Speech Finished at \`${formatTime(this.time, true)}\`!`)
+        (await this._msg).edit(`:white_check_mark: Speech Finished at \`${
+            formatTime(
+                DatePlus.msToSeconds(Date.now() - this._trueStartTime).seconds,
+                true,
+            )}\`!`)
 
         if (this._fakeId !== undefined) {
             Reflect.deleteProperty(timers, this._fakeId)
@@ -250,7 +274,7 @@ export class Timer {
     /**
      * Update the message with the current time
      */
-    private _updateStatus = async (): Promise<void> => {
+    private async _updateStatus (): Promise<void> {
         const msg = await this._msg
         const {_barWidth: barWidth, timeCtrl} = this
 
@@ -292,7 +316,7 @@ export class Timer {
      * Sends a message to the channel to notify everyone that an important time
      * has passed, such as protected times
      */
-    private _notifySpeechStatus = (): void => {
+    private _notifySpeechStatus (): void {
         // Tagged user to notify
         const userTag = this.mentionedUid ? `<@${this.mentionedUid}>` : ""
         const {channel} = this.message
@@ -302,9 +326,15 @@ export class Timer {
         const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
 
         // The messages can be used as comments they're kinda self explanatory
-        if (!this._stages[1] && hasProtectedTime && time >= 30) {
+        if (
+            !this._stages[1] &&
+            hasProtectedTime &&
+            time >= this.protectedTime
+        ) {
+            const showTime = formatTime(this.protectedTime, true)
+
             this._stages[1] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **0:30** - Protected time is over!`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Protected time is over!`)
         }
         if (!this._stages[2] && time >= timeCtrl / 2) {
             const showTime = formatTime(timeCtrl / 2)
@@ -312,8 +342,12 @@ export class Timer {
             this._stages[2] = true
             channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - You're halfway through your speech!`)
         }
-        if (!this._stages[3] && hasProtectedTime && time >= timeCtrl - 30) {
-            const showTime = formatTime(timeCtrl - 30)
+        if (
+            !this._stages[3] &&
+            hasProtectedTime &&
+            time >= timeCtrl - this.protectedTime
+        ) {
+            const showTime = formatTime(timeCtrl - this.protectedTime)
 
             this._stages[3] = true
             channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Protected time! Your speech is almost over!`)
@@ -322,10 +356,10 @@ export class Timer {
             const showTime = formatTime(timeCtrl)
 
             this._stages[4] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Wrap it up! You have 15 seconds.`)
+            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Wrap it up! You have ${Values.GraceTime} seconds.`)
         }
-        if (!this._stages[5] && time >= timeCtrl + 15) {
-            const showTime = formatTime(timeCtrl + 15)
+        if (!this._stages[5] && time >= timeCtrl + Values.GraceTime) {
+            const showTime = formatTime(timeCtrl + Values.GraceTime)
 
             this._stages[5] = true
             channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`)
@@ -341,4 +375,5 @@ export class Timer {
 export {resume, pause} from "./playPause"
 export {default as changeTime} from "./changeTime"
 export {kill} from "./kill"
+export {list} from "./list"
 export {start} from "./start"
