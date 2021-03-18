@@ -89,9 +89,9 @@ const createRandomPartners = (
 ): [string[][], Formats] | void => {
     // Invocation message
     const invocation = (
-        message.content +
-        " " +
-        (messageRef?.content.replace(/  +/gu, " ") ?? "")
+        `${message.content 
+        } ${ 
+            messageRef?.content.replace(/  +/gu, " ") ?? ""}`
     ).trim().split(" ")
 
     // Array of debaters

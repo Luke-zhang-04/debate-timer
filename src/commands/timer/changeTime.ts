@@ -18,12 +18,12 @@ import {timers} from "."
  * @param amt - the amount to change the timer - could be undefined, but shouldn't be
  * @returns void
  */
-export const changeTime = async (
+export const changeTime = (
     {author, member, channel}: Message,
     multiply: -1 | 1,
     id?: string,
     amt?: string,
-): Promise<void> => {
+): void => {
     let numericId = Number(id)
     let numericAmt = Number(amt) * multiply
 
