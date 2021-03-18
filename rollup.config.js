@@ -46,7 +46,7 @@ const config = {
             preventAssignment: true,
         }),
         resolve({
-            resolveOnly: [/^\.{0,2}\/|tslib/],
+            resolveOnly: [/^\.{0,2}\/|tslib/u],
         }),
         process.env.NODE_ENV === "dev" ? undefined : terser({
             format: {

@@ -7,7 +7,7 @@
  */
 
 import type {GuildMember} from "discord.js"
-import {emojify as _emojify} from "node-emoji"
+import emoji from "node-emoji"
 
 type PermissionString =
     | "CREATE_INSTANT_INVITE"
@@ -78,6 +78,6 @@ export const inlineTry = <T>(func: ()=> T): T | Error => {
     }
 }
 
-export const emojify = (str: string): string => _emojify(
+export const emojify = (str: string): string => emoji.emojify(
     str.replace(/:judge:/gu, "🧑‍⚖️"),
 )
