@@ -42,7 +42,7 @@ const config = {
             tsconfig: "./tsconfig.rollup.json",
         }),
         replace({
-            "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV ?? "prod"),
+            "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "prod"),
             preventAssignment: true,
         }),
         resolve({

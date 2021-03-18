@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.0] - unreleased
+## [1.7.0] - 2021-03-18
 
-## Added
+### Added
 - feat: allow replying for teamGen arguments
 - feat: bot will attempt to get timer id by user
 - feat: add improved polls
@@ -18,13 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - feat: alias `backwards` and `start` commands
 - feat: add dice command
 
-## Changed
+### Changed
 - fix: use 60 seconds of protected time if speech is 7 minutes or longer
 - feat: send multiple motions if a number argument is supplied
 - feat: use `Discord.MessageEmbed` for help messages
 - reduce default cooldown time
 
-## Fixed
+### Fixed
 - fix welcome message and add new config option
 
 
