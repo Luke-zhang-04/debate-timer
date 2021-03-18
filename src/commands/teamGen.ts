@@ -85,9 +85,14 @@ const arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
  */
 const createRandomPartners = (
     message: Message,
+    messageRef?: Message | null,
 ): [string[][], Formats] | void => {
     // Invocation message
-    const invocation = message.content.split(" ")
+    const invocation = (
+        message.content +
+        " " +
+        (messageRef?.content.replace(/  +/gu, " ") ?? "")
+    ).trim().split(" ")
 
     // Array of debaters
     const debaters = invocation.slice(1).filter((content) => (
@@ -103,7 +108,7 @@ const createRandomPartners = (
     const membersPerTeam = format === "worlds" ? 3 : 2
 
     if (debaters.length < basePositions[format].length * membersPerTeam) { // Mention count
-        message.channel.send(`:1234: at least ${basePositions[format].length * membersPerTeam} @mentions required, but ${debaters.length} were found. Learn to count. (That's smaller than ${basePositions[format].length * membersPerTeam}, right?)`)
+        message.channel.send(`:1234: at least ${basePositions[format].length * membersPerTeam} @mentions required, but ${debaters.length} ${debaters.length === 1 ? "was" : "were"} found. Learn to count. (That's smaller than ${basePositions[format].length * membersPerTeam}, right?)`)
 
         return undefined
     }
@@ -142,7 +147,13 @@ export const makeTeams = (message: Message): void => {
  * @param message - message object
  */
 export const makePartners = (message: Message): void => {
-    const randomPartners = createRandomPartners(message)
+    const {reference} = message
+    const messageRef = reference
+        ? message.channel.messages.cache.find((msg) => (
+            msg.id === reference.messageID
+        ))
+        : undefined
+    const randomPartners = createRandomPartners(message, messageRef)
 
     if (randomPartners) {
         const [debaters, format] = randomPartners
@@ -161,7 +172,13 @@ export const makePartners = (message: Message): void => {
  * @param message - message object
  */
 export const makeDraw = (message: Message): void => {
-    const randomPartners = createRandomPartners(message)
+    const {reference} = message
+    const messageRef = reference
+        ? message.channel.messages.cache.find((msg) => (
+            msg.id === reference.messageID
+        ))
+        : undefined
+    const randomPartners = createRandomPartners(message, messageRef)
 
     if (randomPartners) {
         const [debaters, format] = randomPartners
@@ -180,7 +197,13 @@ export const makeDraw = (message: Message): void => {
  * @param message - message object
  */
 export const makeRound = async (message: Message): Promise<void> => {
-    const randomPartners = createRandomPartners(message)
+    const {reference} = message
+    const messageRef = reference
+        ? message.channel.messages.cache.find((msg) => (
+            msg.id === reference.messageID
+        ))
+        : undefined
+    const randomPartners = createRandomPartners(message, messageRef)
 
     if (randomPartners) {
         const [debaters, format] = randomPartners
