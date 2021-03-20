@@ -93,3 +93,29 @@ export const inlineTryPromise = async <T>(
 export const emojify = (str: string): string => emoji.emojify(
     str.replace(/:judge:/gu, "🧑‍⚖️"),
 )
+
+/**
+ * Array.filter with size limit
+ * @param array - array to filter
+ * @param predicate - function to determine if item matches predicate
+ * @param maxSize - max number of items in filter
+ * @returns generator
+ */
+export function* filter<T>(
+    array: T[],
+    predicate?: (value: T, index: number, array: T[]) => unknown,
+    maxSize = Infinity,
+): Generator<T, void, void> {
+    let count = 0;
+
+    for (const [index, item] of array.entries()) {
+        if (predicate?.(item, index, array)) {
+            yield item;
+            count++;
+        }
+
+        if (count > maxSize) {
+            return
+        }
+    }
+}

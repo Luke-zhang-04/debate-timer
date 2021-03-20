@@ -10,19 +10,20 @@ import {
     Message,
     User
 } from "discord.js"
+import {filter} from "../../utils"
 import {formatTime} from "./utils"
 import {timers} from "."
 
 export const getTimers = (user?: User): string => {
-    // Get all the timers
-    const matchingTimers = Object.values(timers)
-        .filter((timer, index) => (
-            index <= 10 && (
-                user === undefined ||
-                    user.id === timer.creator.id ||
-                    user.id === timer.mentionedUid
-            )
-        ))
+    const matchingTimers = Array.from(filter(
+        Object.values(timers),
+        (timer) => (
+            user === undefined ||
+                user.id === timer.creator.id ||
+                user.id === timer.mentionedUid
+        ),
+        10,
+    ))
 
     // Format each timer to a string
     const timersString = matchingTimers.map((timer, index) => (
