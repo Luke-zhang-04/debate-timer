@@ -22,11 +22,6 @@
 </p>
 
 ## Features Rundown
-- Coinfip and dice
-- Broadcasting
-    - Reply to a message and broadcast it to all channels that match a [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) argument
-    - For example, you can reply to a motion and run `!broadcast poi`. This will broadcast a message too all chats which match the [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) `poi`
-    - Admin only
 - Timer
     - You can start, stop, pause, and resume timers
     - You can wind timers forwards or backwards
@@ -35,6 +30,11 @@
     - All motions are from the [HelloMotions spreadsheet](https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678)
 - Team Generation
     - Generate random teams, partners, and create draws and rounds
+- Broadcasting
+    - Reply to a message and broadcast it to all channels that match a [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) argument
+    - For example, you can reply to a motion and run `!broadcast poi`. This will broadcast a message too all chats which match the [regex](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet) `poi`
+    - Admin only
+- Coinfip and dice
 - Fuzzy String Matching
     - Automatically corrects typos (e.g `hekp` -> `help`, `star` -> `start`)
 - Simple Syntax
