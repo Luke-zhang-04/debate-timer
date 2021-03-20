@@ -45,7 +45,7 @@
 Why use this bot over other existing bots?
 Namely the widely used bot [CUDS NotTDBot](https://github.com/spiltbeans/NotTDBot)
 
-1. **Get current time of speech** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time. Unlike the NotTDBot, this bot can reliabily time you and can replace your phone.
+1. **Live Speech Timer** - a progress bar and current time is displayed and continuously changed, so you don't have to speculate time. Unlike the NotTDBot, this bot can reliabily time you and can replace your phone.
 2. **Configurable** - host the bot yourself and configure it to your liking with YAML
 3. **User Friendly** - created with ease of use in mind
     1. Simple autocorrect (e.g `hekp` -> `help`, `star` -> `start`)
