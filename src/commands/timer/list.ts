@@ -17,7 +17,7 @@ import {timers} from "."
 export const getTimers = (user?: User): string => {
     const matchingTimers = Array.from(filter(
         Object.values(timers),
-        (timer) => (
+        (timer: import(".").Timer) => (
             user === undefined ||
                 user.id === timer.creator.id ||
                 user.id === timer.mentionedUid

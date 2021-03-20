@@ -101,17 +101,17 @@ export const emojify = (str: string): string => emoji.emojify(
  * @param maxSize - max number of items in filter
  * @returns generator
  */
-export function* filter<T>(
+export function* filter<T> (
     array: T[],
-    predicate?: (value: T, index: number, array: T[]) => unknown,
+    predicate?: (value: T, index: number, array: T[])=> unknown,
     maxSize = Infinity,
 ): Generator<T, void, void> {
-    let count = 0;
+    let count = 0
 
     for (const [index, item] of array.entries()) {
         if (predicate?.(item, index, array)) {
-            yield item;
-            count++;
+            yield item
+            count++
         }
 
         if (count > maxSize) {
