@@ -146,14 +146,16 @@ export const getPoll = (message: Message): void => {
             )
         }
     } else {
+        const data = Object.entries(userPoll.data).map(([usage, users]) => (
+            `- **${usage}**: ${users.map(([userId, username]) => (
+                isRaw ? username : `<@${userId}>`
+            )).join(" ")}`
+        ))
+            .join("\n")
+
         message.channel.send(`<@${message.author.id}>'s Poll
 
-${Object.entries(userPoll.data).map(([usage, users]) => (
-        `- **${usage}**: ${users.map(([userId, username]) => (
-            isRaw ? username : `<@${userId}>`
-        )).join(" ")}`
-    ))
-        .join("\n")}`)
+${data.length === 0 ? "No responses" : data}`)
     }
 }
 
