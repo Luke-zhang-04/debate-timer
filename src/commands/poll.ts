@@ -12,7 +12,9 @@ import type {
 } from "discord.js"
 import {emojis} from "../getConfig"
 
-const pollOptions: {[key: string]: string[]} = {}
+type PollData = [id: string, username: string][]
+
+const pollOptions: {[key: string]: PollData} = {}
 
 for (const emoji of Object.keys(emojis)) {
     pollOptions[emoji] = []
@@ -44,26 +46,32 @@ class Poll {
         this.user = userMessage.author
     }
 
-    public get data (): {[key: string]: string[]} {
-        const data = {...pollOptions}
+    public get data (): {[key: string]: PollData} {
+        const data: typeof pollOptions = {}
 
         for (const [_, {emoji, users}] of this.message.reactions.cache) {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 
             if (usage) {
-                (data[usage] ??= []).push(...users.cache.map((user) => user.id))
+                (data[usage] ??= []).push(...users.cache.map((user) => [
+                    user.id,
+                    user.username.replace(/ /gu, "-"),
+                ]) as PollData)
             }
         }
 
         return data
     }
 
-    public getDataByKey (key: string): string[] | undefined {
+    public getDataByKey (key: string): PollData | undefined {
         for (const [_, {emoji, users}] of this.message.reactions.cache) {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 
             if (usage && usage === key) {
-                return users.cache.map((user) => user.id)
+                return users.cache.map((user) => [
+                    user.id,
+                    user.username.replace(/ /gu, "-"),
+                ])
             }
         }
 
@@ -117,7 +125,9 @@ export const getPoll = (message: Message): void => {
         return
     }
 
-    const key = message.content.split(" ")[1]
+    const args = message.content.split(" ").slice(1)
+    const key = args.find((arg) => arg !== "raw")
+    const isRaw = args.find((arg) => arg === "raw") !== undefined
 
     if (key) {
         const reactions = userPoll.getDataByKey(key)
@@ -130,14 +140,18 @@ export const getPoll = (message: Message): void => {
             message.channel.send("*empty*")
         } else {
             message.channel.send(
-                reactions.map((userId) => `<@${userId}>`).join(" "),
+                reactions.map(([userId, username]) => (
+                    isRaw ? username : `<@${userId}>`
+                )).join(" "),
             )
         }
     } else {
         message.channel.send(`<@${message.author.id}>'s Poll
 
 ${Object.entries(userPoll.data).map(([usage, users]) => (
-        `- **${usage}**: ${users.map((userId) => `<@${userId}>`).join(" ")}`
+        `- **${usage}**: ${users.map(([userId, username]) => (
+            isRaw ? username : `<@${userId}>`
+        )).join(" ")}`
     ))
         .join("\n")}`)
     }

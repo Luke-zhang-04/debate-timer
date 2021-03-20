@@ -72,7 +72,7 @@ You can use regex to match most text channel names. For an example, you can matc
 But you can do more with regex.
 - If you have rooms names \`poi-1\`, \`poi-2\`, etc. you can match them with \`poi-.*\`. The \`.*\` will match anything after \`poi-\`.
 - You can also use \`poi-[0-9]+\` to match \`poi-\` then one or more of any number.
-- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`
+- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`,
     },
 
     start: {
@@ -315,17 +315,20 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
     },
 
     getPoll: {
-        name: `\`${prefix}getPoll [option?]\``,
+        name: `\`${prefix}getPoll [option?] [raw?]\``,
         value: "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
         fields: [
             {
                 name: "Parameters",
-                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`,
+                value: `- \`[option?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.
+- \`[raw?]\` - optional - if poll data should be plaintext usernames instead of pings`,
             },
             {
                 name: "Usage",
                 value: `\`\`\`${prefix}getPoll
-${prefix}getPoll debating\`\`\``,
+${prefix}getPoll debating
+${prefix}getPoll raw
+${prefix}getPoll spectating raw\`\`\``,
             },
         ],
     },
