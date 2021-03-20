@@ -67,6 +67,7 @@ const teamGenCommands: Commands = {
     partners: teamGen.makePartners,
     makeRound: teamGen.makeRound,
     round: teamGen.makeRound,
+    newMotion: teamGen.newMotion,
 }
 
 /**

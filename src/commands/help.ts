@@ -297,6 +297,17 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
         value: `Functionally equivalent to \`${prefix}makeDraw\`.`,
     },
 
+    newMotion: {
+        name: `\`${prefix}newMotion\``,
+        value: "Reply to a generated round, and change the motion. Use this if the motion is bad, but you want to keep the teams.",
+        fields: [
+            {
+                name: "Usage",
+                value: `\`${prefix}newMotion\``,
+            },
+        ],
+    },
+
     poll: {
         name: `\`${prefix}poll\``,
         value: "Creates a poll",
@@ -451,7 +462,8 @@ E.g ${prefix}help getMotion`,
             value: `- makeTeams [format?]
 - makePartners [format?] [debater1] [debater2] ...
 - makeDraw [format?] [debater1] [debater2] ...
-- makeRound [format?] [debater1] [debater2] ...`,
+- makeRound [format?] [debater1] [debater2] ...
+- newMotion`,
         },
     ],
 }

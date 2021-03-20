@@ -78,6 +78,18 @@ export const inlineTry = <T>(func: ()=> T): T | Error => {
     }
 }
 
+export const inlineTryPromise = async <T>(
+    func: ()=> Promise<T>,
+): Promise<T | Error> => {
+    try {
+        return await func()
+    } catch (err: unknown) {
+        return err instanceof Error
+            ? err
+            : new Error(typeof err === "string" ? err : String(err))
+    }
+}
+
 export const emojify = (str: string): string => emoji.emojify(
     str.replace(/:judge:/gu, "🧑‍⚖️"),
 )

@@ -9,6 +9,7 @@
 import type {Message} from "discord.js"
 import crypto from "crypto"
 import {getRandomMotion} from "./randomMotion"
+import {inlineTryPromise} from "../utils"
 
 export type Formats = "bp" | "cp" | "worlds"
 
@@ -216,7 +217,57 @@ export const makeRound = async (message: Message): Promise<void> => {
         // Debate motion
         const motion = await getRandomMotion()
 
-        message.channel.send(`:speaking_head: **Here's the round**: ${draw}\n\n${motion}`)
+        message.channel.send(`:speaking_head: **Here's the round**: ${draw}\n\n**Motion:**\n${motion}`)
+    }
+}
+
+export const newMotion = async (message: Message): Promise<void> => {
+    if (!(
+        message.guild === null ||
+        message.member?.permissions.has("MANAGE_MESSAGES", true)
+    )) {
+        await message.channel.send("You don't have permission to edit this motion")
+
+        return
+    }
+
+    const seperator = "**Motion:**"
+    const {reference} = message
+
+    if (reference === null || reference.messageID === null) {
+        await message.channel.send("No message given. Make sure you reply to the message you want to redraw the motion to.")
+
+        return
+    }
+
+    const messageRef = await message.channel.messages.fetch(reference.messageID)
+    const oldMessage = messageRef.content.split(seperator)
+
+    if (!oldMessage[1]) {
+        await message.channel.send("Error getting new motion; couldn't parse message properly.")
+
+        return
+    }
+
+    const motion = await inlineTryPromise<string>(async () => (
+        await getRandomMotion()
+    ))
+
+    if (motion instanceof Error) {
+        await message.channel.send(`Error getting a new motion:\n\n${motion.name}\n${motion.message}`)
+
+        return
+    }
+
+    oldMessage[1] = `\n${motion}`
+
+    await messageRef.edit(oldMessage.join(seperator))
+
+    if (
+        message.guild !== null &&
+        message.guild.me?.permissions.has("MANAGE_MESSAGES")
+    ) {
+        message.delete()
     }
 }
 
@@ -225,4 +276,5 @@ export default {
     makeTeams,
     makePartners,
     makeRound,
+    newMotion,
 }
