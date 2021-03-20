@@ -11,16 +11,11 @@ import {
     User
 } from "discord.js"
 import {formatTime} from "./utils"
+import {timers} from "."
 
-/**
- * Lists timers and prints them to message.channel
- * @param param0 - message object to send to
- * @param user - user for looking for timers
- * @returns void - sends message in function
- */
-const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
+export const getTimers = (user?: User): string => {
     // Get all the timers
-    const timers = Object.values((await import(".")).timers)
+    const matchingTimers = Object.values(timers)
         .filter((timer, index) => (
             index <= 10 && (
                 user === undefined ||
@@ -30,14 +25,14 @@ const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
         ))
 
     // Format each timer to a string
-    const timersString = timers.map((timer, index) => (
+    const timersString = matchingTimers.map((timer, index) => (
         `**${index + 1}**. Id: \`${timer.fakeId}\`, Created by: \`${timer.creator.username}\`, State: \`${timer.isPaused ? "paused" : "running"}\`, Time: \`${formatTime(timer.time)}\``
     ))
 
     // Message title/header
     const title = `${user?.id && `<@${user.id}>` || "global"}`
 
-    channel.send(`**Timers for: ${title}**:\n${timersString.join("\n") || "None"}`)
+    return `**Timers for: ${title}**:\n${timersString.join("\n") || "None"}`
 }
 
 /**
@@ -45,10 +40,10 @@ const listTimers = async ({channel}: Message, user?: User): Promise<void> => {
  * @param message - Discord message
  * @returns void - sends message in function
  */
-export const list = (message: Message): Promise<void> => {
+export const cmd = (message: Message): void => {
     const param = message.content.split(" ")[1]
 
-    return listTimers(message, param === "global" ? undefined : message.author)
+    message.channel.send(getTimers(param === "global" ? undefined : message.author))
 }
 
-export default list
+export default cmd

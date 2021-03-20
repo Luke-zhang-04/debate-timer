@@ -9,6 +9,7 @@
 import {deriveTimerId, isAuthorizedToModifyTimer} from "./utils"
 import type {Message} from "discord.js"
 import {adminRoleName} from "../../getConfig"
+import {getTimers} from "./list"
 import {timers} from "."
 
 /**
@@ -42,7 +43,7 @@ export const changeTime = (
         const derivedNumericId = Number(derivedId)
 
         if (derivedId === undefined || isNaN(derivedNumericId)) {
-            channel.send(":confused: Argument [amt] not provided. For help using this command, run the `!help` command.")
+            channel.send(`:confused: Multiple timers found for <@${author.id}>. Please provide the argument [id]. For help using this command, run the \`!help\` command.\n\n${getTimers(author)}`)
 
             return
         }

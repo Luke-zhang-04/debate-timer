@@ -375,5 +375,5 @@ export class Timer {
 export {resume, pause} from "./playPause"
 export {default as changeTime} from "./changeTime"
 export {kill} from "./kill"
-export {list} from "./list"
+export {cmd as list} from "./list"
 export {start} from "./start"
