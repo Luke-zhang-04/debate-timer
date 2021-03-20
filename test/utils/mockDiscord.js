@@ -6,8 +6,6 @@
  * @license BSD-3-Clause
  */
 
-import { PermissionOverwrites } from "discord.js"
-
 export class Reaction {
 
     emoji
@@ -134,8 +132,11 @@ export class User {
 
     id
 
+    username
+
     constructor (id) {
         this.id = id
+        this.username = id
     }
 
 }
