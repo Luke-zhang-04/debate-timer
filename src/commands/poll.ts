@@ -39,14 +39,14 @@ class Poll {
 
     public readonly user: User
 
-    public constructor (
+    public constructor(
         userMessage: Message,
         public readonly message: Message,
     ) {
         this.user = userMessage.author
     }
 
-    public get data (): {[key: string]: PollData} {
+    public get data(): {[key: string]: PollData} {
         const data: typeof pollOptions = {}
 
         for (const [_, {emoji, users}] of this.message.reactions.cache) {
@@ -63,7 +63,7 @@ class Poll {
         return data
     }
 
-    public getDataByKey (key: string): PollData | undefined {
+    public getDataByKey(key: string): PollData | undefined {
         for (const [_, {emoji, users}] of this.message.reactions.cache) {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 

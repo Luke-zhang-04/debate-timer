@@ -73,6 +73,7 @@ type FullConfig = {
         channelName?: string,
         message: string,
     },
+    verbosity: 0 | 1 | 2,
 }
 
 // Configuration with optional options that are passed in
@@ -109,11 +110,12 @@ const defaultConfig: FullConfig = {
     },
     whitelistedWords: [],
     blacklistedWords: [],
+    verbosity: 2,
 }
 
 Object.freeze(defaultConfig)
 
-/* eslint-disable complexity */ // Not much we can do
+/* eslint-disable complexity, max-lines-per-function */ // Not much we can do
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
  * @param obj - object to check
@@ -134,6 +136,11 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         obj.welcomeMessage === null ||
         obj.welcomeMessage === false ||
         typeof obj.welcomeMessage === "object"
+    const isValidVerbosity = typeof (obj.verbosity ?? 2) === "number" &&
+        obj.verbosity === undefined ||
+        obj.verbosity === null ||
+        (obj.verbosity as number) >= 0 &&
+        (obj.verbosity as number) <= 2
 
     if (!isValidPrefix) {
         throw new Error("Prefix should be type string, have no spaces, and not be empty")
@@ -145,6 +152,8 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         throw new Error("emojis should be an object")
     } else if (!isValidWelcomeMessage) {
         throw new Error("welcomeMessage should be either undefined, null, false, or an object")
+    } else if (!isValidVerbosity) {
+        throw new Error("verbosity should be either 0, 1, 2, or null/undefined")
     }
 
     const singleVerificationKeys: (keyof Partial<FullConfig>)[] = [
@@ -196,7 +205,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
 
     return true
 }
-/* eslint-enable complexity */
+/* eslint-enable complexity, max-lines-per-function */
 
 // Try and get config.yml from root
 let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""

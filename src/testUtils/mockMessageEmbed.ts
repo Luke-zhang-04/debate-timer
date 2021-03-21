@@ -20,7 +20,7 @@ export class MockMessageEmbed {
 
     private _content = ""
 
-    public addField (
+    public addField(
         name: Stringable,
         value: Stringable,
         _?: boolean,
@@ -30,7 +30,7 @@ export class MockMessageEmbed {
         return this
     }
 
-    public addFields (
+    public addFields(
         ...fields: EmbedFieldData[] | EmbedFieldData[][]
     ): this {
         for (const field of fields) {
@@ -48,7 +48,7 @@ export class MockMessageEmbed {
         return this
     }
 
-    public setAuthor (
+    public setAuthor(
         name: Stringable,
         ..._: Stringable[]
     ): this {
@@ -59,26 +59,26 @@ export class MockMessageEmbed {
 
     public setColor = (..._: Stringable[]): this => this
 
-    public setDescription (desc: Stringable): this {
+    public setDescription(desc: Stringable): this {
         this._content += `\n${desc.toString()}`
 
         return this
     }
 
-    public setFooter (text: Stringable, ..._: Stringable[]): this {
+    public setFooter(text: Stringable, ..._: Stringable[]): this {
         this._content += `\n${text.toString()}`
 
         return this
     }
 
-    public setImage (_: string): this {
+    public setImage(_: string): this {
         return this
     }
 
     /* eslint-disable @typescript-eslint/member-ordering */
     public setThumbnail = this.setImage
 
-    public setTimestamp (_?: Date | number): this {
+    public setTimestamp(_?: Date | number): this {
         return this
     }
 
@@ -86,11 +86,11 @@ export class MockMessageEmbed {
 
     /* eslint-enable @typescript-eslint/member-ordering */
 
-    public setURL (_: string): this {
+    public setURL(_: string): this {
         return this
     }
 
-    public toString (): string {
+    public toString(): string {
         return this._content
     }
 
