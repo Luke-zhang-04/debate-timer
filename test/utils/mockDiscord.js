@@ -7,12 +7,11 @@
  */
 
 export class Reaction {
-
     emoji
 
     message
 
-    constructor (emoji, message) {
+    constructor(emoji, message) {
         this.emoji = emoji
         this.message = message
     }
@@ -22,18 +21,16 @@ export class Reaction {
             name: this.emoji,
         },
         users: {
-            cache: this.message.reactedEmojis.filter((val) => (
-                val[1] === this.emoji ? [val[0]] : false
-            )),
+            cache: this.message.reactedEmojis.filter((val) =>
+                val[1] === this.emoji ? [val[0]] : false,
+            ),
         },
     })
-
 }
 
 let messageId = 0
 
 export class Message {
-
     content
 
     newMessage
@@ -54,7 +51,7 @@ export class Message {
         username: "Tester",
     }
 
-    constructor (content, options, member) {
+    constructor(content, options, member) {
         this.content = content
         this.files = options ? options.files : undefined
         this.id = messageId
@@ -85,7 +82,7 @@ export class Message {
 
         get cache() {
             return Object.entries(this.getEmojis())
-        }
+        },
     }
 
     channel = {
@@ -117,41 +114,35 @@ export class Message {
     }
 
     delete = () => {}
-
 }
 
 export class Client {
-
     functions = {}
 
     on = (key, func) => {
         this.functions[key] = func
     }
-
 }
 
 export class User {
-
     id
 
     username
 
-    constructor (id) {
+    constructor(id) {
         this.id = id
         this.username = id
     }
-
 }
 
 export class Member {
-
     roles
 
     user
 
     permission
 
-    constructor (id, roles = [], permissions = []) {
+    constructor(id, roles = [], permissions = []) {
         this.roles = {
             roles,
             cache: {
@@ -177,7 +168,6 @@ export class Member {
 
         return this.permissions.find((val) => permission.includes(val)) !== undefined
     }
-
 }
 
 export default {

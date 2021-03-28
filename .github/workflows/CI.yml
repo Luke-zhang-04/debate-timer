@@ -23,8 +23,11 @@ jobs:
       - name: install deps
         run: yarn install --frozen-lockfile
 
-      - name: lint
-        run: ./node_modules/.bin/eslint src/"{*.ts,**/*.ts}"
+      - name: ESLint
+        run: ./node_modules/.bin/eslint src/"{*,**/*}"."{ts,tsx}" --max-warnings=0
+
+      - name: Prettier
+        run: ./node_modules/.bin/prettier src/ --check
 
       - name: build
         run: ./scripts/compile

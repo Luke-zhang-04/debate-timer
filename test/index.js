@@ -19,10 +19,7 @@ describe("Help functions", helpTest)
 describe("Miscellaneous functions", miscTest)
 describe("Poll functions", pollTest)
 
-if (
-    !process.argv.includes("--skip-googlesheets") &&
-    !process.argv.includes("--no-googlesheets")
-) {
+if (!process.argv.includes("--skip-googlesheets") && !process.argv.includes("--no-googlesheets")) {
     import("./randomMotion.js").then((randomMotionTest) => {
         describe("Random motion", randomMotionTest)
     })

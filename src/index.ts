@@ -18,7 +18,7 @@ dotenv.config()
 
 import("./garbageCollector").then(({register}) => register())
 
-const readFile = (path: string): Promise<string> => (
+const readFile = (path: string): Promise<string> =>
     new Promise((resolve, reject) => {
         fs.readFile(path, "utf-8", (err, data) => {
             if (err) {
@@ -28,9 +28,8 @@ const readFile = (path: string): Promise<string> => (
             return resolve(data)
         })
     })
-)
 
-const writeFile = (path: string, content: string): Promise<void> => (
+const writeFile = (path: string, content: string): Promise<void> =>
     new Promise((resolve, reject) => {
         fs.writeFile(path, content, "utf-8", (err) => {
             if (err) {
@@ -40,7 +39,6 @@ const writeFile = (path: string, content: string): Promise<void> => (
             return resolve()
         })
     })
-)
 
 const uncaughtException = async (err: Error): Promise<void> => {
     const date = new Date()
@@ -62,17 +60,24 @@ const uncaughtException = async (err: Error): Promise<void> => {
 
     if (err instanceof Error) {
         // eslint-disable-next-line
-            stack = err.stack?.length ?? 0 < 1000 ? err.stack : "Stack trace too long"
+        stack = err.stack?.length ?? 0 < 1000 ? err.stack : "Stack trace too long"
     }
 
     // Write error to log file. Log file size shall not exceed 2.5 Mb.
     await writeFile(
         "bot.error.log",
-        `${hostname()} ${userInfo().username} [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(0, 2_500_000),
+        `${hostname()} ${
+            userInfo().username
+        } [${formattedDate}:${formattedTime} ${Date.now()}] ERROR - "${err}" Stack trace; most recent call first:\n${stack}\n${prevContents}`.substr(
+            0,
+            2_500_000,
+        ),
     )
 }
 
-console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
+console.log(
+    "Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.",
+)
 
 export const client = new Discord.Client()
 
@@ -100,12 +105,10 @@ client.on("guildMemberAdd", (member) => {
         const {channel: channelId, message} = welcomeMessage
         const channelName =
             welcomeMessage.channelName && new RegExp(welcomeMessage.channelName, "u")
-        const channel = member.guild.channels.cache
-            .find((chan) => chan.id === channelId) ??
-            (
-                channelName && member.guild.channels.cache
-                    .find((chan) => channelName.test(chan.name))
-            )
+        const channel =
+            member.guild.channels.cache.find((chan) => chan.id === channelId) ??
+            (channelName &&
+                member.guild.channels.cache.find((chan) => channelName.test(chan.name)))
 
         if (!channel || !(channel instanceof Discord.TextChannel)) {
             console.log(`Cannot find text channel with ID ${channelId}`)
@@ -124,7 +127,9 @@ client.on("message", async (message) => {
     try {
         await handleMessage(message, client)
     } catch (err: unknown) {
-        message.channel.send(`:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`)
+        message.channel.send(
+            `:dizzy_face: Sorry, this bot has died (crashed) due to an unexpected error \`${err}\`.\n\nIn all likelyhood, the bot itself is fine. You should still be able to run commands.\nI've logged the error in an error log file.`,
+        )
 
         if (err instanceof Error) {
             uncaughtException(err)

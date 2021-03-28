@@ -10,20 +10,14 @@
 import Discord from "discord.js"
 import colors from "../colors"
 
-type Channel = Discord.Guild |
-    Discord.TextChannel |
-    Discord.CategoryChannel
+type Channel = Discord.Guild | Discord.TextChannel | Discord.CategoryChannel
 
 /**
  * List all servers, categories, or channels within the current context of the bot
  * @param client - client to send to
  * @param head - the current server/category/channel
  */
-export const ls = (
-    client: Discord.Client,
-    head?: Channel,
-    guild?: Discord.Guild,
-): string => {
+export const ls = (client: Discord.Client, head?: Channel, guild?: Discord.Guild): string => {
     let items = `${colors.biBlue}.${colors.reset}/  ${colors.biBlue}..${colors.reset}/  ` // ./ and ../
 
     if (head === undefined) {
@@ -41,27 +35,22 @@ export const ls = (
     } else if (head instanceof Discord.Guild) {
         // Get all categories and text channels
         const channels = head.channels.cache
-            .filter((channel) => (
-                ["text", "category"].includes(channel.type)
-                    ? channel.parent === null
-                    : false
-            ),
+            .filter((channel) =>
+                ["text", "category"].includes(channel.type) ? channel.parent === null : false,
             )
             .sort()
-            .map((channel) => (
+            .map((channel) =>
                 channel.type === "category"
                     ? `${colors.biGreen}${channel.name}${colors.reset}/  `
-                    : `${colors.reset}${channel.name}  `
-            ))
+                    : `${colors.reset}${channel.name}  `,
+            )
             .join("")
 
         items += channels
     } else {
         // Get all text channels in this category
         const channels = guild?.channels.cache
-            .filter((channel) => (
-                channel.type === "text" && channel.parent?.id === head.id
-            ))
+            .filter((channel) => channel.type === "text" && channel.parent?.id === head.id)
             .sort()
             .map((channel) => `${channel.name}/  `)
             .join("")

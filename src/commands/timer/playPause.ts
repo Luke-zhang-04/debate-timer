@@ -26,7 +26,8 @@ export const playPause = (
     let id = _id
     let numericId = Number(id)
 
-    if (id === undefined) { // Id was never provided. Terminate.
+    if (id === undefined) {
+        // Id was never provided. Terminate.
         const derivedId = deriveTimerId(timers, author.id)
         const derivedNumericId = Number(derivedId)
 
@@ -36,7 +37,8 @@ export const playPause = (
 
         numericId = derivedNumericId
         id = derivedId
-    } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
+    } else if (isNaN(numericId)) {
+        // Id couldn't be parsed as a number. Terminate.
         channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
 
         return
@@ -57,27 +59,33 @@ export const playPause = (
         if (verbosity === 1) {
             message.react("\u2705")
         } else if (verbosity === 2) {
-            channel.send(`${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`)
+            channel.send(
+                `${playOrPause === "pause" ? "Paused" : "Continuing"} timer with id ${id}`,
+            )
         }
     } else {
         const mentionedMessage = timer.mentionedUid
             ? `, the mentioned user (${timer.mentionedUid}),`
             : ""
 
-        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only the timer creator (${timer.creator.username})${mentionedMessage} and those with the \`${adminRoleName.value}\` ${adminRoleName.type === "name" ? "role" : "permission"} may modify this timer.`)
+        channel.send(
+            `Sorry <@${
+                author.id
+            }>, but you're not authorized to modify this protected timer. Only the timer creator (${
+                timer.creator.username
+            })${mentionedMessage} and those with the \`${adminRoleName.value}\` ${
+                adminRoleName.type === "name" ? "role" : "permission"
+            } may modify this timer.`,
+        )
     }
 }
 
 export const pause = (message: Message): void => {
-    playPause(
-        message, message.content.split(" ")[1], "pause",
-    )
+    playPause(message, message.content.split(" ")[1], "pause")
 }
 
 export const resume = (message: Message): void => {
-    playPause(
-        message, message.content.split(" ")[1], "resume",
-    )
+    playPause(message, message.content.split(" ")[1], "resume")
 }
 
 export default playPause

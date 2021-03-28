@@ -6,10 +6,7 @@
  * @license BSD-3-Clause
  */
 
-import type {
-    Message,
-    User
-} from "discord.js"
+import type {Message, User} from "discord.js"
 import {emojis} from "../getConfig"
 
 type PollData = [id: string, username: string][]
@@ -20,12 +17,9 @@ for (const emoji of Object.keys(emojis)) {
     pollOptions[emoji] = []
 }
 
-const getEmojiUsage = (
-    emoji: string,
-    id: string | null = null,
-): string | undefined => {
+const getEmojiUsage = (emoji: string, id: string | null = null): string | undefined => {
     for (const [role, info] of Object.entries(emojis)) {
-        if (emoji === info.name && (!id && !info.id || id === info.id)) {
+        if (emoji === info.name && ((!id && !info.id) || id === info.id)) {
             return role
         }
     }
@@ -34,15 +28,11 @@ const getEmojiUsage = (
 }
 
 class Poll {
-
     public readonly createdAt = Date.now()
 
     public readonly user: User
 
-    public constructor(
-        userMessage: Message,
-        public readonly message: Message,
-    ) {
+    public constructor(userMessage: Message, public readonly message: Message) {
         this.user = userMessage.author
     }
 
@@ -53,10 +43,12 @@ class Poll {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 
             if (usage) {
-                (data[usage] ??= []).push(...users.cache.map((user) => [
-                    user.id,
-                    user.username.replace(/ /gu, "-"),
-                ]) as PollData)
+                ;(data[usage] ??= []).push(
+                    ...(users.cache.map((user) => [
+                        user.id,
+                        user.username.replace(/ /gu, "-"),
+                    ]) as PollData),
+                )
             }
         }
 
@@ -68,16 +60,12 @@ class Poll {
             const usage = getEmojiUsage(emoji.name, emoji.id)
 
             if (usage && usage === key) {
-                return users.cache.map((user) => [
-                    user.id,
-                    user.username.replace(/ /gu, "-"),
-                ])
+                return users.cache.map((user) => [user.id, user.username.replace(/ /gu, "-")])
             }
         }
 
         return pollOptions[key] === undefined ? undefined : []
     }
-
 }
 
 /**
@@ -92,21 +80,17 @@ export const polls: {[key: string]: Poll} = {}
  * @param client - Discord client
  * @returns void - sends the message in the function
  */
-export const makePoll = async (
-    message: Message,
-): Promise<void> => {
+export const makePoll = async (message: Message): Promise<void> => {
     const newMessage = await message.channel.send(`**Poll**
 React here for what you feel like doing today. Here are your options:
 
-${Object.entries(emojis).map(([role, emoji]) => {
-        const formattedEmoji = emoji.id
-            ? `<:${emoji.name}:${emoji.id}>`
-            : emoji.name
+${Object.entries(emojis)
+    .map(([role, emoji]) => {
+        const formattedEmoji = emoji.id ? `<:${emoji.name}:${emoji.id}>` : emoji.name
 
         return `${role}: ${formattedEmoji}`
     })
-        .join("\n")}`,
-    )
+    .join("\n")}`)
 
     polls[message.author.id] = new Poll(message, newMessage)
 }
@@ -120,7 +104,9 @@ export const getPoll = (message: Message): void => {
     const userPoll = polls[message.author.id]
 
     if (userPoll === undefined) {
-        message.channel.send(`Sorry <@${message.author.id}>, but I couldn't find your poll. Maybe your poll expired?`)
+        message.channel.send(
+            `Sorry <@${message.author.id}>, but I couldn't find your poll. Maybe your poll expired?`,
+        )
 
         return
     }
@@ -134,23 +120,27 @@ export const getPoll = (message: Message): void => {
 
         if (reactions === undefined) {
             message.channel.send(
-                `No such poll option \`${key}\`. Your options are: \`${Object.keys(pollOptions).join(", ")}.\``,
+                `No such poll option \`${key}\`. Your options are: \`${Object.keys(
+                    pollOptions,
+                ).join(", ")}.\``,
             )
         } else if (reactions.length === 0) {
             message.channel.send("*empty*")
         } else {
             message.channel.send(
-                reactions.map(([userId, username]) => (
-                    isRaw ? username : `<@${userId}>`
-                )).join(" "),
+                reactions
+                    .map(([userId, username]) => (isRaw ? username : `<@${userId}>`))
+                    .join(" "),
             )
         }
     } else {
-        const data = Object.entries(userPoll.data).map(([usage, users]) => (
-            `- **${usage}**: ${users.map(([userId, username]) => (
-                isRaw ? username : `<@${userId}>`
-            )).join(" ")}`
-        ))
+        const data = Object.entries(userPoll.data)
+            .map(
+                ([usage, users]) =>
+                    `- **${usage}**: ${users
+                        .map(([userId, username]) => (isRaw ? username : `<@${userId}>`))
+                        .join(" ")}`,
+            )
             .join("\n")
 
         message.channel.send(`<@${message.author.id}>'s Poll

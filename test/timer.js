@@ -14,15 +14,12 @@ import testHelpers from "./utils/helpers.js"
 
 export default () => {
     context("Should start a timer properly", async () => {
-        const message = new Message(
-            "!start @Tester",
-            {
-                author: {
-                    bot: false,
-                    id: "user1",
-                },
+        const message = new Message("!start @Tester", {
+            author: {
+                bot: false,
+                id: "user1",
             },
-        )
+        })
 
         await handleMessage.default(message)
 
@@ -61,16 +58,13 @@ export default () => {
 
         context("Listing timers", async () => {
             for (let i = 0; i < 2; i++) {
-                const timerForList = new Message(
-                    "!start @Tester",
-                    {
-                        author: {
-                            bot: false,
-                            id: `user${i + 2}`,
-                            username: `user${i + 2}`,
-                        },
+                const timerForList = new Message("!start @Tester", {
+                    author: {
+                        bot: false,
+                        id: `user${i + 2}`,
+                        username: `user${i + 2}`,
                     },
-                )
+                })
 
                 await handleMessage.default(timerForList)
             }
@@ -79,9 +73,7 @@ export default () => {
                 const listMsg = new Message("!list global")
                 const {includes} = testHelpers
 
-                await (
-                    listCmd instanceof Function ? listCmd : listCmd.default
-                )(listMsg) // Weird esmodules bug
+                await (listCmd instanceof Function ? listCmd : listCmd.default)(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
@@ -90,42 +82,32 @@ export default () => {
             })
 
             it("Should list 1 timer for user", async () => {
-                const listMsg = new Message(
-                    "!list",
-                    {
-                        author: {
-                            bot: false,
-                            id: "user2",
-                            username: "user2",
-                        },
+                const listMsg = new Message("!list", {
+                    author: {
+                        bot: false,
+                        id: "user2",
+                        username: "user2",
                     },
-                )
+                })
                 const {includes} = testHelpers
 
-                await (
-                    listCmd instanceof Function ? listCmd : listCmd.default
-                )(listMsg) // Weird esmodules bug
+                await (listCmd instanceof Function ? listCmd : listCmd.default)(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
             })
 
             it("Should list 2 timers for Tester", async () => {
-                const listMsg = new Message(
-                    "!list",
-                    {
-                        author: {
-                            bot: false,
-                            id: "Tester",
-                            username: "Tester",
-                        },
+                const listMsg = new Message("!list", {
+                    author: {
+                        bot: false,
+                        id: "Tester",
+                        username: "Tester",
                     },
-                )
+                })
                 const {includes} = testHelpers
 
-                await (
-                    listCmd instanceof Function ? listCmd : listCmd.default
-                )(listMsg) // Weird esmodules bug
+                await (listCmd instanceof Function ? listCmd : listCmd.default)(listMsg) // Weird esmodules bug
 
                 includes(listMsg.newMessage.content, "**1**")
                 includes(listMsg.newMessage.content, "user2")
@@ -210,42 +192,32 @@ export default () => {
     })
 
     context("Time change commands", async () => {
-        const myTimer = new Message(
-            "!start @Tester",
-            {
-                author: {
-                    bot: false,
-                    id: "user2",
-                    username: "user2",
-                },
+        const myTimer = new Message("!start @Tester", {
+            author: {
+                bot: false,
+                id: "user2",
+                username: "user2",
             },
-        )
+        })
 
         await handleMessage.default(myTimer)
 
         const id = myTimer.newMessage.content.split(" ")[9]
 
         it("Should move timer forward by 20 seconds", async () => {
-            const forwardMsg = new Message(
-                `!forward ${id} 20`,
-                {
-                    author: {
-                        bot: false,
-                        id: "user2",
-                        username: "user2",
-                    },
+            const forwardMsg = new Message(`!forward ${id} 20`, {
+                author: {
+                    bot: false,
+                    id: "user2",
+                    username: "user2",
                 },
-            )
+            })
 
             await handleMessage.default(forwardMsg)
 
             testHelpers.includes(forwardMsg.newMessage.content, "forward by 20")
 
-            const time = Number(
-                myTimer.newMessage.content
-                    .replace(/\n/ug, " ")
-                    .split(" ")[8]
-            )
+            const time = Number(myTimer.newMessage.content.replace(/\n/gu, " ").split(" ")[8])
 
             if (!(time >= 20 && time <= 30)) {
                 throw new Error(`Expected time to be between 20 and 30. Found ${time}`)
@@ -253,26 +225,19 @@ export default () => {
         })
 
         it("Should move timer backward by 10 seconds", async () => {
-            const backwardMsg = new Message(
-                `!backward ${id} 10`,
-                {
-                    author: {
-                        bot: false,
-                        id: "user2",
-                        username: "user2",
-                    },
+            const backwardMsg = new Message(`!backward ${id} 10`, {
+                author: {
+                    bot: false,
+                    id: "user2",
+                    username: "user2",
                 },
-            )
+            })
 
             await handleMessage.default(backwardMsg)
 
             testHelpers.includes(backwardMsg.newMessage.content, "backwards by 10")
 
-            const time = Number(
-                myTimer.newMessage.content
-                    .replace(/\n/ug, " ")
-                    .split(" ")[8]
-            )
+            const time = Number(myTimer.newMessage.content.replace(/\n/gu, " ").split(" ")[8])
 
             if (!(time >= 10 && time <= 20)) {
                 throw new Error(`Expected time to be between 10 and 20. Found ${time}`)
@@ -280,26 +245,19 @@ export default () => {
         })
 
         it("Should not move timer back past 0", async () => {
-            const backwardMsg = new Message(
-                `!backward ${id} 1000`,
-                {
-                    author: {
-                        bot: false,
-                        id: "user2",
-                        username: "user2",
-                    },
+            const backwardMsg = new Message(`!backward ${id} 1000`, {
+                author: {
+                    bot: false,
+                    id: "user2",
+                    username: "user2",
                 },
-            )
+            })
 
             await handleMessage.default(backwardMsg)
 
             testHelpers.includes(backwardMsg.newMessage.content, "backwards by 1000")
 
-            const time = Number(
-                myTimer.newMessage.content
-                    .replace(/\n/ug, " ")
-                    .split(" ")[8]
-            )
+            const time = Number(myTimer.newMessage.content.replace(/\n/gu, " ").split(" ")[8])
 
             strictEqual(time, 0)
         })

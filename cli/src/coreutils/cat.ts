@@ -15,14 +15,15 @@ import colors from "../colors"
  * a text channel
  * @param channel - channel to look at
  */
-export const cat = async (
-    channel: Discord.TextChannel,
-): Promise<string> => {
+export const cat = async (channel: Discord.TextChannel): Promise<string> => {
     const replaceFunc = ({content, mentions}: Discord.Message): string => {
         let message = content
 
         for (const [_, user] of mentions.users) {
-            message = message.replace(new RegExp(`<@(!)?${user.id}>`, "gui"), `${colors.blue}@${user.username}${colors.reset}`)
+            message = message.replace(
+                new RegExp(`<@(!)?${user.id}>`, "gui"),
+                `${colors.blue}@${user.username}${colors.reset}`,
+            )
         }
 
         return message
@@ -30,9 +31,13 @@ export const cat = async (
 
     const messages = await channel.messages.fetch({limit: 15})
 
-    return messages.map((message) => (
-        `${colors.biWhite}${message.author.username}${colors.reset}: ${replaceFunc(message)}`
-    ))
+    return messages
+        .map(
+            (message) =>
+                `${colors.biWhite}${message.author.username}${colors.reset}: ${replaceFunc(
+                    message,
+                )}`,
+        )
         .reverse()
         .join("\n")
 }

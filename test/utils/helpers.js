@@ -6,7 +6,6 @@
  * @license BSD-3-Clause
  */
 
-
 export const includes = (target, test) => {
     if (!target.includes(test)) {
         throw new Error(`Expected "${target}" to include "${test}"`)

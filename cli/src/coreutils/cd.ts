@@ -16,11 +16,7 @@ import Discord from "discord.js"
  * @param channels - array of current channels
  * @param newDir - new Dir that was passed in
  */
-export const cd = (
-    client: Discord.Client,
-    channels: Channels,
-    newDir: string,
-): void => {
+export const cd = (client: Discord.Client, channels: Channels, newDir: string): void => {
     const dirs = newDir.split("/")
 
     if (dirs[dirs.length - 1] === "") {
@@ -34,8 +30,9 @@ export const cd = (
             channels.length = 0
         } else if (dir !== ".") {
             if (channels.length === 0) {
-                const target = client.guilds.cache
-                    .find((guild) => guild.name === dir || guild.id === dir)
+                const target = client.guilds.cache.find(
+                    (guild) => guild.name === dir || guild.id === dir,
+                )
 
                 if (target === undefined) {
                     return console.log(`cd: "${dir}" no such server`)
@@ -43,42 +40,33 @@ export const cd = (
 
                 channels.push(target)
             } else if (channels.length === 1) {
-                const target = channels[0]?.channels.cache
-                    .find((channel) => (
-                        (channel.name === dir || channel.id === dir) && (
-                            channel instanceof Discord.CategoryChannel ||
-                            channel instanceof Discord.TextChannel &&
-                                channel.parent === null
-                        )
-                    )) as Discord.CategoryChannel | Discord.TextChannel
+                const target = channels[0]?.channels.cache.find(
+                    (channel) =>
+                        (channel.name === dir || channel.id === dir) &&
+                        (channel instanceof Discord.CategoryChannel ||
+                            (channel instanceof Discord.TextChannel && channel.parent === null)),
+                ) as Discord.CategoryChannel | Discord.TextChannel
 
                 if (target === undefined) {
                     return console.log(`cd: "${dir}" no such category or text channel`)
                 }
 
                 channels.push(target)
-            } else if (
-                channels[1] instanceof Discord.CategoryChannel &&
-                channels.length < 3
-            ) {
-                const target = channels[0]?.channels.cache
-                    .find((channel) => (
-                        channel.parent?.name ===
-                            (channels[1] as Discord.CategoryChannel).name &&
+            } else if (channels[1] instanceof Discord.CategoryChannel && channels.length < 3) {
+                const target = channels[0]?.channels.cache.find(
+                    (channel) =>
+                        channel.parent?.name === (channels[1] as Discord.CategoryChannel).name &&
                         (channel.name === dir || channel.id === dir) &&
-                        channel instanceof Discord.TextChannel
-                    )) as Discord.TextChannel
+                        channel instanceof Discord.TextChannel,
+                ) as Discord.TextChannel
 
                 if (target === undefined) {
                     return console.log(`cd: "${dir}" no such text channel`)
                 }
 
                 channels.push(target)
-            } else if (
-                channels[1] instanceof Discord.TextChannel ||
-                channels.length >= 3
-            ) {
-                return console.log("This is a text channel. Did you mean to go back with \"..\"")
+            } else if (channels[1] instanceof Discord.TextChannel || channels.length >= 3) {
+                return console.log('This is a text channel. Did you mean to go back with ".."')
             }
         }
     }

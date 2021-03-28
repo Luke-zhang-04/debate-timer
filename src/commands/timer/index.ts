@@ -22,9 +22,7 @@ export const timers: {[key: number]: Timer} = {}
 
 /* eslint-enable no-use-before-define */
 
-
 const enum Values {
-
     /**
      * How often the timer should update in seconds
      * 5 seconds is fine because of server latency
@@ -39,7 +37,6 @@ const enum Values {
 }
 
 export class Timer {
-
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
@@ -129,23 +126,22 @@ export class Timer {
         const uid = this.mentionedUid
 
         // Make sure timer isn't longer than 15 mins
-        this.timeCtrl = isNaN(timeCtrl)
-            ? DatePlus.minsToSecs(5)
-            : timeCtrl
+        this.timeCtrl = isNaN(timeCtrl) ? DatePlus.minsToSecs(5) : timeCtrl
 
-        this.protectedTime = this.timeCtrl >= DatePlus.minsToSecs(7)
-            ? 60
-            : 30
+        this.protectedTime = this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
-        const bar = process.env.NODE_ENV === "test"
-            ? ""
-            : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+        const bar =
+            process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
 
         this._msg = message.channel.send(
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
+                this.time,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
+                this.isPaused ? "\nPaused" : ""
+            }`,
         )
     }
 
@@ -176,9 +172,7 @@ export class Timer {
          */
         if (this._startTime > now) {
             this._startTime = now
-        } else if (
-            this._startTime < now - (this.timeCtrl + Values.GraceTime) * 1000
-        ) {
+        } else if (this._startTime < now - (this.timeCtrl + Values.GraceTime) * 1000) {
             this._startTime = now - (this.timeCtrl + Values.GraceTime) * 1000
         }
 
@@ -186,19 +180,24 @@ export class Timer {
 
         const {_time: time, timeCtrl} = this
 
-        if (time < timeCtrl + Values.GraceTime && this._stages[5]) { // Grace time
+        if (time < timeCtrl + Values.GraceTime && this._stages[5]) {
+            // Grace time
             this._stages[5] = false
         }
-        if (time < timeCtrl && this._stages[4]) { // End of speech
+        if (time < timeCtrl && this._stages[4]) {
+            // End of speech
             this._stages[4] = false
         }
-        if (time < timeCtrl - this.protectedTime && this._stages[3]) { // Ending protected time
+        if (time < timeCtrl - this.protectedTime && this._stages[3]) {
+            // Ending protected time
             this._stages[3] = false
         }
-        if (time < timeCtrl / 2 && this._stages[2]) { // Halfway
+        if (time < timeCtrl / 2 && this._stages[2]) {
+            // Halfway
             this._stages[2] = false
         }
-        if (time < this.protectedTime && this._stages[1]) { // Starting procteded
+        if (time < this.protectedTime && this._stages[1]) {
+            // Starting procteded
             this._stages[1] = false
         }
     }
@@ -212,7 +211,9 @@ export class Timer {
                 this._startTime += Values.Interval * 1000
 
                 if (Date.now() - this._trueStartTime > DatePlus.minsToMs(20)) {
-                    this.message.channel.send(`Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`)
+                    this.message.channel.send(
+                        `Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`,
+                    )
 
                     this.shouldMute = false
                     this.kill()
@@ -251,11 +252,12 @@ export class Timer {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
-        (await this._msg).edit(`:white_check_mark: Speech Finished at \`${
-            formatTime(
+        ;(await this._msg).edit(
+            `:white_check_mark: Speech Finished at \`${formatTime(
                 DatePlus.msToSeconds(Date.now() - this._trueStartTime).seconds,
                 true,
-            )}\`!`)
+            )}\`!`,
+        )
 
         if (this._fakeId !== undefined) {
             Reflect.deleteProperty(timers, this._fakeId)
@@ -267,9 +269,7 @@ export class Timer {
      * @param playOrPause - if the timer should resume or pause
      */
     public playPause(playOrPause?: "resume" | "pause"): void {
-        this.isPaused = playOrPause === undefined
-            ? !this.isPaused
-            : playOrPause === "pause"
+        this.isPaused = playOrPause === undefined ? !this.isPaused : playOrPause === "pause"
     }
 
     /**
@@ -298,16 +298,21 @@ export class Timer {
         /**
          * Percentage of the speech that is complete
          */
-        const percentage =
-                Math.min(Math.round(this._time / timeCtrl * 1000) / 10, 100)
+        const percentage = Math.min(Math.round((this._time / timeCtrl) * 1000) / 10, 100)
 
         // Progress bar with █ and —
-        const bar = process.env.NODE_ENV === "test" // Ignore if testing
-            ? ""
-            : `\`[${blocks}${dashes}]\` ${percentage}%\n`
+        const bar =
+            process.env.NODE_ENV === "test" // Ignore if testing
+                ? ""
+                : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
-        msg.edit( // Edit the message with required information
-            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(this.time)}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
+        msg.edit(
+            // Edit the message with required information
+            `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
+                this.time,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
+                this.isPaused ? "\nPaused" : ""
+            }`,
         )
 
         this._notifySpeechStatus()
@@ -327,50 +332,53 @@ export class Timer {
         const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
 
         // The messages can be used as comments they're kinda self explanatory
-        if (
-            !this._stages[1] &&
-            hasProtectedTime &&
-            time >= this.protectedTime
-        ) {
+        if (!this._stages[1] && hasProtectedTime && time >= this.protectedTime) {
             const showTime = formatTime(this.protectedTime, true)
 
             this._stages[1] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Protected time is over!`)
+            channel.send(
+                `${userTag} timer ${this._fakeId} - **${showTime}** - Protected time is over!`,
+            )
         }
         if (!this._stages[2] && time >= timeCtrl / 2) {
             const showTime = formatTime(timeCtrl / 2)
 
             this._stages[2] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - You're halfway through your speech!`)
+            channel.send(
+                `${userTag} timer ${this._fakeId} - **${showTime}** - You're halfway through your speech!`,
+            )
         }
-        if (
-            !this._stages[3] &&
-            hasProtectedTime &&
-            time >= timeCtrl - this.protectedTime
-        ) {
+        if (!this._stages[3] && hasProtectedTime && time >= timeCtrl - this.protectedTime) {
             const showTime = formatTime(timeCtrl - this.protectedTime)
 
             this._stages[3] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Protected time! Your speech is almost over!`)
+            channel.send(
+                `${userTag} timer ${this._fakeId} - **${showTime}** - Protected time! Your speech is almost over!`,
+            )
         }
         if (!this._stages[4] && time >= timeCtrl) {
             const showTime = formatTime(timeCtrl)
 
             this._stages[4] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Wrap it up! You have ${Values.GraceTime} seconds.`)
+            channel.send(
+                `${userTag} timer ${this._fakeId} - **${showTime}** - Wrap it up! You have ${Values.GraceTime} seconds.`,
+            )
         }
         if (!this._stages[5] && time >= timeCtrl + Values.GraceTime) {
             const showTime = formatTime(timeCtrl + Values.GraceTime)
 
             this._stages[5] = true
-            channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`)
+            channel.send(
+                `${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`,
+            )
 
             if (verbosity === 2 && Math.random() >= 0.9) {
-                channel.send("BTW, I don't use exclamation marks because I'm excited, I'm just forced to.")
+                channel.send(
+                    "BTW, I don't use exclamation marks because I'm excited, I'm just forced to.",
+                )
             }
         }
     }
-
 }
 
 export {resume, pause} from "./playPause"

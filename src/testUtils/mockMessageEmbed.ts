@@ -7,51 +7,37 @@
  */
 
 type Stringable = {
-    toString: ()=> string,
+    toString: () => string
 }
 
 interface EmbedFieldData {
-    name: Stringable,
-    value: Stringable,
-    inline?: boolean,
+    name: Stringable
+    value: Stringable
+    inline?: boolean
 }
 
 export class MockMessageEmbed {
-
     private _content = ""
 
-    public addField(
-        name: Stringable,
-        value: Stringable,
-        _?: boolean,
-    ): this {
+    public addField(name: Stringable, value: Stringable, _?: boolean): this {
         this._content += `\n${name.toString()}\n${value.toString()}`
 
         return this
     }
 
-    public addFields(
-        ...fields: EmbedFieldData[] | EmbedFieldData[][]
-    ): this {
+    public addFields(...fields: EmbedFieldData[] | EmbedFieldData[][]): this {
         for (const field of fields) {
             if (field instanceof Array) {
                 this.addFields(field)
             } else {
-                this.addField(
-                    field.name.toString(),
-                    field.value.toString(),
-                    field.inline,
-                )
+                this.addField(field.name.toString(), field.value.toString(), field.inline)
             }
         }
 
         return this
     }
 
-    public setAuthor(
-        name: Stringable,
-        ..._: Stringable[]
-    ): this {
+    public setAuthor(name: Stringable, ..._: Stringable[]): this {
         this._content += `\n${name.toString()}`
 
         return this
@@ -93,7 +79,6 @@ export class MockMessageEmbed {
     public toString(): string {
         return this._content
     }
-
 }
 
 export default MockMessageEmbed

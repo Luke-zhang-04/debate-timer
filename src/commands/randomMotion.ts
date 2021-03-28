@@ -80,12 +80,14 @@ const motionsToChumks = (motions: string[]): string[] => {
     let index = 0
 
     for (const motion of motions) {
-        if ( // The current chunk of motions will not exceed the message size limit
+        if (
+            // The current chunk of motions will not exceed the message size limit
             (splitMotions[index] ??= "").length + motion.length <
-                maxMessageLength
+            maxMessageLength
         ) {
             splitMotions[index] += `\n\n${motion}`
-        } else { // Adding a new motion will surpass the maximum, so we create a new chunk
+        } else {
+            // Adding a new motion will surpass the maximum, so we create a new chunk
             index++
             splitMotions.push(`_ _\n${motion}`)
         }
@@ -104,10 +106,7 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
         await docDidLoad
 
         // Array of motions
-        const motions: Promise<[
-            motion: string | null,
-            infoSlide: string | null,
-        ]>[] = []
+        const motions: Promise<[motion: string | null, infoSlide: string | null]>[] = []
 
         // Keep track of rows used to prevent duplicates
         const rowsUsed: number[] = []
@@ -122,14 +121,22 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
         let amt = Number(message.content.split(" ")[1] ?? 5)
 
         if (isNaN(amt)) {
-            await message.channel.send(`:1234: Could not parse \`${message.content.split(" ")[1]}\` as a number. Learn to count.`)
+            await message.channel.send(
+                `:1234: Could not parse \`${
+                    message.content.split(" ")[1]
+                }\` as a number. Learn to count.`,
+            )
 
             return
         } else if (amt > maxMotions) {
-            message.channel.send(`:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you ${maxMotions} motions.`)
+            message.channel.send(
+                `:tired_face: Requested a total of ${amt} motions. That's too much power for me to handle. I'll be sending you ${maxMotions} motions.`,
+            )
             amt = maxMotions
         } else if (amt < 0) {
-            await message.channel.send(`:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).`)
+            await message.channel.send(
+                `:1234: Requested a total of ${amt} motions. That's smaller than 0 (yes, I can count).`,
+            )
 
             return
         }
@@ -137,34 +144,40 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
         for (let _ = 0; _ < amt; _++) {
             let row = crypto.randomInt(2, sheet.rowCount)
 
-            while (rowsUsed.includes(row)) { // Make sure random row hasn't already been used
+            while (rowsUsed.includes(row)) {
+                // Make sure random row hasn't already been used
                 row = crypto.randomInt(2, sheet.rowCount)
             }
 
             rowsUsed.push(row)
 
             // Push a Promise with a random motion to motions
-            motions.push(sheet.loadCells(`S${row}:T${row}`).then(() => [
-                sheet.getCellByA1(`S${row}`).value?.toString(),
-                sheet.getCellByA1(`T${row}`).value?.toString(),
-            ]))
+            motions.push(
+                sheet
+                    .loadCells(`S${row}:T${row}`)
+                    .then(() => [
+                        sheet.getCellByA1(`S${row}`).value?.toString(),
+                        sheet.getCellByA1(`T${row}`).value?.toString(),
+                    ]),
+            )
         }
 
         // Wait for Promises to resolve, then add them to motionsString
-        await Promise.all(motions).then(async (_motions) => {
-            for (const [index, [motion, infoSlide]] of _motions.entries()) {
-                let formattedMotion: string = infoSlide
-                    ? `*Info Slide:* ${infoSlide}\n\n*Motion:* `
-                    : ""
+        await Promise.all(motions)
+            .then(async (_motions) => {
+                for (const [index, [motion, infoSlide]] of _motions.entries()) {
+                    let formattedMotion: string = infoSlide
+                        ? `*Info Slide:* ${infoSlide}\n\n*Motion:* `
+                        : ""
 
-                /* eslint-disable no-await-in-loop */
-                // OK in this situation b/c the loop usually will run once
-                formattedMotion += motion ?? await getRandomMotion()
-                /* eslint-enable no-await-in-loop */
+                    /* eslint-disable no-await-in-loop */
+                    // OK in this situation b/c the loop usually will run once
+                    formattedMotion += motion ?? (await getRandomMotion())
+                    /* eslint-enable no-await-in-loop */
 
-                motionsStrings.push(`**${index + 1}.** ${formattedMotion}`)
-            }
-        })
+                    motionsStrings.push(`**${index + 1}.** ${formattedMotion}`)
+                }
+            })
             .catch(() => "***Error :sweat_smile:***")
 
         for (const motion of motionsToChumks(motionsStrings)) {
@@ -172,11 +185,11 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
             // OK in this situation b/c the loop usually will run once or twice
             await message.channel
                 .send(motion)
-                .catch((err) => (
+                .catch((err) =>
                     err instanceof Error
                         ? message.channel.send(`${err.name}: ${err.message} Solution: try again.`)
-                        : message.channel.send(JSON.stringify(err))
-                ))
+                        : message.channel.send(JSON.stringify(err)),
+                )
             /* eslint-enable no-await-in-loop */
         }
     } catch (err: unknown) {
@@ -193,7 +206,9 @@ export const sendRandomMotion = async (message: Message): Promise<void> => {
         if (isNaN(numberArg)) {
             await message.channel.send(`:speaking_head: ${await getRandomMotion()}`)
         } else {
-            await message.channel.send("You ran the command `getMotion` (singular) with a number. Assuming user meant `getMotions`.")
+            await message.channel.send(
+                "You ran the command `getMotion` (singular) with a number. Assuming user meant `getMotions`.",
+            )
             await sendRandomMotions(message)
         }
     } catch (err: unknown) {

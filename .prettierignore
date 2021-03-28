@@ -1,0 +1,10 @@
+*/node_modules/
+.serverless
+.vscode
+lib/
+tsconfig*.json
+docs/*.css
+docs/js
+cli/lib
+lib
+bot.mjs

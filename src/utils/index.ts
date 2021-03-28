@@ -45,22 +45,18 @@ type PermissionString =
 export const hasAdminPerms = (
     member: GuildMember | null,
     adminRoleName: {
-        type: "permission" | "name",
-        value: string,
+        type: "permission" | "name"
+        value: string
     },
 ): boolean => {
     if (adminRoleName.type === "permission") {
-        return member?.hasPermission(
-            adminRoleName.value as PermissionString,
-        ) ?? false
+        return member?.hasPermission(adminRoleName.value as PermissionString) ?? false
     }
 
-    return (member?.roles.cache.find((role) => (
-        role.name === adminRoleName.value
-    )) ?? null) !== null
+    return (member?.roles.cache.find((role) => role.name === adminRoleName.value) ?? null) !== null
 }
 
-export const niceTry = <T>(func: ()=> T): T | undefined => {
+export const niceTry = <T>(func: () => T): T | undefined => {
     try {
         return func()
     } catch (_) {
@@ -68,31 +64,23 @@ export const niceTry = <T>(func: ()=> T): T | undefined => {
     }
 }
 
-export const inlineTry = <T>(func: ()=> T): T | Error => {
+export const inlineTry = <T>(func: () => T): T | Error => {
     try {
         return func()
     } catch (err: unknown) {
-        return err instanceof Error
-            ? err
-            : new Error(typeof err === "string" ? err : String(err))
+        return err instanceof Error ? err : new Error(typeof err === "string" ? err : String(err))
     }
 }
 
-export const inlineTryPromise = async <T>(
-    func: ()=> Promise<T>,
-): Promise<T | Error> => {
+export const inlineTryPromise = async <T>(func: () => Promise<T>): Promise<T | Error> => {
     try {
         return await func()
     } catch (err: unknown) {
-        return err instanceof Error
-            ? err
-            : new Error(typeof err === "string" ? err : String(err))
+        return err instanceof Error ? err : new Error(typeof err === "string" ? err : String(err))
     }
 }
 
-export const emojify = (str: string): string => emoji.emojify(
-    str.replace(/:judge:/gu, "🧑‍⚖️"),
-)
+export const emojify = (str: string): string => emoji.emojify(str.replace(/:judge:/gu, "🧑‍⚖️"))
 
 /**
  * Array.filter with size limit
@@ -103,7 +91,7 @@ export const emojify = (str: string): string => emoji.emojify(
  */
 export function* filter<T>(
     array: T[],
-    predicate?: (value: T, index: number, array: T[])=> unknown,
+    predicate?: (value: T, index: number, array: T[]) => unknown,
     maxSize = Infinity,
 ): Generator<T, void, void> {
     let count = 0

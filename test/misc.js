@@ -13,7 +13,6 @@ import {hostname} from "os"
 import systemInfo from "../lib/commands/systemInfo.js"
 import testHelpers from "./utils/helpers.js"
 
-
 export default () => {
     it("Should do nothing if author was a bot", () => {
         const message = new Message("!help", {author: {bot: true}})

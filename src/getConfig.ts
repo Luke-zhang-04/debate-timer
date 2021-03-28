@@ -46,34 +46,40 @@ const permissions = [
 
 // Full configuration object
 type FullConfig = {
-    prefix: string,
-    maxTimers: number,
-    maxTimersPerUser: number,
-    commandCooldown: number,
-    maxMotions: number,
-    defaultTimeCtrl: number,
-    serverIconUrl: string,
-    botIconUrl: string,
-    otherImageUrl: string,
-    shouldDetectProfanity: boolean,
-    shouldUseFuzzyStringMatch: boolean,
-    shouldRespondToUnknownCommand: boolean,
+    prefix: string
+    maxTimers: number
+    maxTimersPerUser: number
+    commandCooldown: number
+    maxMotions: number
+    defaultTimeCtrl: number
+    serverIconUrl: string
+    botIconUrl: string
+    otherImageUrl: string
+    shouldDetectProfanity: boolean
+    shouldUseFuzzyStringMatch: boolean
+    shouldRespondToUnknownCommand: boolean
     adminRoleName: {
-        type: "name" | "permission",
-        value: string,
-    },
-    emojis: {[key: string]: {
-        name: string,
-        id?: string,
-    }, },
-    whitelistedWords: string[],
-    blacklistedWords: string[],
-    welcomeMessage?: false | null | {[key: string]: never} | {
-        channel: string,
-        channelName?: string,
-        message: string,
-    },
-    verbosity: 0 | 1 | 2,
+        type: "name" | "permission"
+        value: string
+    }
+    emojis: {
+        [key: string]: {
+            name: string
+            id?: string
+        }
+    }
+    whitelistedWords: string[]
+    blacklistedWords: string[]
+    welcomeMessage?:
+        | false
+        | null
+        | {[key: string]: never}
+        | {
+              channel: string
+              channelName?: string
+              message: string
+          }
+    verbosity: 0 | 1 | 2
 }
 
 // Configuration with optional options that are passed in
@@ -89,8 +95,7 @@ const defaultConfig: FullConfig = {
     defaultTimeCtrl: 5,
     serverIconUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png",
-    botIconUrl:
-        "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
+    botIconUrl: "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     otherImageUrl:
         "https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png",
     shouldDetectProfanity: true,
@@ -113,21 +118,19 @@ const defaultConfig: FullConfig = {
     verbosity: 2,
 }
 
-Object.freeze(defaultConfig)
+Object.freeze(defaultConfig) // Not much we can do
 
-/* eslint-disable complexity, max-lines-per-function */ // Not much we can do
-/**
+/* eslint-disable complexity, max-lines-per-function */ /**
  * Typegaurd for unknown object to make sure it is a good configuration file
  * @param obj - object to check
  * @returns if obj is type inputconfig
  */
 const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
-    const isValidPrefix = (
-        typeof obj.prefix === "string" &&
+    const isValidPrefix =
+        (typeof obj.prefix === "string" &&
             obj.prefix !== "" && // Prefix isn't empty
-            !obj.prefix.includes(" ") || // Prefix has no spaces
+            !obj.prefix.includes(" ")) || // Prefix has no spaces
         obj.prefix === undefined
-    )
     const isValidWhitelistedWords = (obj.whitelistedWords ?? []) instanceof Array
     const isValidBlacklistedWords = (obj.blackListedWords ?? []) instanceof Array
     const isValidEmojis = typeof obj.emojis === "object"
@@ -136,11 +139,10 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         obj.welcomeMessage === null ||
         obj.welcomeMessage === false ||
         typeof obj.welcomeMessage === "object"
-    const isValidVerbosity = typeof (obj.verbosity ?? 2) === "number" &&
-        obj.verbosity === undefined ||
+    const isValidVerbosity =
+        (typeof (obj.verbosity ?? 2) === "number" && obj.verbosity === undefined) ||
         obj.verbosity === null ||
-        (obj.verbosity as number) >= 0 &&
-        (obj.verbosity as number) <= 2
+        ((obj.verbosity as number) >= 0 && (obj.verbosity as number) <= 2)
 
     if (!isValidPrefix) {
         throw new Error("Prefix should be type string, have no spaces, and not be empty")
@@ -170,10 +172,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
     ]
 
     for (const key of singleVerificationKeys) {
-        if (
-            obj[key] !== undefined &&
-            typeof defaultConfig[key] !== typeof obj[key]
-        ) {
+        if (obj[key] !== undefined && typeof defaultConfig[key] !== typeof obj[key]) {
             return false
         }
     }
@@ -181,10 +180,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
     if (typeof obj.adminRoleName === "string") {
         const {adminRoleName: roleName} = obj
 
-        if (
-            (/^hasPermission:(?<permissionName>[A-Z]|_)/u)
-                .test(roleName)
-        ) {
+        if (/^hasPermission:(?<permissionName>[A-Z]|_)/u.test(roleName)) {
             const permission = roleName.slice("hasPermission:".length)
 
             if (permissions.includes(permission)) {
@@ -193,7 +189,11 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
                     value: permission,
                 }
             } else {
-                throw new Error(`adminRoleName permission after hasPermission: must be one of the following:\n\n${permissions.join(", ")}`)
+                throw new Error(
+                    `adminRoleName permission after hasPermission: must be one of the following:\n\n${permissions.join(
+                        ", ",
+                    )}`,
+                )
             }
         } else {
             obj.adminRoleName = {
@@ -232,11 +232,12 @@ if (!isValidConfig(inputConfig)) {
 const fullConfig: FullConfig = {
     ...defaultConfig,
     ...inputConfig,
-}
+} // Need to test for emojis
 
-/* eslint-disable no-control-regex */ // Need to test for emojis
-for (const [usage, info] of Object.entries(fullConfig.emojis)) {
-    if (!info.id && !(/[^\u0000-\u00ff]/u).test(info.name)) {
+/* eslint-disable no-control-regex */ for (const [usage, info] of Object.entries(
+    fullConfig.emojis,
+)) {
+    if (!info.id && !/[^\u0000-\u00ff]/u.test(info.name)) {
         fullConfig.emojis[usage].name = emojify(`:${info.name}:`)
     }
 }

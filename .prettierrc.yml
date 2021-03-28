@@ -5,7 +5,7 @@ endOfLine: "lf"
 htmlWhitespaceSensitivity: "strict"
 jsxBracketSameLine: false
 jsxSingleQuote: false
-printWidth: 81
+printWidth: 99
 quoteProps: "as-needed"
 semi: false
 singleQuote: false
@@ -15,8 +15,11 @@ useTabs: false
 
 overrides:
   - files:
-    - "*.scss"
-    - "*.css"
-
+      - "*.html"
+      - "*.yml"
+      - "*.yaml"
+      - "*.json"
+      - "*.css"
+      - "*.scss"
     options:
       tabWidth: 2

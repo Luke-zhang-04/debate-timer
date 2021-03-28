@@ -17,17 +17,15 @@ import {timers} from "."
  * @param id - timermessage.member.roles id - could be undefined, but shouldn't be
  * @returns void
  */
-export const kill = (
-    message: Message,
-): void => {
+export const kill = (message: Message): void => {
     const {author, member, channel} = message
     let id = message.content.split(" ")[1]
     const shouldMute =
-        message.content.split(" ")[2] === undefined ||
-        message.content.split(" ")[2] === "mute"
+        message.content.split(" ")[2] === undefined || message.content.split(" ")[2] === "mute"
     let numericId = Number(id)
 
-    if (id === undefined) { // Id was never provided. Terminate.
+    if (id === undefined) {
+        // Id was never provided. Terminate.
         const derivedId = deriveTimerId(timers, author.id)
         const derivedNumericId = Number(derivedId)
 
@@ -37,7 +35,8 @@ export const kill = (
 
         numericId = derivedNumericId
         id = derivedId
-    } else if (isNaN(numericId)) { // Id couldn't be parsed as a number. Terminate.
+    } else if (isNaN(numericId)) {
+        // Id couldn't be parsed as a number. Terminate.
         channel.send(`:1234: Could not parse \`${id}\` as a number. Learn to count.`)
 
         return
@@ -72,7 +71,15 @@ export const kill = (
             ? `, the mentioned user (${timer.mentionedUid}),`
             : ""
 
-        channel.send(`Sorry <@${author.id}>, but you're not authorized to modify this protected timer. Only the timer creator (${timer.creator.username})${mentionedMessage} and those with the \`${adminRoleName.value}\` ${adminRoleName.type === "name" ? "role" : "permission"} may modify this timer.`)
+        channel.send(
+            `Sorry <@${
+                author.id
+            }>, but you're not authorized to modify this protected timer. Only the timer creator (${
+                timer.creator.username
+            })${mentionedMessage} and those with the \`${adminRoleName.value}\` ${
+                adminRoleName.type === "name" ? "role" : "permission"
+            } may modify this timer.`,
+        )
     }
 }
 

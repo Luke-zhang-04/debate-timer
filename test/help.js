@@ -10,7 +10,6 @@ import {Message} from "./utils/mockDiscord.js"
 import handleMessage from "../lib/handleMessage.js"
 import testHelpers from "./utils/helpers.js"
 
-
 export default () => {
     it("Should show help message on !help", () => {
         const message = new Message("!help")

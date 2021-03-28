@@ -8,19 +8,18 @@
 
 import {Message, TextChannel} from "discord.js"
 import {hasAdminPerms, inlineTry} from "../utils"
-import {adminRoleName} from "../getConfig"
+import {adminRoleName} from "../getConfig" // Code will get messier if I try to split it
 
-/* eslint-disable max-statements */ // Code will get messier if I try to split it
-/**
+/* eslint-disable max-statements */ /**
  * Broadcasts referenced message to all channels with regex
  * @param message - message object
  * @returns {Promise<void>}
  */
-export const broadcast = async (
-    message: Message,
-): Promise<void> => {
+export const broadcast = async (message: Message): Promise<void> => {
     if (message.reference === null || message.reference.messageID === null) {
-        await message.channel.send("No message given. Make sure you reply to the message you want to broadcast.")
+        await message.channel.send(
+            "No message given. Make sure you reply to the message you want to broadcast.",
+        )
 
         return
     } else if (message.guild === null) {
@@ -38,7 +37,11 @@ export const broadcast = async (
             msg = `Sorry (not really) <@${author.id}>, but you're not authorized to use this command.`
         }
 
-        await message.channel.send(`${msg} Only those with the \`${adminRoleName.value}\` ${adminRoleName.type === "name" ? "role" : "permission"} may use this command.`)
+        await message.channel.send(
+            `${msg} Only those with the \`${adminRoleName.value}\` ${
+                adminRoleName.type === "name" ? "role" : "permission"
+            } may use this command.`,
+        )
 
         return
     }
@@ -52,20 +55,22 @@ export const broadcast = async (
         return
     }
 
-    const maxBroadcasts =
-        Number(args.find((val) => !isNaN(Number(val))) ?? Infinity)
-    const regex = inlineTry(() => (
-        new RegExp(givenRegex, "u")
-    ))
+    const maxBroadcasts = Number(args.find((val) => !isNaN(Number(val))) ?? Infinity)
+    const regex = inlineTry(() => new RegExp(givenRegex, "u"))
 
     if (regex instanceof Error) {
-        await message.channel.send(`Cannot broadcast message. Reason:\n\`\`\`${regex.name}\n${regex.message}\`\`\`\n${Math.random() > 0.5 ? "Smooth brain" : "Brainlet"}, learn to regex. <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>, or run \`!help regex\``)
+        await message.channel.send(
+            `Cannot broadcast message. Reason:\n\`\`\`${regex.name}\n${regex.message}\`\`\`\n${
+                Math.random() > 0.5 ? "Smooth brain" : "Brainlet"
+            }, learn to regex. <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>, or run \`!help regex\``,
+        )
 
         return
     }
 
-    const {content: broadcastContent} =
-        await message.channel.messages.fetch(message.reference.messageID)
+    const {content: broadcastContent} = await message.channel.messages.fetch(
+        message.reference.messageID,
+    )
     const sent: Promise<Message>[] = []
     let broadcasts = 0
 
@@ -73,10 +78,7 @@ export const broadcast = async (
         if (
             channel instanceof TextChannel &&
             regex.test(channel.name) &&
-            message.guild.me?.permissionsIn(channel).has([
-                "SEND_MESSAGES",
-                "VIEW_CHANNEL",
-            ])
+            message.guild.me?.permissionsIn(channel).has(["SEND_MESSAGES", "VIEW_CHANNEL"])
         ) {
             if (broadcasts >= maxBroadcasts) {
                 break
@@ -90,13 +92,16 @@ export const broadcast = async (
     try {
         await Promise.all(sent)
 
-        await message.channel.send(`Success! Your message was broadcast to ${sent.length} channels!`)
+        await message.channel.send(
+            `Success! Your message was broadcast to ${sent.length} channels!`,
+        )
     } catch (err: unknown) {
-        const error = err instanceof Error
-            ? err
-            : new Error(typeof err === "string" ? err : String(err))
+        const error =
+            err instanceof Error ? err : new Error(typeof err === "string" ? err : String(err))
 
-        await message.channel.send(`An error occured. Reason:\n\`\`\`${error.name}\n${error.message}\`\`\``)
+        await message.channel.send(
+            `An error occured. Reason:\n\`\`\`${error.name}\n${error.message}\`\`\``,
+        )
     }
 }
 /* eslint-enable max-statements */

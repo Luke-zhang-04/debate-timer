@@ -13,10 +13,11 @@ import {hostname} from "os"
  * Run a shell command
  * @param cmd - command to run
  */
-const runCommand = (cmd: string): Promise<string> => (
+const runCommand = (cmd: string): Promise<string> =>
     new Promise((resolve, reject) => {
         childProcess.exec(cmd, (err, stdout, stderr) => {
-            if (stderr !== "" && !stderr.includes("WARNING")) { // Ignore warnings
+            if (stderr !== "" && !stderr.includes("WARNING")) {
+                // Ignore warnings
                 reject(stderr)
             } else if (err !== null) {
                 reject(err)
@@ -25,7 +26,6 @@ const runCommand = (cmd: string): Promise<string> => (
             resolve(stdout)
         })
     })
-)
 
 /**
  * Gets system details including hostname, CPU info, RAM, an uname
@@ -38,13 +38,12 @@ export default async (): Promise<string> => {
     const uname = await runCommand("uname -a")
 
     // CPU info
-    const cpu = await runCommand("lscpu | grep -E \"name\" | tr -s \" \"")
+    const cpu = await runCommand('lscpu | grep -E "name" | tr -s " "')
 
     // Memory (RAM)
     const mem = await runCommand(
-        "cat /proc/meminfo | grep MemTotal | awk '$3==\"kB\"{$2=$2/1024^2;$3=\"GB\";} 1'",
+        'cat /proc/meminfo | grep MemTotal | awk \'$3=="kB"{$2=$2/1024^2;$3="GB";} 1\'',
     )
 
     return `debate-timer-bot@${hostname()}\n\n${version}\n${cpu}${mem}\n${uname}`
 }
-
