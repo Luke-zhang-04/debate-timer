@@ -29,8 +29,8 @@ jobs:
       - name: Prettier
         run: ./node_modules/.bin/prettier src/ --check
 
-      - name: typecheck
-        run: ./node_modules/.bin/tsc --noEmit
+      - name: build
+        run: ./scripts/compile
 
       - name: test
         run: NODE_ENV=test ./node_modules/.bin/mocha --timeout 10000 --no-googlesheets --exit
