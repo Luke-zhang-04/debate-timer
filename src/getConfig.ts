@@ -118,9 +118,12 @@ const defaultConfig: FullConfig = {
     verbosity: 2,
 }
 
-Object.freeze(defaultConfig) // Not much we can do
+Object.freeze(defaultConfig)
 
-/* eslint-disable complexity, max-lines-per-function */ /**
+// Not much we can do
+/* eslint-disable complexity, max-lines-per-function */
+
+/**
  * Typegaurd for unknown object to make sure it is a good configuration file
  * @param obj - object to check
  * @returns if obj is type inputconfig
