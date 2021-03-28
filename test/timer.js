@@ -185,7 +185,7 @@ export default () => {
 
             const returnMsg = message.newMessage.content
 
-            testHelpers.includes(returnMsg, "not provided")
+            testHelpers.includes(returnMsg, "no timers")
         })
 
         it("Should send message if id is not number", () => {

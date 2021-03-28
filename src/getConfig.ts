@@ -262,6 +262,7 @@ export const {
     whitelistedWords,
     blacklistedWords,
     welcomeMessage,
+    verbosity,
 } = fullConfig
 
 export default fullConfig

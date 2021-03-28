@@ -6,10 +6,9 @@
  * @license BSD-3-Clause
  */
 
-import {deriveTimerId, isAuthorizedToModifyTimer} from "./utils"
+import {adminRoleName, verbosity} from "../../getConfig"
+import {deriveTimerId, derivedIdIsValid, isAuthorizedToModifyTimer} from "./utils"
 import type {Message} from "discord.js"
-import {adminRoleName} from "../../getConfig"
-import {getTimers} from "./list"
 import {timers} from "."
 
 /**
@@ -20,11 +19,12 @@ import {timers} from "."
  * @returns void
  */
 export const changeTime = (
-    {author, member, channel}: Message,
+    message: Message,
     multiply: -1 | 1,
     id?: string,
     amt?: string,
 ): void => {
+    const {author, member, channel} = message
     let numericId = Number(id)
     let numericAmt = Number(amt) * multiply
 
@@ -42,9 +42,7 @@ export const changeTime = (
         const derivedId = deriveTimerId(timers, author.id)
         const derivedNumericId = Number(derivedId)
 
-        if (derivedId === undefined || isNaN(derivedNumericId)) {
-            channel.send(`:confused: Multiple timers found for <@${author.id}>. Please provide the argument [id]. For help using this command, run the \`!help\` command.\n\n${getTimers(author)}`)
-
+        if (!derivedIdIsValid(derivedId, derivedNumericId, message)) {
             return
         }
 
@@ -56,7 +54,7 @@ export const changeTime = (
         return
     }
 
-    if (numericAmt === 0) {
+    if (verbosity === 2 && numericAmt === 0) {
         channel.send(":1234: Changing the timer by 0 does nothing. Learn to add.")
 
         return
@@ -68,10 +66,14 @@ export const changeTime = (
     if (timer === undefined) {
         channel.send(`:confused: Could not find timer with id ${id}`)
     } else if (isAuthorizedToModifyTimer(member, author, timer)) {
-        if (numericAmt > 0) {
-            channel.send(`Winding timer ${id} forward by ${numericAmt} seconds`)
-        } else {
-            channel.send(`Winding timer ${id} backwards by ${-numericAmt} seconds`)
+        if (verbosity === 1) {
+            message.react("\u2705")
+        } else if (verbosity === 2) {
+            if (numericAmt > 0) {
+                channel.send(`Winding timer ${numericId} forward by ${numericAmt} seconds`)
+            } else {
+                channel.send(`Winding timer ${numericId} backwards by ${-numericAmt} seconds`)
+            }
         }
 
         timer.changeTime(numericAmt)

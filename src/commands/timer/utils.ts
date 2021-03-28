@@ -8,10 +8,12 @@
 import type {
     Guild,
     GuildMember,
-    User
+    User,
+    Message
 } from "discord.js"
 import type {Timer} from "."
 import {adminRoleName} from "../../getConfig"
+import {getTimers} from "./list"
 import {hasAdminPerms} from "../../utils"
 
 // One minute
@@ -150,6 +152,12 @@ export const isAuthorizedToModifyTimer = (
         hasAdminPerms(member, adminRoleName)
 }
 
+/**
+ * Gets an implicit timer id based off the user
+ * @param timers - object of timers to search
+ * @param userId - id of user that wants to modify the timer
+ * @returns string if a timer is found, undefined it more than 1 is found, and 0 if none are found
+ */
 export const deriveTimerId = (
     timers: {[key: number]: Timer},
     userId: string,
@@ -166,5 +174,30 @@ export const deriveTimerId = (
         }
     }
 
-    return key
+    return key ?? ""
+}
+
+/**
+ * Checks the validity of derivedId and derivedNumericId
+ * @param derivedId - derived string id
+ * @param derivedNumericId - derived id in number form
+ * @param message - message object
+ * @returns if derivedID and derivedNumericId are valid, and will also send errors to the channels
+ */
+export const derivedIdIsValid = (
+    derivedId: undefined | string,
+    derivedNumericId: number,
+    {author, channel}: Message,
+): derivedId is string => {
+    if (derivedId === undefined || isNaN(derivedNumericId)) {
+        channel.send(`:confused: Multiple timers found for <@${author.id}>. Please provide the argument [id]. For help using this command, run the \`!help\` command.\n\n${getTimers(author)}`)
+
+        return false
+    } else if (derivedId === "") {
+        channel.send(`:confused: You have no timers <@${author.id}>`)
+
+        return false
+    }
+
+    return true
 }

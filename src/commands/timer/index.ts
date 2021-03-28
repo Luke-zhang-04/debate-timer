@@ -9,6 +9,7 @@
 import type {Message, User} from "discord.js"
 import {formatTime, muteUser} from "./utils"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
+import {verbosity} from "../../getConfig"
 
 /* eslint-disable no-use-before-define */
 
@@ -246,7 +247,7 @@ export class Timer {
             muteUser(this.message.guild, this._mentionedUser)
         }
 
-        if (sendMsg) {
+        if (verbosity === 2 && sendMsg) {
             this.message.channel.send(`Killed timer with id ${this._fakeId}.`)
         }
 
@@ -364,7 +365,7 @@ export class Timer {
             this._stages[5] = true
             channel.send(`${userTag} timer ${this._fakeId} - **${showTime}** - Your speech is over!`)
 
-            if (Math.random() >= 0.9) {
+            if (verbosity === 2 && Math.random() >= 0.9) {
                 channel.send("BTW, I don't use exclamation marks because I'm excited, I'm just forced to.")
             }
         }

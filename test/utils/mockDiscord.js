@@ -116,6 +116,8 @@ export class Message {
         }
     }
 
+    delete = () => {}
+
 }
 
 export class Client {

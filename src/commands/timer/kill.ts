@@ -6,10 +6,9 @@
  * @license BSD-3-Clause
  */
 
-import {deriveTimerId, isAuthorizedToModifyTimer} from "./utils"
+import {adminRoleName, verbosity} from "../../getConfig"
+import {deriveTimerId, derivedIdIsValid, isAuthorizedToModifyTimer} from "./utils"
 import type {Message} from "discord.js"
-import {adminRoleName} from "../../getConfig"
-import {getTimers} from "./list"
 import {timers} from "."
 
 /**
@@ -32,9 +31,7 @@ export const kill = (
         const derivedId = deriveTimerId(timers, author.id)
         const derivedNumericId = Number(derivedId)
 
-        if (derivedId === undefined || isNaN(derivedNumericId)) {
-            channel.send(`:confused: Multiple timers found for <@${author.id}>. Please provide the argument [id]. For help using this command, run the \`!help\` command.\n\n${getTimers(author)}`)
-
+        if (!derivedIdIsValid(derivedId, derivedNumericId, message)) {
             return
         }
 
@@ -46,14 +43,16 @@ export const kill = (
         return
     }
 
-    const num = Math.random()
+    if (verbosity === 2) {
+        const num = Math.random()
 
-    if (num < 0.5) {
-        channel.send(`Looking for timer with id ${id}`)
-    } else if (num < 0.75) {
-        channel.send(`Sending hitman for timer with id ${id}`)
-    } else {
-        channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+        if (num < 0.5) {
+            channel.send(`Looking for timer with id ${id}`)
+        } else if (num < 0.75) {
+            channel.send(`Sending hitman for timer with id ${id}`)
+        } else {
+            channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+        }
     }
 
     // The current timer
@@ -64,6 +63,10 @@ export const kill = (
     } else if (isAuthorizedToModifyTimer(member, author, timer)) {
         timer.shouldMute = Boolean(shouldMute)
         timer.kill() // Run the `kill()` function
+
+        if (verbosity === 1) {
+            message.react("\u2705")
+        }
     } else {
         const mentionedMessage = timer.mentionedUid
             ? `, the mentioned user (${timer.mentionedUid}),`

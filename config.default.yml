@@ -74,3 +74,10 @@ emojis:
   spectating:
     name: eyes
     id: ""
+
+# Configure how verbose the bot should be
+# 0: minimal - send as few messages as possible i.e avoid sending "Paused timer with id 0"
+# 1: react - same as minimal, except messages get a reaction if they're successful
+# 2: verbose - full logging of commands.
+# Default 2 (for now)
+verbosity: 2
