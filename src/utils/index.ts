@@ -94,18 +94,38 @@ export function* filter<T>(
     predicate?: (value: T, index: number, array: T[]) => unknown,
     maxSize = Infinity,
 ): Generator<T, void, void> {
-    let count = 0
+    let total = 0
 
     for (const [index, item] of array.entries()) {
         if (predicate?.(item, index, array)) {
             yield item
-            count++
+            total++
         }
 
-        if (count > maxSize) {
+        if (total > maxSize) {
             return
         }
     }
+}
+
+export const count = <T>(
+    array: T[],
+    predicate?: (value: T) => unknown,
+    max = Infinity,
+): number => {
+    let total = 0
+
+    for (const item of array) {
+        if (predicate?.(item)) {
+            total++
+        }
+
+        if (total > max) {
+            return total
+        }
+    }
+
+    return total
 }
 
 export const getFirst = <T>(item: T | T[]): T => (item instanceof Array ? item[0] : item)
