@@ -434,23 +434,17 @@ E.g ${prefix}help getMotion`,
         },
         {
             name: ":computer: Misc",
-            value: `- bruh
-- based
-- epic
-- coinfilp
-- dice
+            value: `- based, bruh, epic
+- coinfilp, dice
 - broadcast [regex] [amt? = Infinity]`,
         },
         {
             name: ":timer: Timer",
             value: `- start [@mention?] [timeControl?]
 - kill [id] [shouldMute?]
-
 - resume [id]
 - pause [id]
-
 - list [global?]
-
 - backward [id] [amt]
 - forward [id] [amt]`,
         },
