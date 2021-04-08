@@ -108,6 +108,60 @@ export function* filter<T>(
     }
 }
 
+type NotFunction<T> = T extends Function ? never : T
+
+type FilterMapPredicate<T, K, Falsey> = (
+    value: T,
+    index: number,
+    matched: number,
+    array: T[],
+) => Exclude<K, Falsey> | Falsey
+
+export function filterMap<T, K, Falsey>(
+    array: T[],
+    falsey: NotFunction<Falsey>,
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void>
+
+/** If falsey value is missing, it's undefined by default */
+export function filterMap<T, K, Falsey = undefined>(
+    array: T[],
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void>
+
+/**
+ * Map and filter in one loop
+ * @param array - array to filter and map
+ * @param falsey - what a falsey value is. If something strictly matches this value, it will be
+ * excluded
+ * @param predicate - predicate function. If this function returns something strictly equal to
+ * falsey, then it will be ignored. It not, the return value will be yielded
+ */
+export function* filterMap<T, K, Falsey>(
+    array: T[],
+    falsey?: NotFunction<Falsey> | typeof predicate,
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void> {
+    let matched = 0
+    const _predicate = falsey instanceof Function ? falsey : predicate
+    const _falsey = falsey instanceof Function ? undefined : falsey
+
+    for (const [index, item] of array.entries()) {
+        const result = _predicate?.(item, index, matched, array)
+
+        if (result !== _falsey) {
+            yield result as K
+        }
+    }
+}
+
+/**
+ * Counts items in array that match the predicate
+ * @param array - array to count items from
+ * @param predicate-  function to determine if item matches predicate
+ * @param max - max number of items to count
+ * @returns number of counted items
+ */
 export const count = <T>(
     array: T[],
     predicate?: (value: T) => unknown,
@@ -128,4 +182,8 @@ export const count = <T>(
     return total
 }
 
+/**
+ * @param item - item to get
+ * @returns if item is an array, the first item in item, otherwise the item itself
+ */
 export const getFirst = <T>(item: T | T[]): T => (item instanceof Array ? item[0] : item)

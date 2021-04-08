@@ -7,10 +7,10 @@
  */
 
 import type {DMChannel, Message, NewsChannel, TextChannel, User} from "discord.js"
+import {count, filterMap} from "../../utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {Timer, timers} from "."
-import {count} from "../../utils"
 import {nextKey} from "./utils"
 
 /**
@@ -70,10 +70,11 @@ export const start = async (message: Message): Promise<void> => {
 
     // User defined time control (e.g 5 mins)
     const timeCtrl =
-        message.content
-            .split(" ")
-            .filter((content) => !isNaN(Number(content)))
-            .map((val) => Number(val))[0] ?? defaultTimeCtrl
+        Array.from(
+            filterMap(message.content.split(" "), false, (content) =>
+                isNaN(Number(content)) ? false : Number(content),
+            ),
+        )[0] ?? defaultTimeCtrl
 
     if (!isNaN(timeCtrl) && timeCtrl > 15) {
         message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
