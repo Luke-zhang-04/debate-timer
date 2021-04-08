@@ -107,3 +107,5 @@ export function* filter<T>(
         }
     }
 }
+
+export const getFirst = <T>(item: T | T[]): T => (item instanceof Array ? item[0] : item)

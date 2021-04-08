@@ -11,6 +11,7 @@ import config, {prefix} from "./getConfig"
 import Filter from "bad-words"
 import commands from "./getCommands"
 import didyoumean from "didyoumean"
+import {getFirst} from "./utils"
 
 // Swear words filter
 const filter = new Filter()
@@ -44,36 +45,33 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
     }
 
     const correctedCmd = config.shouldUseFuzzyStringMatch
-        ? didyoumean(cmd, Object.keys(commands))
+        ? getFirst(didyoumean(cmd, Object.keys(commands)))
         : cmd
 
-    // Await in loop is ok because we return after the loop anyways
-    /* eslint-disable no-await-in-loop */
     if (correctedCmd !== null) {
-        for (const [key, command] of Object.entries(commands)) {
-            if (correctedCmd === key) {
-                if (correctedCmd !== cmd) {
-                    const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
-                    const content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to ${
-                        shouldTypo ? "tpye" : "type"
-                    }.`
+        const command = commands[correctedCmd]
 
-                    message.channel.send(content).then((_message) => {
-                        if (shouldTypo) {
-                            setTimeout(() => {
-                                _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
-                            }, 2500)
-                        }
-                    })
-                }
+        if (commands !== undefined) {
+            if (correctedCmd.toLowerCase() !== cmd.toLowerCase()) {
+                const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
+                const content = `Automatically corrected your input from \`${cmd}\` to \`${correctedCmd}\`. Learn to ${
+                    shouldTypo ? "tpye" : "type"
+                }.`
 
-                await command(message, client)
-
-                return
+                message.channel.send(content).then((_message) => {
+                    if (shouldTypo) {
+                        setTimeout(() => {
+                            _message.edit(`${content.replace(/tpe|tpye/gu, "type")}`)
+                        }, 2500)
+                    }
+                })
             }
+
+            await command(message, client)
+
+            return
         }
     }
-    /* eslint-enable no-await-in-loop */
 
     if (config.shouldRespondToUnknownCommand) {
         const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
