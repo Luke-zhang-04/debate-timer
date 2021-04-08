@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import dotenv from "dotenv"
@@ -19,10 +20,7 @@ describe("Help functions", helpTest)
 describe("Miscellaneous functions", miscTest)
 describe("Poll functions", pollTest)
 
-if (
-    !process.argv.includes("--skip-googlesheets") &&
-    !process.argv.includes("--no-googlesheets")
-) {
+if (!process.argv.includes("--skip-googlesheets") && !process.argv.includes("--no-googlesheets")) {
     import("./randomMotion.js").then((randomMotionTest) => {
         describe("Random motion", randomMotionTest)
     })

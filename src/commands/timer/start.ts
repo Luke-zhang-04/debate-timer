@@ -1,57 +1,68 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {Message, User} from "discord.js"
+import type {DMChannel, Message, NewsChannel, TextChannel, User} from "discord.js"
+import {Timer, timers} from "."
+import {count, filterMap} from "../../utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
-import {Timer} from "."
 import {nextKey} from "./utils"
-
 
 /**
  * Checks if one user has exceeded the number of timers that can be run
- * @param user - user object
- * @returns {boolean} if user has exceeded the limit
+ *
+ * @param user - User object
+ * @returns {boolean} If user has exceeded the limit
  */
-const userTimersExceeded = (
-    user: User,
-    timers: {[key: number]: Timer},
-): boolean => {
-    let timerCount = 0
+const userTimersExceeded = (user: User): boolean =>
+    count(Object.values(timers), (timer) => timer.creator.id === user.id, maxTimersPerUser + 1) >=
+    maxTimersPerUser
 
-    for (const timer of Object.values(timers)) {
-        if (timer.creator.id === user.id) {
-            timerCount ++
-        }
+const maxTimersPerChannel = 5
 
-        // Break the loop early if possible
-        if (timerCount >= maxTimersPerUser) {
-            return true
-        }
-    }
-
-    return timerCount >= maxTimersPerUser
-}
+/**
+ * Checks if one channel has exceeded the number of timers that can be run
+ *
+ * @param user - User object
+ * @returns {boolean} If user has exceeded the limit
+ */
+const channelTimersExceeded = (channel: TextChannel | DMChannel | NewsChannel): boolean =>
+    count(
+        Object.values(timers),
+        (timer) => timer.message.channel.id === channel.id,
+        maxTimersPerChannel + 1,
+    ) >= maxTimersPerChannel
 
 /**
  * Start a new timer in background
- * @param message - message object
+ *
+ * @param message - Message object
  * @returns Promise<void>
  */
-export const start = async (message: Message): Promise<void> => {
-    const {timers} = await import(".")
-
-    if (maxTimers > -1 && Object.keys(timers).length >= maxTimers) { // Max number of timers reached
-        message.channel.send(`A maximum of ${maxTimers} are allowed to run concurrently. The max timer count can be changed in the configuration file.`)
+export const start = (message: Message): void => {
+    if (maxTimers > -1 && Object.keys(timers).length >= maxTimers) {
+        // Max number of timers reached
+        message.channel.send(
+            `A maximum of ${maxTimers} are allowed to run concurrently. The max timer count can be changed in the configuration file.`,
+        )
 
         return
-    } else if (userTimersExceeded(message.author, timers)) {
-        message.channel.send(`A maximum of ${maxTimersPerUser} are allowed for one user. Why tf do you even need ${maxTimersPerUser} at once? The max timers per user count can be changed in the configuration file.`)
+    } else if (userTimersExceeded(message.author)) {
+        message.channel.send(
+            `A maximum of ${maxTimersPerUser} timers are allowed for one user. Why do you even need ${maxTimersPerUser} timers at once?`,
+        )
+
+        return
+    } else if (channelTimersExceeded(message.channel)) {
+        message.channel.send(
+            `A maximum of ${maxTimersPerChannel} timers are allowed for one channel to stay within Discord API limits. Why do you even need ${maxTimersPerChannel} timers in a channel?`,
+        )
 
         return
     }
@@ -60,9 +71,12 @@ export const start = async (message: Message): Promise<void> => {
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
 
     // User defined time control (e.g 5 mins)
-    const timeCtrl = message.content.split(" ")
-        .filter((content) => !isNaN(Number(content)))
-        .map((val) => Number(val))[0] ?? defaultTimeCtrl
+    const timeCtrl =
+        Array.from(
+            filterMap(message.content.split(" "), false, (content) =>
+                isNaN(Number(content)) ? false : Number(content),
+            ),
+        )[0] ?? defaultTimeCtrl
 
     if (!isNaN(timeCtrl) && timeCtrl > 15) {
         message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
@@ -70,11 +84,7 @@ export const start = async (message: Message): Promise<void> => {
         return
     }
 
-    const timer = new Timer(
-        fakeId,
-        message,
-        DatePlus.minsToSecs(timeCtrl),
-    )
+    const timer = new Timer(fakeId, message, DatePlus.minsToSecs(timeCtrl))
 
     timer.start()
 

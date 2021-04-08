@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 /* eslint-disable max-lines */
@@ -14,28 +15,23 @@ import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
 import fs from "fs"
 
-const makeMessageEmbed = (): MessageEmbed | MockMessageEmbed => (
-    (
-        process.env.NODE_ENV === "test"
-            ? new MockMessageEmbed()
-            : new MessageEmbed()
-    )
+const makeMessageEmbed = (): MessageEmbed | MockMessageEmbed =>
+    (process.env.NODE_ENV === "test" ? new MockMessageEmbed() : new MessageEmbed())
         .setColor("#f4f4f4")
         .setAuthor("Debate Timer", botIconUrl, "https://github.com/Luke-zhang-04/debate-timer")
         .setFooter("Copyright (C) 2020 - 2021 Luke Zhang")
-)
 
 /* eslint-disable no-sync */
 
 type Manual = {
     [key: string]: {
-        name: string,
-        value: string,
+        name: string
+        value: string
         fields?: {
-            name: string,
-            value: string,
-        }[],
-    },
+            name: string
+            value: string
+        }[]
+    }
 }
 
 // Object with all the mafullConfignual entries
@@ -72,7 +68,7 @@ You can use regex to match most text channel names. For an example, you can matc
 But you can do more with regex.
 - If you have rooms names \`poi-1\`, \`poi-2\`, etc. you can match them with \`poi-.*\`. The \`.*\` will match anything after \`poi-\`.
 - You can also use \`poi-[0-9]+\` to match \`poi-\` then one or more of any number.
-- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`
+- If you want to match \`poi\` and \`the-ga\`, you can do \`poi|the-ga\`, or \`poi-.*|the-ga\`.`,
     },
 
     start: {
@@ -111,7 +107,8 @@ ${prefix}start 3 @debate-timer\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value:
+                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -131,7 +128,8 @@ ${prefix}start 3 @debate-timer\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value: "- [global?] - optional - if \"global\" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.",
+                value:
+                    '- [global?] - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.',
             },
             {
                 name: "Usage",
@@ -297,6 +295,18 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
         value: `Functionally equivalent to \`${prefix}makeDraw\`.`,
     },
 
+    newMotion: {
+        name: `\`${prefix}newMotion\``,
+        value:
+            "Reply to a generated round, and change the motion. Use this if the motion is bad, but you want to keep the teams.",
+        fields: [
+            {
+                name: "Usage",
+                value: `\`${prefix}newMotion\``,
+            },
+        ],
+    },
+
     poll: {
         name: `\`${prefix}poll\``,
         value: "Creates a poll",
@@ -315,17 +325,21 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
     },
 
     getPoll: {
-        name: `\`${prefix}getPoll [option?]\``,
-        value: "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
+        name: `\`${prefix}getPoll [option?] [raw?]\``,
+        value:
+            "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
         fields: [
             {
                 name: "Parameters",
-                value: `- \`[opion?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.`,
+                value: `- \`[option?]\` - optional - which poll option to get data for. If not provided, all poll data will be shown.
+- \`[raw?]\` - optional - if poll data should be plaintext usernames instead of pings`,
             },
             {
                 name: "Usage",
                 value: `\`\`\`${prefix}getPoll
-${prefix}getPoll debating\`\`\``,
+${prefix}getPoll debating
+${prefix}getPoll raw
+${prefix}getPoll spectating raw\`\`\``,
             },
         ],
     },
@@ -336,7 +350,8 @@ ${prefix}getPoll debating\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value:
+                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -351,7 +366,8 @@ ${prefix}getPoll debating\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value:
+                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -362,7 +378,8 @@ ${prefix}getPoll debating\`\`\``,
 
     broadcast: {
         name: `\`${prefix}broadcast [regex] [amt? = Infinity]\``,
-        value: "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
+        value:
+            "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
         fields: [
             {
                 name: "Parameters",
@@ -384,17 +401,17 @@ ${prefix}broadcast 3 .*\`\`\``,
 }
 
 type Package = {
-    name?: string,
-    version?: string,
-    description?: string,
-    main?: string,
-    scripts: {[key: string]: string},
-    keywords?: string[],
-    author?: string | {name: string, url: string, email?: string},
-    license?: string,
-    dependencies?: {[key: string]: string},
-    devDependencies?: {[key: string]: string},
-    engines?: {[key: string]: string},
+    name?: string
+    version?: string
+    description?: string
+    main?: string
+    scripts: {[key: string]: string}
+    keywords?: string[]
+    author?: string | {name: string; url: string; email?: string}
+    license?: string
+    dependencies?: {[key: string]: string}
+    devDependencies?: {[key: string]: string}
+    engines?: {[key: string]: string}
 }
 
 const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
@@ -418,23 +435,17 @@ E.g ${prefix}help getMotion`,
         },
         {
             name: ":computer: Misc",
-            value: `- bruh
-- based
-- epic
-- coinfilp
-- dice
+            value: `- based, bruh, epic
+- coinfilp, dice
 - broadcast [regex] [amt? = Infinity]`,
         },
         {
             name: ":timer: Timer",
             value: `- start [@mention?] [timeControl?]
 - kill [id] [shouldMute?]
-
 - resume [id]
 - pause [id]
-
 - list [global?]
-
 - backward [id] [amt]
 - forward [id] [amt]`,
         },
@@ -448,7 +459,8 @@ E.g ${prefix}help getMotion`,
             value: `- makeTeams [format?]
 - makePartners [format?] [debater1] [debater2] ...
 - makeDraw [format?] [debater1] [debater2] ...
-- makeRound [format?] [debater1] [debater2] ...`,
+- makeRound [format?] [debater1] [debater2] ...
+- newMotion`,
         },
     ],
 }
@@ -461,28 +473,28 @@ const defaultMsg = makeMessageEmbed()
 
 /**
  * Help command invoked with !help
+ *
  * @param message - Discord message
- * @returns string
+ * @returns String
  */
 export default (message: Message): void => {
     let arg = message.content.split(" ")[1]
 
     if (arg === undefined) {
         message.channel.send(
-            defaultMsg instanceof MessageEmbed
-                ? defaultMsg
-                : defaultMsg.toString(),
+            defaultMsg instanceof MessageEmbed ? defaultMsg : defaultMsg.toString(),
         )
 
         return
     }
 
-    if (arg[0] === "!") { // Get rid of ! at beginning
+    if (arg[0] === "!") {
+        // Get rid of ! at beginning
         arg = arg.slice(1)
     }
 
     const correctedArg = shouldUseFuzzyStringMatch
-        ? didyoumean(arg, Object.keys(manual)) as string
+        ? (didyoumean(arg, Object.keys(manual)) as string)
         : arg
 
     if (correctedArg === null) {
@@ -493,7 +505,9 @@ export default (message: Message): void => {
 
     if (correctedArg !== arg) {
         const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
-        const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${shouldTypo ? "tpe" : "type"}.`
+        const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${
+            shouldTypo ? "tpe" : "type"
+        }.`
 
         message.channel.send(content).then((_message) => {
             if (shouldTypo) {
@@ -510,9 +524,5 @@ export default (message: Message): void => {
         .setDescription(manualEntry.value)
         .addFields(...(manualEntry.fields ?? []))
 
-    message.channel.send(
-        helpMsg instanceof MessageEmbed
-            ? helpMsg
-            : helpMsg.toString(),
-    )
+    message.channel.send(helpMsg instanceof MessageEmbed ? helpMsg : helpMsg.toString())
 }

@@ -1,10 +1,11 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
- * @file lets you send messages on the bots behalf
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @file lets You send messages on the bots behalf
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import * as coreutils from "./coreutils"
@@ -17,7 +18,9 @@ import prompts from "prompts"
 
 dotenv.config()
 
-console.log("Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.")
+console.log(
+    "Copyright 2020 Luke Zhang. This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you are welcome to redistribute it under certain conditions; see https://github.com/Luke-zhang-04/debate-timer/blob/master/LICENSE for more details.",
+)
 
 export const client = new Discord.Client()
 
@@ -25,14 +28,14 @@ client.login(process.env.AUTHTOKEN)
 
 export type Channels = [
     server?: Discord.Guild,
-    ...channels: (Discord.TextChannel | Discord.CategoryChannel)[],
+    ...channels: (Discord.TextChannel | Discord.CategoryChannel)[]
 ]
 
 const connected = new Promise<void>((resolve) => {
     client.once("ready", resolve)
 })
 
-const readFile = (path: string): Promise<string> => (
+const readFile = (path: string): Promise<string> =>
     new Promise((resolve, reject) => {
         fs.readFile(path, "utf-8", (err, data) => {
             if (err) {
@@ -42,19 +45,16 @@ const readFile = (path: string): Promise<string> => (
             return resolve(data)
         })
     })
-);
 
 /* eslint-disable no-await-in-loop, no-constant-condition, max-statements, require-atomic-updates */
 
 // Main CLI IIFE
-(async (): Promise<void> => {
+;(async (): Promise<void> => {
     await connected
     console.log("Connected to client")
 
     // Get CLI Version
-    const {version} = JSON.parse(
-        await readFile("package.json"),
-    ) as {version: string}
+    const {version} = JSON.parse(await readFile("package.json")) as {version: string}
 
     // Current channel(s) that the user is on
     const channels: Channels = []
@@ -65,11 +65,11 @@ const readFile = (path: string): Promise<string> => (
     // Current working directory
     let cwd = "/"
 
-
     console.log(`\nCLI Version ${version}\n`)
 
     while (shouldcontinueRunning) {
-        const fullCommand = await prompts({ // Get input
+        const fullCommand = await prompts({
+            // Get input
             type: "text",
             name: "text",
             message: `debate-timer-bot ${Math.round(client.ws.ping)}ms ${cwd} ->`,
@@ -77,7 +77,8 @@ const readFile = (path: string): Promise<string> => (
             .then(({text}) => text as string)
             .catch(() => "")
 
-        if (fullCommand === undefined) { // Deal with undefined input
+        if (fullCommand === undefined) {
+            // Deal with undefined input
             continue
         }
 
@@ -92,7 +93,9 @@ const readFile = (path: string): Promise<string> => (
                 break
 
             case "help":
-                console.log("Help for CLI:\n\"(send | echo) [msg]\" sends a message to a channel.\n\"cd [server, category, or channel name]\" changes your current localtion\n\"ls\" lists the current channel's contents\n\"(cat | show)\" shows the contents of the current text channel\n\"exit\" exits the CLI")
+                console.log(
+                    'Help for CLI:\n"(send | echo) [msg]" sends a message to a channel.\n"cd [server, category, or channel name]" changes your current localtion\n"ls" lists the current channel\'s contents\n"(cat | show)" shows the contents of the current text channel\n"exit" exits the CLI',
+                )
 
                 break
 
@@ -128,11 +131,13 @@ const readFile = (path: string): Promise<string> => (
                         console.log(content)
                     } catch (err: unknown) {
                         err instanceof Error
-                            ? spinner.fail(`${colors.biRed}${err.name}${colors.red}: ${err.message}${colors.reset}`)
+                            ? spinner.fail(
+                                  `${colors.biRed}${err.name}${colors.red}: ${err.message}${colors.reset}`,
+                              )
                             : (() => {
-                                spinner.fail(String(err))
-                                console.log(err)
-                            })()
+                                  spinner.fail(String(err))
+                                  console.log(err)
+                              })()
                     }
                 })()
 
@@ -141,18 +146,20 @@ const readFile = (path: string): Promise<string> => (
             case "cd": // Change "directory"
             case "cc":
                 // Name of new directory target
-                const newDir = fullCommand.split(" ")
-                    .slice(1)
-                    .join(" ")
+                const newDir = fullCommand.split(" ").slice(1).join(" ")
 
                 if (newDir === undefined) {
                     break
                 }
 
                 coreutils.cd(client, channels, newDir)
-                cwd = channels.map((channel) => (
-                    `/${channel instanceof Discord.TextChannel ? "#" : ""}${channel?.name ?? "?"}`
-                ))
+                cwd = channels
+                    .map(
+                        (channel) =>
+                            `/${channel instanceof Discord.TextChannel ? "#" : ""}${
+                                channel?.name ?? "?"
+                            }`,
+                    )
                     .join("")
                     .trim()
 
@@ -181,22 +188,20 @@ const readFile = (path: string): Promise<string> => (
                         spinner.succeed("Sent")
                     } catch (err: unknown) {
                         err instanceof Error
-                            ? spinner.fail(`${colors.biRed}${err.name}${colors.red}: ${err.message}${colors.reset}`)
+                            ? spinner.fail(
+                                  `${colors.biRed}${err.name}${colors.red}: ${err.message}${colors.reset}`,
+                              )
                             : (() => {
-                                spinner.fail(String(err))
-                                console.log(err)
-                            })()
+                                  spinner.fail(String(err))
+                                  console.log(err)
+                              })()
                     }
                 })()
 
                 break
 
             case "ls": // List "directory"
-                console.log(coreutils.ls(
-                    client,
-                    channels[channels.length - 1],
-                    channels[0],
-                ))
+                console.log(coreutils.ls(client, channels[channels.length - 1], channels[0]))
 
                 break
 

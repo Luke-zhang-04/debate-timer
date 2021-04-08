@@ -1,15 +1,15 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {Message} from "./utils/mockDiscord.js"
 import handleMessage from "../lib/handleMessage.js"
 import testHelpers from "./utils/helpers.js"
-
 
 export default () => {
     it("Should show help message on !help", () => {

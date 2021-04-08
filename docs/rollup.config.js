@@ -6,12 +6,12 @@ import {terser} from "rollup-plugin-terser"
 import typescript from "@rollup/plugin-typescript"
 
 const banner = `/**
-* Discord Debate Timer
-* @copyright 2020 Luke Zhang
-* @author Luke Zhang luke-zhang-04.github.io/
-* @version 1.7.0
-* @license BSD-3-Clause
-*/
+ * Discord Debate Timer
+ * @copyright 2020 Luke Zhang
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @version 1.8.0
+ * @license BSD-3-Clause
+ */
 
 `
 
@@ -33,14 +33,16 @@ const config = {
             tsconfig: `${__dirname}/tsconfig.json`,
         }),
         resolve(),
-        process.env.NODE_ENV === "dev" ? undefined : terser({
-            mangle: {
-                properties: {
-                    regex: /^_/u, // Mangle private properties
-                },
-            },
-        }),
-    ]
+        process.env.NODE_ENV === "dev"
+            ? undefined
+            : terser({
+                  mangle: {
+                      properties: {
+                          regex: /^_/u, // Mangle private properties
+                      },
+                  },
+              }),
+    ],
 }
 
 export default config

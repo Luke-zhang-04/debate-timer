@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {GuildMember} from "discord.js"
@@ -45,22 +46,18 @@ type PermissionString =
 export const hasAdminPerms = (
     member: GuildMember | null,
     adminRoleName: {
-        type: "permission" | "name",
-        value: string,
+        type: "permission" | "name"
+        value: string
     },
 ): boolean => {
     if (adminRoleName.type === "permission") {
-        return member?.hasPermission(
-            adminRoleName.value as PermissionString,
-        ) ?? false
+        return member?.hasPermission(adminRoleName.value as PermissionString) ?? false
     }
 
-    return (member?.roles.cache.find((role) => (
-        role.name === adminRoleName.value
-    )) ?? null) !== null
+    return (member?.roles.cache.find((role) => role.name === adminRoleName.value) ?? null) !== null
 }
 
-export const niceTry = <T>(func: ()=> T): T | undefined => {
+export const niceTry = <T>(func: () => T): T | undefined => {
     try {
         return func()
     } catch (_) {
@@ -68,16 +65,130 @@ export const niceTry = <T>(func: ()=> T): T | undefined => {
     }
 }
 
-export const inlineTry = <T>(func: ()=> T): T | Error => {
+export const inlineTry = <T>(func: () => T): T | Error => {
     try {
         return func()
     } catch (err: unknown) {
-        return err instanceof Error
-            ? err
-            : new Error(typeof err === "string" ? err : String(err))
+        return err instanceof Error ? err : new Error(typeof err === "string" ? err : String(err))
     }
 }
 
-export const emojify = (str: string): string => emoji.emojify(
-    str.replace(/:judge:/gu, "🧑‍⚖️"),
-)
+export const inlineTryPromise = async <T>(func: () => Promise<T>): Promise<T | Error> => {
+    try {
+        return await func()
+    } catch (err: unknown) {
+        return err instanceof Error ? err : new Error(typeof err === "string" ? err : String(err))
+    }
+}
+
+export const emojify = (str: string): string => emoji.emojify(str.replace(/:judge:/gu, "🧑‍⚖️"))
+
+/**
+ * Array.filter with size limit
+ *
+ * @param array - Array to filter
+ * @param predicate - Function to determine if item matches predicate
+ * @param maxSize - Max number of items in filter
+ * @returns Generator
+ */
+export function* filter<T>(
+    array: T[],
+    predicate?: (value: T, index: number, array: T[]) => unknown,
+    maxSize = Infinity,
+): Generator<T, void, void> {
+    let total = 0
+
+    for (const [index, item] of array.entries()) {
+        if (predicate?.(item, index, array)) {
+            yield item
+            total++
+        }
+
+        if (total > maxSize) {
+            return
+        }
+    }
+}
+
+type NotFunction<T> = T extends Function ? never : T
+
+type FilterMapPredicate<T, K, Falsey> = (
+    value: T,
+    index: number,
+    matched: number,
+    array: T[],
+) => Exclude<K, Falsey> | Falsey
+
+export function filterMap<T, K, Falsey>(
+    array: T[],
+    falsey: NotFunction<Falsey>,
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void>
+
+/**
+ * If falsey value is missing, it's undefined by default
+ */
+export function filterMap<T, K, Falsey = undefined>(
+    array: T[],
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void>
+
+/**
+ * Map and filter in one loop
+ *
+ * @param array - Array to filter and map
+ * @param falsey - What a falsey value is. If something strictly matches this value, it will be excluded
+ * @param predicate - Predicate function. If this function returns something strictly equal to
+ *   falsey, then it will be ignored. It not, the return value will be yielded
+ */
+export function* filterMap<T, K, Falsey>(
+    array: T[],
+    falsey?: NotFunction<Falsey> | typeof predicate,
+    predicate?: FilterMapPredicate<T, K, Falsey>,
+): Generator<K, void, void> {
+    const matched = 0
+    const _predicate = falsey instanceof Function ? falsey : predicate
+    const _falsey = falsey instanceof Function ? undefined : falsey
+
+    for (const [index, item] of array.entries()) {
+        const result = _predicate?.(item, index, matched, array)
+
+        if (result !== _falsey) {
+            yield result as K
+        }
+    }
+}
+
+/**
+ * Counts items in array that match the predicate
+ *
+ * @param array - Array to count items from
+ * @param predicate- Function to determine if item matches predicate
+ * @param max - Max number of items to count
+ * @returns Number of counted items
+ */
+export const count = <T>(
+    array: T[],
+    predicate?: (value: T) => unknown,
+    max = Infinity,
+): number => {
+    let total = 0
+
+    for (const item of array) {
+        if (predicate?.(item)) {
+            total++
+        }
+
+        if (total > max) {
+            return total
+        }
+    }
+
+    return total
+}
+
+/**
+ * @param item - Item to get
+ * @returns If item is an array, the first item in item, otherwise the item itself
+ */
+export const getFirst = <T>(item: T | T[]): T => (item instanceof Array ? item[0] : item)

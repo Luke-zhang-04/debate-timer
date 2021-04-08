@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {Message} from "./utils/mockDiscord.js"
@@ -18,7 +19,7 @@ export default () => {
         assert.strictEqual(typeof _motion, "string")
     })
 
-    it("Should give 5 random motions by default", () => (
+    it("Should give 5 random motions by default", () =>
         new Promise(async (resolve) => {
             const message = new Message("!getMotions")
 
@@ -32,8 +33,7 @@ export default () => {
             testHelpers.notIncludes(returnMsg, "\n6.")
 
             resolve()
-        })
-    ))
+        }))
 
     it("Should give a specified number of random motions", async () => {
         const message = new Message("!getMotions 3")
@@ -48,7 +48,7 @@ export default () => {
         testHelpers.notIncludes(returnMsg, "\n4.")
     })
 
-    it("Should send a message if less than 0 motions passed", () => (
+    it("Should send a message if less than 0 motions passed", () =>
         new Promise(async (resolve) => {
             const message = new Message("!getMotions -3")
 
@@ -59,10 +59,9 @@ export default () => {
             testHelpers.includes(returnMsg, "smaller than 0")
 
             resolve()
-        })
-    ))
+        }))
 
-    it("Should send a message if motion count is not a number", () => (
+    it("Should send a message if motion count is not a number", () =>
         new Promise(async (resolve) => {
             const message = new Message("!getMotions notanumber")
 
@@ -73,6 +72,5 @@ export default () => {
             testHelpers.includes(returnMsg, "Learn to count")
 
             resolve()
-        })
-    ))
+        }))
 }

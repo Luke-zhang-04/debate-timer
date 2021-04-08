@@ -13,21 +13,18 @@ defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 # This doesn't actually set your picture. It just dictates what to display on
 # the command for !bruh
 # Defaults to the GitHub logo
-serverIconUrl:
-  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
+serverIconUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
 
 # Url of your bot's icon image, or any other image works too.
 # This doesn't actually set your picture. It just dictates what to display on
 # the command for !epic
 # Defaults to the Discord logo
-botIconUrl:
-  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+botIconUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
 
 # Random image
 # What to display on the command for !based
 # Defaults to the Discord logo
-otherImageUrl:
-  https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+otherImageUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
 
 # Profanity detection. Default true
 shouldDetectProfanity: true
@@ -43,7 +40,8 @@ blacklistedWords:
   # - word
 
 # Welcome message to send when a new member joins
-welcomeMessage: null # An empty object, false, or null signifies no welcome message
+welcomeMessage:
+  null # An empty object, false, or null signifies no welcome message
   # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
   # channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
 
@@ -74,3 +72,10 @@ emojis:
   spectating:
     name: eyes
     id: ""
+
+# Configure how verbose the bot should be
+# 0: minimal - send as few messages as possible i.e avoid sending "Paused timer with id 0"
+# 1: react - same as minimal, except messages get a reaction if they're successful
+# 2: verbose - full logging of commands.
+# Default 2 (for now)
+verbosity: 2

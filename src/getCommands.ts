@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.8.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import * as timer from "./commands/timer"
@@ -18,9 +19,7 @@ import poll from "./commands/poll"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
-type Commands = Readonly<
-    {[key: string]: ((message: Message, client: Client)=> unknown)}
->
+type Commands = Readonly<{[key: string]: (message: Message, client: Client) => unknown}>
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
@@ -30,10 +29,12 @@ type Commands = Readonly<
 const microCommands: Commands = {
     bruh: (message) => message.channel.send("", {files: [config.serverIconUrl]}),
     based: (message) => message.channel.send("", {files: [config.otherImageUrl]}),
-    coinflip: (message) => message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
+    coinflip: (message) =>
+        message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
     dice: (message) => message.channel.send(`:game_die: ${crypto.randomInt(1, 7)}`),
-    ping: (message, client) => message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
+    ping: (message, client) =>
+        message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     systemInfo: async (message) => message.channel.send(await systemInfo()),
 }
 
@@ -67,6 +68,7 @@ const teamGenCommands: Commands = {
     partners: teamGen.makePartners,
     makeRound: teamGen.makeRound,
     round: teamGen.makeRound,
+    newMotion: teamGen.newMotion,
 }
 
 /**
@@ -89,9 +91,10 @@ const pollCommands: Commands = {
 
 /**
  * All commands
- * @param message - message object
- * @param client - client object
- * @returns void
+ *
+ * @param message - Message object
+ * @param client - Client object
+ * @returns Void
  */
 export const commands: Readonly<Commands> = {
     help,

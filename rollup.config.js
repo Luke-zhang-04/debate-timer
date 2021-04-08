@@ -10,7 +10,7 @@ const banner = `#!/bin/node
  * Discord Debate Timer
  * @copyright 2020 - 2021 Luke Zhang
  * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ * @version 1.8.0
  * @license BSD-3-Clause
  * @preserve
  */
@@ -48,15 +48,16 @@ const config = {
         resolve({
             resolveOnly: [/^\.{0,2}\/|tslib/u],
         }),
-        process.env.NODE_ENV === "dev" ? undefined : terser({
-            format: {
-                comments: (_, {value}) => (
-                    (!(/Luke Zhang/ui).test(value) || (/@preserve/ui).test(value)) &&
-                    (/@preserve|li[cs]ense|copyright/ui).test(value)
-                ),
-            }
-        }),
-    ]
+        process.env.NODE_ENV === "dev"
+            ? undefined
+            : terser({
+                  format: {
+                      comments: (_, {value}) =>
+                          (!/Luke Zhang/iu.test(value) || /@preserve/iu.test(value)) &&
+                          /@preserve|li[cs]ense|copyright/iu.test(value),
+                  },
+              }),
+    ],
 }
 
 export default config
