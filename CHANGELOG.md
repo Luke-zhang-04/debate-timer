@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   feat(timers): add per channel timer limits
+-   feat: add case insensitive commands
 -   feat: add verbosity option
 -   feat(timer): show list of timers if timer id can't be inferred
 -   feat(teamGen): add ability to swap out a motion in a generated round
@@ -16,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   perf: add filterMap function
+-   feat(help): decrease the size of help a bit
 -   feat(poll): don't show empty data for getPoll
 
 ### Fixed
