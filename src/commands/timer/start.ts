@@ -8,10 +8,10 @@
  */
 
 import type {DMChannel, Message, NewsChannel, TextChannel, User} from "discord.js"
+import {Timer, timers} from "."
 import {count, filterMap} from "../../utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
-import {Timer, timers} from "."
 import {nextKey} from "./utils"
 
 /**
@@ -45,9 +45,7 @@ const channelTimersExceeded = (channel: TextChannel | DMChannel | NewsChannel): 
  * @param message - Message object
  * @returns Promise<void>
  */
-export const start = async (message: Message): Promise<void> => {
-    const {timers} = await import(".")
-
+export const start = (message: Message): void => {
     if (maxTimers > -1 && Object.keys(timers).length >= maxTimers) {
         // Max number of timers reached
         message.channel.send(
