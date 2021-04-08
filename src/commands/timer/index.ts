@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {Message, User} from "discord.js"
@@ -14,9 +15,8 @@ import {verbosity} from "../../getConfig"
 /* eslint-disable no-use-before-define */
 
 /**
- * Timers get pushed here
- * This keeps track of running timers
- * To kill a timer, the kill() function should be called
+ * Timers get pushed here This keeps track of running timers To kill a timer, the kill() function
+ * should be called
  */
 export const timers: {[key: number]: Timer} = {}
 
@@ -24,8 +24,7 @@ export const timers: {[key: number]: Timer} = {}
 
 const enum Values {
     /**
-     * How often the timer should update in seconds
-     * 5 seconds is fine because of server latency
+     * How often the timer should update in seconds 5 seconds is fine because of server latency
      * Anything smaller might cause issues
      */
     Interval = 5,
@@ -73,8 +72,7 @@ export class Timer {
     private readonly _trueStartTime = Date.now()
 
     /**
-     * Keep track of this message, as we're going to consantly edit it and
-     * change it's time
+     * Keep track of this message, as we're going to consantly edit it and change it's time
      */
     private readonly _msg: Promise<Message>
 
@@ -159,7 +157,8 @@ export class Timer {
 
     /**
      * Changes the current time of this timer by changing the start time
-     * @param amt - amount to wind FORWARD by
+     *
+     * @param amt - Amount to wind FORWARD by
      */
     public async changeTime(amt: number): Promise<void> {
         this._startTime -= amt * 1000 // Wind the start time the opposite direction
@@ -167,8 +166,7 @@ export class Timer {
         const now = Date.now()
 
         /**
-         * If removed time causes negative time, make it 0
-         * If added time causes more than 5:15, make it 5:15
+         * If removed time causes negative time, make it 0 If added time causes more than 5:15, make it 5:15
          */
         if (this._startTime > now) {
             this._startTime = now
@@ -235,9 +233,10 @@ export class Timer {
     }
 
     /**
-     * Kills this timer and removes it from the timer list
-     * End of life for this timer. Once this is called, the timer is gone.
-     * @param sendMsg - if "killed timer" message should be sent to channel
+     * Kills this timer and removes it from the timer list End of life for this timer. Once this is
+     * called, the timer is gone.
+     *
+     * @param sendMsg - If "killed timer" message should be sent to channel
      */
     public async kill(sendMsg = true): Promise<void> {
         if (this._intervalId !== null) {
@@ -266,7 +265,8 @@ export class Timer {
 
     /**
      * Control resume or pause state of timer
-     * @param playOrPause - if the timer should resume or pause
+     *
+     * @param playOrPause - If the timer should resume or pause
      */
     public playPause(playOrPause?: "resume" | "pause"): void {
         this.isPaused = playOrPause === undefined ? !this.isPaused : playOrPause === "pause"
@@ -319,8 +319,8 @@ export class Timer {
     }
 
     /**
-     * Sends a message to the channel to notify everyone that an important time
-     * has passed, such as protected times
+     * Sends a message to the channel to notify everyone that an important time has passed, such as
+     * protected times
      */
     private _notifySpeechStatus(): void {
         // Tagged user to notify

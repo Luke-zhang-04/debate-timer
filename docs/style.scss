@@ -94,8 +94,7 @@ select {
   margin-bottom: 10px;
   height: 45px;
 
-  transition: border-bottom 0.25s $transition-timing,
-    background-color 0.25s $transition-timing;
+  transition: border-bottom 0.25s $transition-timing, background-color 0.25s $transition-timing;
 
   &:focus {
     border-bottom: 0.125rem solid $light;

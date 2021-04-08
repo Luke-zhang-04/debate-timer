@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {GoogleSpreadsheet} from "google-spreadsheet"
@@ -33,8 +34,9 @@ const docDidLoad = (async (): Promise<void> => {
 
 /**
  * Gets a random motion from the hellomotions motions spreadsheet
+ *
+ * @returns Promise with a motion
  * @see {@link https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678}
- * @returns promise with a motion
  */
 export const getRandomMotion = async (): Promise<string> => {
     await docDidLoad // Make sure doc was properly loaded
@@ -69,10 +71,10 @@ export const getRandomMotion = async (): Promise<string> => {
 }
 
 /**
- * Groups the motions into the largest size possible for the Discord API
- * message size
- * @param motions - array of motions
- * @return chunked motions
+ * Groups the motions into the largest size possible for the Discord API message size
+ *
+ * @param motions - Array of motions
+ * @returns Chunked motions
  */
 const motionsToChumks = (motions: string[]): string[] => {
     const splitMotions = [":speaking_head: **Got random motions**:"]
@@ -98,7 +100,8 @@ const motionsToChumks = (motions: string[]): string[] => {
 
 /**
  * Gets multiple random motions as defined in the message content
- * @param message - message object so we can get it's contents and send messages back
+ *
+ * @param message - Message object so we can get it's contents and send messages back
  * @returns Promise<void>
  */
 export const sendRandomMotions = async (message: Message): Promise<void> => {

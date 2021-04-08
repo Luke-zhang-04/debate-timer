@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {Message, User} from "discord.js"
@@ -41,8 +42,9 @@ export const getTimers = (user?: User): string => {
 
 /**
  * Lists timers
+ *
  * @param message - Discord message
- * @returns void - sends message in function
+ * @returns Void - sends message in function
  */
 export const cmd = (message: Message): void => {
     const param = message.content.split(" ")[1]

@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {adminRoleName, verbosity} from "../../getConfig"
@@ -13,9 +14,10 @@ import {timers} from "."
 
 /**
  * Pauses a timer with id
- * @param param0 - message object with message info
- * @param id - timer id - could be undefined, but shouldn't be
- * @returns void
+ *
+ * @param param0 - Message object with message info
+ * @param id - Timer id - could be undefined, but shouldn't be
+ * @returns Void
  */
 export const playPause = (
     message: Message,

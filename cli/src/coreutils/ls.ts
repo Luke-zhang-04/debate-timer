@@ -1,10 +1,11 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
- * @file lets you send messages on the bots behalf
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @file lets You send messages on the bots behalf
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import Discord from "discord.js"
@@ -14,8 +15,9 @@ type Channel = Discord.Guild | Discord.TextChannel | Discord.CategoryChannel
 
 /**
  * List all servers, categories, or channels within the current context of the bot
- * @param client - client to send to
- * @param head - the current server/category/channel
+ *
+ * @param client - Client to send to
+ * @param head - The current server/category/channel
  */
 export const ls = (client: Discord.Client, head?: Channel, guild?: Discord.Guild): string => {
     let items = `${colors.biBlue}.${colors.reset}/  ${colors.biBlue}..${colors.reset}/  ` // ./ and ../

@@ -1,10 +1,11 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
- * @file lets you send messages on the bots behalf
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @file lets You send messages on the bots behalf
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {Channels} from ".."
@@ -12,9 +13,10 @@ import Discord from "discord.js"
 
 /**
  * Change "directory" as in a server, category, or channel
- * @param client - discord client
- * @param channels - array of current channels
- * @param newDir - new Dir that was passed in
+ *
+ * @param client - Discord client
+ * @param channels - Array of current channels
+ * @param newDir - New Dir that was passed in
  */
 export const cd = (client: Discord.Client, channels: Channels, newDir: string): void => {
     const dirs = newDir.split("/")

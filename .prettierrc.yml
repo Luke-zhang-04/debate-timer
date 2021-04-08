@@ -1,3 +1,4 @@
+# Normal Options
 arrowParens: "always"
 bracketSpacing: false
 embeddedLanguageFormatting: "auto"
@@ -12,6 +13,16 @@ singleQuote: false
 tabWidth: 4
 trailingComma: "all"
 useTabs: false
+
+# JSDoc plugin
+jsdocParser: true
+jsdocSpaces: 1
+jsdocDescriptionWithDot: false
+jsdocDescriptionTag: false
+jsdocVerticalAlignment: false
+jsdocKeepUnParseAbleExampleIndent: false
+jsdocSingleLineComment: false
+tsdoc: true
 
 overrides:
   - files:

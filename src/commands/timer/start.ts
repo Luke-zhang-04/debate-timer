@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {DMChannel, Message, NewsChannel, TextChannel, User} from "discord.js"
@@ -15,8 +16,9 @@ import {nextKey} from "./utils"
 
 /**
  * Checks if one user has exceeded the number of timers that can be run
- * @param user - user object
- * @returns {boolean} if user has exceeded the limit
+ *
+ * @param user - User object
+ * @returns {boolean} If user has exceeded the limit
  */
 const userTimersExceeded = (user: User): boolean =>
     count(Object.values(timers), (timer) => timer.creator.id === user.id, maxTimersPerUser + 1) >=
@@ -26,8 +28,9 @@ const maxTimersPerChannel = 5
 
 /**
  * Checks if one channel has exceeded the number of timers that can be run
- * @param user - user object
- * @returns {boolean} if user has exceeded the limit
+ *
+ * @param user - User object
+ * @returns {boolean} If user has exceeded the limit
  */
 const channelTimersExceeded = (channel: TextChannel | DMChannel | NewsChannel): boolean =>
     count(
@@ -38,7 +41,8 @@ const channelTimersExceeded = (channel: TextChannel | DMChannel | NewsChannel): 
 
 /**
  * Start a new timer in background
- * @param message - message object
+ *
+ * @param message - Message object
  * @returns Promise<void>
  */
 export const start = async (message: Message): Promise<void> => {

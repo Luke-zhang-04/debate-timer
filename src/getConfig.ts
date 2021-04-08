@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {emojify, niceTry} from "./utils"
@@ -125,8 +126,9 @@ Object.freeze(defaultConfig)
 
 /**
  * Typegaurd for unknown object to make sure it is a good configuration file
- * @param obj - object to check
- * @returns if obj is type inputconfig
+ *
+ * @param obj - Object to check
+ * @returns If obj is type inputconfig
  */
 const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
     const isValidPrefix =

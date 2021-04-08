@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {adminRoleName, verbosity} from "../../getConfig"
@@ -32,10 +33,11 @@ const makeChange = (
 
 /**
  * Changes the time of a timer with id
- * @param param0 - message object with message info
- * @param id - id of timer - could be undefined, but shouldn't be
- * @param amt - the amount to change the timer - could be undefined, but shouldn't be
- * @returns void
+ *
+ * @param param0 - Message object with message info
+ * @param id - Id of timer - could be undefined, but shouldn't be
+ * @param amt - The amount to change the timer - could be undefined, but shouldn't be
+ * @returns Void
  */
 export const changeTime = (
     message: Message,
@@ -110,8 +112,9 @@ export const changeTime = (
 
 /**
  * Change the time of a timer
- * @param message - message object
- * @param mode - positive to decrease time, negative to increase
+ *
+ * @param message - Message object
+ * @param mode - Positive to decrease time, negative to increase
  */
 export default (message: Message, mode: -1 | 1): void => {
     const content = message.content.split(" ")

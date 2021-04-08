@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import childProcess from "child_process"
@@ -11,7 +12,8 @@ import {hostname} from "os"
 
 /**
  * Run a shell command
- * @param cmd - command to run
+ *
+ * @param cmd - Command to run
  */
 const runCommand = (cmd: string): Promise<string> =>
     new Promise((resolve, reject) => {

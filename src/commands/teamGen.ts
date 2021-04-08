@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {Message} from "discord.js"
@@ -28,9 +29,10 @@ const basePositions: Record<Formats, string[]> = {
 
 /**
  * Shuffles an array
- * @param array - array to shuffle
- * @param cycles - number of shuffle cycles to go through
- * @returns void; shuffles in-place
+ *
+ * @param array - Array to shuffle
+ * @param cycles - Number of shuffle cycles to go through
+ * @returns Void; shuffles in-place
  */
 const shuffle = <T>(array: T[], cycles = 1): void => {
     for (let _ = 0; _ < cycles; _++) {
@@ -46,8 +48,9 @@ const shuffle = <T>(array: T[], cycles = 1): void => {
 
 /**
  * Splits an array into chunks
- * @param arr - array to split
- * @param chunkSize - size of array chunks
+ *
+ * @param arr - Array to split
+ * @param chunkSize - Size of array chunks
  */
 const arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
     const chunks: T[][] = []
@@ -61,8 +64,9 @@ const arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
 
 /**
  * Create random partners
- * @param message - message object
- * @returns [debaters, format]
+ *
+ * @param message - Message object
+ * @returns Debaters, format
  */
 const createRandomPartners = (
     message: Message,
@@ -111,7 +115,8 @@ const createRandomPartners = (
 
 /**
  * Sends random teams to channel
- * @param message - message object
+ *
+ * @param message - Message object
  */
 export const makeTeams = (message: Message): void => {
     // Get the debate format
@@ -135,7 +140,8 @@ export const makeTeams = (message: Message): void => {
 
 /**
  * Send random partners to channel
- * @param message - message object
+ *
+ * @param message - Message object
  */
 export const makePartners = (message: Message): void => {
     const {reference} = message
@@ -161,7 +167,8 @@ export const makePartners = (message: Message): void => {
 
 /**
  * Sends random partners and teams to channel
- * @param message - message object
+ *
+ * @param message - Message object
  */
 export const makeDraw = (message: Message): void => {
     const {reference} = message
@@ -187,7 +194,8 @@ export const makeDraw = (message: Message): void => {
 
 /**
  * Sends a draw + a motion
- * @param message - message object
+ *
+ * @param message - Message object
  */
 export const makeRound = async (message: Message): Promise<void> => {
     const {reference} = message

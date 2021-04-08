@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import DeStagnate from "destagnate"
@@ -19,24 +20,21 @@ const parseNumber = (val: unknown): number | undefined => {
 }
 
 /**
- * Turns seconds into human readable time
- * E.g `formatTime(90)` -> `"1:30"`
- * Stolen from Discord bot source code
- * @param secs - seconds to format
- * @returns the formatted time
+ * Turns seconds into human readable time E.g `formatTime(90)` -> `"1:30"` Stolen from Discord bot
+ * source code
+ *
+ * @param secs - Seconds to format
+ * @returns The formatted time
  */
 const formatTime = (secs: number): string => {
     const remainingSeconds = secs % Time.Minute // Get the remainder seconds
     const minutes = (secs - remainingSeconds) / Time.Minute // Get the number of whole minutes
 
     /**
-     * Add 0 to beginning if remainder seconds is less than 10
-     * E.g `"1:3"` -> `"1:03"`
+     * Add 0 to beginning if remainder seconds is less than 10 E.g `"1:3"` -> `"1:03"`
      */
     const remainingSecondsStr =
-        remainingSeconds < 10
-            ? `0${remainingSeconds}`
-            : remainingSeconds.toString()
+        remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds.toString()
 
     return minutes > 0 // Return the seconds if no minutes have passed
         ? `${minutes}:${remainingSecondsStr}`
@@ -75,34 +73,27 @@ class Timer extends DeStagnate.Component<{}, State> {
         }
     }
 
-    public shouldComponentUpdate = (): boolean =>
-        this.stateDidChange(["time", "paused"])
+    public shouldComponentUpdate = (): boolean => this.stateDidChange(["time", "paused"])
 
     public spacebar = (): void => {
         if (this.state.paused) {
             if (this._pausedTime !== undefined) {
                 this._startTime =
-                    (this._startTime ??= Date.now()) +
-                    (Date.now() - this._pausedTime)
+                    (this._startTime ??= Date.now()) + (Date.now() - this._pausedTime)
             }
 
             this.startTimer()
 
             if (this.state.time === 0) {
                 const newTime = parseNumber(this._timeForm.current?.value)
-                const newProtected = parseNumber(
-                    this._protectedForm.current?.value,
-                )
+                const newProtected = parseNumber(this._protectedForm.current?.value)
 
                 if (
                     newTime !== this.state.totalTime ||
                     newProtected !== this.state.protectedTime
                 ) {
                     localStorage.setItem("time", newTime?.toString() ?? "5")
-                    localStorage.setItem(
-                        "protectedTime",
-                        newProtected?.toString() ?? "30",
-                    )
+                    localStorage.setItem("protectedTime", newProtected?.toString() ?? "30")
 
                     this.setState({
                         protectedTime: newProtected,
@@ -122,16 +113,12 @@ class Timer extends DeStagnate.Component<{}, State> {
 
     public startTimer = (): void => {
         this.setState({
-            time: Math.round(
-                (Date.now() - (this._startTime ??= Date.now())) / 1000,
-            ),
+            time: Math.round((Date.now() - (this._startTime ??= Date.now())) / 1000),
         })
 
         const id = setInterval(() => {
             this.setState({
-                time: Math.round(
-                    (Date.now() - (this._startTime ??= Date.now())) / 1000,
-                ),
+                time: Math.round((Date.now() - (this._startTime ??= Date.now())) / 1000),
             })
         }, 1000)
 
@@ -147,10 +134,7 @@ class Timer extends DeStagnate.Component<{}, State> {
                 this.state.time < totalTime)
         ) {
             return <p class="status">Protected Time</p>
-        } else if (
-            this.state.time >= totalTime &&
-            this.state.time <= totalTime + 15
-        ) {
+        } else if (this.state.time >= totalTime && this.state.time <= totalTime + 15) {
             return <p class="status">Grace Time</p>
         }
 
@@ -177,9 +161,7 @@ class Timer extends DeStagnate.Component<{}, State> {
 
     public render = (): JSX.Element => {
         const corner = document.getElementById("github-corner")
-        const barContainer = document.querySelector<HTMLElement>(
-            ".progress-bar-container",
-        )
+        const barContainer = document.querySelector<HTMLElement>(".progress-bar-container")
         const bar = barContainer?.querySelector<HTMLElement>(".progress-bar")
 
         if (this.state.time === 0 && this.state.paused) {
@@ -223,9 +205,7 @@ class Timer extends DeStagnate.Component<{}, State> {
                             value={this.state.protectedTime}
                             ref={this._protectedForm}
                         />
-                        <span>
-                            Protected time at the beginning and end in seconds
-                        </span>
+                        <span>Protected time at the beginning and end in seconds</span>
                         <button type="submit">Start</button>
                     </form>
                 </div>
@@ -240,9 +220,7 @@ class Timer extends DeStagnate.Component<{}, State> {
         }
 
         if (bar) {
-            bar.style.width = `${
-                (this.state.time / (this.state.totalTime * 60)) * 100
-            }%`
+            bar.style.width = `${(this.state.time / (this.state.totalTime * 60)) * 100}%`
             bar.style.display = "block"
         }
 

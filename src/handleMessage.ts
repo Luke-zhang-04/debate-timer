@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import {Client, Message} from "discord.js"
@@ -25,9 +26,10 @@ let lastCommand = 0
 
 /**
  * Handle a command (starts with !)
- * @param message - message object
- * @param client - client object
- * @returns unknown
+ *
+ * @param message - Message object
+ * @param client - Client object
+ * @returns Unknown
  */
 const handleCmd = async (message: Message, client: Client): Promise<void> => {
     // Trip duplicate spaces to just one space
@@ -94,8 +96,9 @@ const handleCmd = async (message: Message, client: Client): Promise<void> => {
 /* eslint-disable */
 /**
  * Messages go through this
- * @param message - message object
- * @returns void
+ *
+ * @param message - Message object
+ * @returns Void
  */
 export const handleMessage = async (message: Message, client: Client): Promise<void> => {
     if (!message.author.bot) {

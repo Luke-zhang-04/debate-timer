@@ -1,10 +1,11 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
- * @file lets you send messages on the bots behalf
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @file lets You send messages on the bots behalf
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import * as coreutils from "./coreutils"

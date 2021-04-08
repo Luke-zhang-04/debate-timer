@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 /* eslint-disable max-lines */
@@ -472,8 +473,9 @@ const defaultMsg = makeMessageEmbed()
 
 /**
  * Help command invoked with !help
+ *
  * @param message - Discord message
- * @returns string
+ * @returns String
  */
 export default (message: Message): void => {
     let arg = message.content.split(" ")[1]

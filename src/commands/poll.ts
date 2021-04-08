@@ -1,9 +1,10 @@
 /**
  * Discord Debate Timer
- * @copyright 2020 - 2021 Luke Zhang
- * @author Luke Zhang luke-zhang-04.github.io/
- * @version 1.7.0
+ *
  * @license BSD-3-Clause
+ * @version 1.7.0
+ * @author Luke Zhang luke-zhang-04.github.io/
+ * @copyright 2020 - 2021 Luke Zhang
  */
 
 import type {Message, User} from "discord.js"
@@ -69,16 +70,16 @@ class Poll {
 }
 
 /**
- * Object with polls for each user
- * Each key is the user id, and the values are the poll class
+ * Object with polls for each user Each key is the user id, and the values are the poll class
  */
 export const polls: {[key: string]: Poll} = {}
 
 /**
  * Makes a poll
+ *
  * @param message - Discord message
  * @param client - Discord client
- * @returns void - sends the message in the function
+ * @returns Void - sends the message in the function
  */
 export const makePoll = async (message: Message): Promise<void> => {
     const newMessage = await message.channel.send(`**Poll**
@@ -97,8 +98,9 @@ ${Object.entries(emojis)
 
 /**
  * Gets a poll's details
+ *
  * @param channel - Discord channel
- * @returns void - sends the message in the function
+ * @returns Void - sends the message in the function
  */
 export const getPoll = (message: Message): void => {
     const userPoll = polls[message.author.id]
