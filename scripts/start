@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ "$1" = "--dev" ]||[ "$1" = "-d" ]; then
+if [ "$1" = "--dev" ] || [ "$1" = "-d" ]; then
     echo "Compiling for development"
     ./node_modules/.bin/tsc
 
