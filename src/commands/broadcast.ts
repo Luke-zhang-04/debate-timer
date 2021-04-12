@@ -9,17 +9,17 @@
 
 import {Message, TextChannel} from "discord.js"
 import {hasAdminPerms, inlineTry} from "../utils"
-import {adminRoleName} from "../getConfig" // Code will get messier if I try to split it
+import {adminRoleName} from "../getConfig"
+
+// Code will get messier if I try to split it
+/* eslint-disable max-statements */
 /**
  * Broadcasts referenced message to all channels with regex
  *
  * @param message - Message object
  * @returns {Promise<void>}
  */
-
-/* eslint-disable max-statements */ export const broadcast = async (
-    message: Message,
-): Promise<void> => {
+export const broadcast = async (message: Message): Promise<void> => {
     if (message.reference === null || message.reference.messageID === null) {
         await message.channel.send(
             "No message given. Make sure you reply to the message you want to broadcast.",
