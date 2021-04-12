@@ -252,7 +252,7 @@ export class Timer {
 
         ;(await this._msg).edit(
             `:white_check_mark: Speech Finished at \`${formatTime(
-                DatePlus.msToSeconds(Date.now() - this._trueStartTime).seconds,
+                Math.round((Date.now() - this._startTime) / 1000),
                 true,
             )}\`!`,
         )
