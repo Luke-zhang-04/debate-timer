@@ -118,16 +118,24 @@ export const nextKey = (keys: number[]): number => {
  */
 export const muteUser = async (guild: Guild | null, user: User): Promise<void> => {
     const member = guild?.member(user) // Get user
+    const muteTime = 2500
 
-    if (member?.voice.connection) {
-        member?.voice.setMute(true, "Your speech is over") // Mute them
+    if (
+        guild?.me?.permissions.has(["MUTE_MEMBERS"]) &&
+        member?.voice &&
+        !member.voice.selfMute &&
+        !member.voice.selfDeaf &&
+        !member.voice.serverMute &&
+        !member.voice.serverDeaf
+    ) {
+        await member?.voice.setMute(true, "Your speech is over") // Mute them
 
         await new Promise((resolve) => {
-            // Wait one second
-            setTimeout(() => resolve(undefined), 2500)
+            // Wait 2.5 seconds
+            setTimeout(() => resolve(undefined), muteTime)
         })
 
-        member?.voice.setMute(false)
+        await member?.voice.setMute(false)
     }
 }
 

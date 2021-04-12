@@ -9,12 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   feat(commands): add changelog command
--   feat(commands): add shuffle command
+-   feat(commands/changelog): add changelog command
+-   feat(commands/shuffle): add shuffle command
 
 ### Changed
 
 -   perf: use `Math.random()` because it's probably faster and security doesn't matter in this case
+
+### Fixed
+
+-   fix(commands/timer): auto muting users actually works now
 
 ## [1.8.0] - 2021-04-08
 

@@ -484,7 +484,7 @@ E.g ${prefix}help getMotion`,
         {
             name: ":timer: Timer",
             value: `- start [@mention?] [timeControl?]
-- kill [id] [shouldMute?]
+- kill [id]
 - resume [id]
 - pause [id]
 - list [global?]

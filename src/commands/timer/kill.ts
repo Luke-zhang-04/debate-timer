@@ -21,8 +21,7 @@ import {timers} from "."
 export const kill = (message: Message): void => {
     const {author, member, channel} = message
     let id = message.content.split(" ")[1]
-    const shouldMute =
-        message.content.split(" ")[2] === undefined || message.content.split(" ")[2] === "mute"
+    const shouldMute = message.content.split(" ")[2] === "mute"
     let numericId = Number(id)
 
     if (id === undefined) {
