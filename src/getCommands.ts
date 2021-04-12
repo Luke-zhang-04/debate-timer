@@ -9,13 +9,13 @@
 
 import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
+import {randint, shuffleReturn as shuffle} from "./utils"
 import broadcast from "./commands/broadcast"
 import changeTime from "./commands/timer/changeTime"
 import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
-import {randint} from "./utils"
 import systemInfo from "./commands/systemInfo"
 import teamGen from "./commands/teamGen"
 
@@ -36,7 +36,8 @@ const microCommands: Commands = {
     ping: (message, client) =>
         message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     systemInfo: async (message) => message.channel.send(await systemInfo()),
-
+    shuffle: (message) =>
+        message.channel.send(shuffle(message.content.split(" ").slice(1), 3).join(" ")),
 }
 
 /**

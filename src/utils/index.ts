@@ -230,6 +230,29 @@ export const shuffle = <T>(array: T[], cycles = 1): void => {
 }
 
 /**
+ * Shuffles an array
+ *
+ * @param array - Array to shuffle
+ * @param cycles - Number of shuffle cycles to go through
+ * @returns Void; shuffles in-place
+ */
+export const shuffleReturn = <T>(array: T[], cycles = 1): T[] => {
+    const arrayCopy = [...array]
+
+    for (let _ = 0; _ < cycles; _++) {
+        for (let index = arrayCopy.length - 1; index > 0; index--) {
+            const randonIndex = randint(0, index + 1)
+            const temp = arrayCopy[index]
+
+            arrayCopy[index] = arrayCopy[randonIndex]
+            arrayCopy[randonIndex] = temp
+        }
+    }
+
+    return arrayCopy
+}
+
+/**
  * Splits an array into chunks
  *
  * @param arr - Array to split
