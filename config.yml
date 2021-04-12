@@ -55,6 +55,9 @@ shouldUseFuzzyStringMatch: true
 # If the bot should reply to an unknown command. Default true.
 shouldRespondToUnknownCommand: true
 
+# If some jokes should be allowed
+allowJokes: true
+
 # Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default
 # You can also delegate by permission. Use "hasPermission:PERMISSIONNAME"

@@ -59,6 +59,7 @@ type FullConfig = {
     shouldDetectProfanity: boolean
     shouldUseFuzzyStringMatch: boolean
     shouldRespondToUnknownCommand: boolean
+    shouldAllowJokes: boolean
     adminRoleName: {
         type: "name" | "permission"
         value: string
@@ -102,6 +103,7 @@ const defaultConfig: FullConfig = {
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
     shouldRespondToUnknownCommand: true,
+    shouldAllowJokes: false,
     adminRoleName: {
         type: "permission",
         value: "ADMINISTRATOR",
@@ -174,6 +176,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         "shouldDetectProfanity",
         "shouldUseFuzzyStringMatch",
         "shouldRespondToUnknownCommand",
+        "shouldAllowJokes",
     ]
 
     for (const key of singleVerificationKeys) {
@@ -263,6 +266,7 @@ export const {
     shouldDetectProfanity,
     shouldUseFuzzyStringMatch,
     shouldRespondToUnknownCommand,
+    shouldAllowJokes,
     adminRoleName,
     emojis,
     whitelistedWords,

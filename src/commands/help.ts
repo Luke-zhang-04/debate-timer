@@ -10,7 +10,13 @@
 /* eslint-disable max-lines */
 // No, I don't like this file either
 
-import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
+import {
+    botIconUrl,
+    maxMotions,
+    prefix,
+    shouldAllowJokes,
+    shouldUseFuzzyStringMatch,
+} from "../getConfig"
 import {MessageEmbed} from "discord.js"
 import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
@@ -55,7 +61,7 @@ type Manual = {
 const manual: Manual = {
     bruh: {
         name: `\`${prefix}bruh\``,
-        value: "B R U H",
+        value: shouldAllowJokes ? "B R U H" : "This command is not enabled",
     },
 
     coinflip: {
@@ -65,12 +71,12 @@ const manual: Manual = {
 
     based: {
         name: `\`${prefix}based\``,
-        value: "No comment.",
+        value: shouldAllowJokes ? "No comment." : "This command is not enabled",
     },
 
     epic: {
         name: `\`${prefix}epic\``,
-        value: "Ok, this is epic.",
+        value: shouldAllowJokes ? "Ok, this is epic." : "This command is not enabled",
     },
 
     dice: {
@@ -481,8 +487,7 @@ E.g ${prefix}help getMotion`,
         },
         {
             name: ":computer: Misc",
-            value: `- based, bruh, epic
-- coinfilp, dice
+            value: `${shouldAllowJokes ? "- based, bruh, epic\n" : ""}- coinfilp, dice
 - broadcast [regex] [amt? = Infinity]
 - shuffle [item1] [item2] ...
 - changelog [version?]`,
@@ -551,7 +556,7 @@ export default (message: Message): void => {
         return
     }
 
-    if (correctedArg !== arg) {
+    if (correctedArg.toLowerCase() !== arg.toLowerCase()) {
         const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
         const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${
             shouldTypo ? "tpe" : "type"

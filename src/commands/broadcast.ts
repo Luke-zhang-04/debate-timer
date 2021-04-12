@@ -7,9 +7,9 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {TextChannel} from "discord.js"
+import {adminRoleName, shouldAllowJokes} from "../getConfig"
 import {hasAdminPerms, inlineTry} from "../utils"
-import {adminRoleName} from "../getConfig"
+import {TextChannel} from "discord.js"
 
 // Code will get messier if I try to split it
 /* eslint-disable max-statements */
@@ -35,7 +35,7 @@ export const broadcast = async (message: Message): Promise<void> => {
         const randVal = Math.random()
         let msg = `Sorry <@${author.id}>, but you're not authorized to use this command.`
 
-        if (randVal > 0.9) {
+        if (shouldAllowJokes && randVal > 0.9) {
             msg = `Sorry <@${author.id}>, but we have a strict no leftist policy here.`
         } else if (randVal > 0.7) {
             msg = `Sorry (not really) <@${author.id}>, but you're not authorized to use this command.`

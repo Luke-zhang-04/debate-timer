@@ -7,7 +7,7 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {adminRoleName, verbosity} from "../../getConfig"
+import {adminRoleName, shouldAllowJokes, verbosity} from "../../getConfig"
 import {deriveTimerId, derivedIdIsValid, isAuthorizedToModifyTimer} from "./utils"
 import {timers} from "."
 
@@ -45,12 +45,12 @@ export const kill = (message: Message): void => {
     if (verbosity === 2) {
         const num = Math.random()
 
-        if (num < 0.5) {
-            channel.send(`Looking for timer with id ${id}`)
-        } else if (num < 0.75) {
+        if (shouldAllowJokes && num > 0.75) {
+            channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+        } else if (shouldAllowJokes && num > 0.5) {
             channel.send(`Sending hitman for timer with id ${id}`)
         } else {
-            channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+            channel.send(`Looking for timer with id ${id}`)
         }
     }
 
