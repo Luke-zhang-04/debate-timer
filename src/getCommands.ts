@@ -2,17 +2,18 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
 import * as timer from "./commands/timer"
 import {Client, Message} from "discord.js"
+import {randint, shuffleReturn as shuffle} from "./utils"
 import broadcast from "./commands/broadcast"
 import changeTime from "./commands/timer/changeTime"
+import changelog from "./commands/changelog"
 import config from "./getConfig"
-import crypto from "crypto"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
 import poll from "./commands/poll"
@@ -32,10 +33,12 @@ const microCommands: Commands = {
     coinflip: (message) =>
         message.channel.send(Math.random() > 0.5 ? ":coin: Heads!" : ":coin: Tails!"),
     epic: (message) => message.channel.send("", {files: [config.botIconUrl]}),
-    dice: (message) => message.channel.send(`:game_die: ${crypto.randomInt(1, 7)}`),
+    dice: (message) => message.channel.send(`:game_die: ${randint(1, 7)}`),
     ping: (message, client) =>
         message.channel.send(`:ping_pong: Latency is ${Math.round(client.ws.ping)}ms`),
     systemInfo: async (message) => message.channel.send(await systemInfo()),
+    shuffle: (message) =>
+        message.channel.send(shuffle(message.content.split(" ").slice(1), 3).join(" ")),
 }
 
 /**
@@ -46,6 +49,7 @@ const timerCommands: Commands = {
     timer: timer.start,
     kill: timer.kill,
     stop: timer.kill,
+    end: timer.kill,
     list: timer.list,
     take: (message) => changeTime(message, 1),
     give: (message) => changeTime(message, -1),
@@ -89,6 +93,11 @@ const pollCommands: Commands = {
     getPoll: poll.getPoll,
 }
 
+const miscCommands: Commands = {
+    broadcast,
+    changelog,
+}
+
 /**
  * All commands
  *
@@ -99,8 +108,8 @@ const pollCommands: Commands = {
 export const commands: Readonly<Commands> = {
     help,
     man: help,
-    broadcast,
     ...microCommands,
+    ...miscCommands,
     ...timerCommands,
     ...teamGenCommands,
     ...motionCommands,

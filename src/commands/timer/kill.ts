@@ -2,14 +2,13 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {adminRoleName, verbosity} from "../../getConfig"
+import {adminRoleName, shouldAllowJokes, verbosity} from "../../getConfig"
 import {deriveTimerId, derivedIdIsValid, isAuthorizedToModifyTimer} from "./utils"
-import type {Message} from "discord.js"
 import {timers} from "."
 
 /**
@@ -22,8 +21,7 @@ import {timers} from "."
 export const kill = (message: Message): void => {
     const {author, member, channel} = message
     let id = message.content.split(" ")[1]
-    const shouldMute =
-        message.content.split(" ")[2] === undefined || message.content.split(" ")[2] === "mute"
+    const shouldMute = message.content.split(" ")[2] === "mute"
     let numericId = Number(id)
 
     if (id === undefined) {
@@ -47,12 +45,12 @@ export const kill = (message: Message): void => {
     if (verbosity === 2) {
         const num = Math.random()
 
-        if (num < 0.5) {
-            channel.send(`Looking for timer with id ${id}`)
-        } else if (num < 0.75) {
+        if (shouldAllowJokes && num > 0.75) {
+            channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+        } else if (shouldAllowJokes && num > 0.5) {
             channel.send(`Sending hitman for timer with id ${id}`)
         } else {
-            channel.send(`Destroying leftist "Timer ${id}" with FACTS and LOGIC`)
+            channel.send(`Looking for timer with id ${id}`)
         }
     }
 

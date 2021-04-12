@@ -2,12 +2,11 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {Message, User} from "discord.js"
 import {formatTime, muteUser} from "./utils"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {verbosity} from "../../getConfig"
@@ -116,6 +115,7 @@ export class Timer {
         private readonly _fakeId: number,
         public readonly message: Message,
         timeCtrl: number,
+        protectedTime?: number,
     ) {
         this._mentionedUser = message.mentions.users.first() // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
@@ -126,20 +126,26 @@ export class Timer {
         // Make sure timer isn't longer than 15 mins
         this.timeCtrl = isNaN(timeCtrl) ? DatePlus.minsToSecs(5) : timeCtrl
 
-        this.protectedTime = this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30
+        console.log(protectedTime)
+
+        this.protectedTime = protectedTime ?? (this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30)
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+        // Progress bar, with "EM DASH" character —
         const bar =
-            process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+            process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n`
+
+        const isProtectedTime =
+            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
 
         this._msg = message.channel.send(
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
                 this.time,
-            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
-                this.isPaused ? "\nPaused" : ""
-            }`,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nProtected: ${
+                isProtectedTime ? "yes" : "no"
+            }\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -253,7 +259,7 @@ export class Timer {
 
         ;(await this._msg).edit(
             `:white_check_mark: Speech Finished at \`${formatTime(
-                DatePlus.msToSeconds(Date.now() - this._trueStartTime).seconds,
+                Math.round((Date.now() - this._startTime) / 1000),
                 true,
             )}\`!`,
         )
@@ -282,6 +288,8 @@ export class Timer {
         // Subtract current time from start time and round to nearest second
         this._time = Math.round((Date.now() - this._startTime) / 1000)
 
+        this._notifySpeechStatus()
+
         // Mentioned user id
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
 
@@ -306,16 +314,17 @@ export class Timer {
                 ? ""
                 : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
+        const isProtectedTime =
+            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
+
         msg.edit(
             // Edit the message with required information
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
                 this.time,
-            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
-                this.isPaused ? "\nPaused" : ""
-            }`,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nProtected: ${
+                isProtectedTime ? "yes" : "no"
+            }\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
-
-        this._notifySpeechStatus()
     }
 
     /**

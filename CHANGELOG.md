@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0] - 2021-04-12
+
+### Added
+
+-   feat(commands/timer): show if timer is protected
+-   feat(commands/timer): add configurable protected time
+-   feat(commands/changelog): add changelog command
+-   feat(commands/shuffle): add shuffle command
+
+### Changed
+
+-   perf: use `Math.random()` because it's probably faster and security doesn't matter in this case
+
+### Fixed
+
+-   fix(commands/timer): make speech finish time accurate
+-   fix(commands/timer): auto muting users actually works now
+
 ## [1.8.0] - 2021-04-08
 
 ### Added
@@ -86,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   fix: fixed bug with DatePlus
 
-## [1.4.1] - 2021-02-17
+## [1.4.2] - 2021-02-17
 
 ### Changed
 
@@ -98,7 +116,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2021-01-15
 
-## Fixed
+### Fixed
 
 -   fix: false positive admin role
     -   Admin was returning true because `undefined !== null` was true

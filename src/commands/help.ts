@@ -2,18 +2,41 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
 /* eslint-disable max-lines */
+// No, I don't like this file either
 
-import {Message, MessageEmbed} from "discord.js"
-import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
+import {
+    botIconUrl,
+    maxMotions,
+    prefix,
+    shouldAllowJokes,
+    shouldUseFuzzyStringMatch,
+} from "../getConfig"
+import {MessageEmbed} from "discord.js"
 import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
 import fs from "fs"
+
+type Package = {
+    name?: string
+    version?: string
+    description?: string
+    main?: string
+    scripts: {[key: string]: string}
+    keywords?: string[]
+    author?: string | {name: string; url: string; email?: string}
+    license?: string
+    dependencies?: {[key: string]: string}
+    devDependencies?: {[key: string]: string}
+    engines?: {[key: string]: string}
+}
+
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
 const makeMessageEmbed = (): MessageEmbed | MockMessageEmbed =>
     (process.env.NODE_ENV === "test" ? new MockMessageEmbed() : new MessageEmbed())
@@ -38,7 +61,7 @@ type Manual = {
 const manual: Manual = {
     bruh: {
         name: `\`${prefix}bruh\``,
-        value: "B R U H",
+        value: shouldAllowJokes ? "B R U H" : "This command is not enabled",
     },
 
     coinflip: {
@@ -48,12 +71,12 @@ const manual: Manual = {
 
     based: {
         name: `\`${prefix}based\``,
-        value: "No comment.",
+        value: shouldAllowJokes ? "No comment." : "This command is not enabled",
     },
 
     epic: {
         name: `\`${prefix}epic\``,
-        value: "Ok, this is epic.",
+        value: shouldAllowJokes ? "Ok, this is epic." : "This command is not enabled",
     },
 
     dice: {
@@ -72,7 +95,7 @@ But you can do more with regex.
     },
 
     start: {
-        name: `\`${prefix}start [@mention?] [timeControl? = 5]\``,
+        name: `\`${prefix}start [@mention?] [timeControl? = 5] [protectedTime? = auto]\``,
         value: `Starts a timer with a default length of 5 minutes.
         If the speech is 5 minutes, there is 30 seconds protected time at the start and end of the speech. If the speech if 7 or 8 minutes, there is a minute of proteced time.
         All lengths include 15 seconds grace time.`,
@@ -80,7 +103,8 @@ But you can do more with regex.
             {
                 name: "Parameters",
                 value: `- \`[@mention?]\` - optional - @mention for current speaker
-- \`[timeControl?: = 5]\` - optional - speech length in minutes. Default value of 5.`,
+- \`[timeControl? = 5]\` - optional - speech length in minutes. Default value of 5.
+- \`[protectedTime? = auto] - optional - protected time in minutes. Automatically determined by default.\``,
             },
             {
                 name: "Notes",
@@ -90,7 +114,7 @@ But you can do more with regex.
             {
                 name: "Usage",
                 value: `\`\`\`${prefix}start @debate-timer
-${prefix}start 7
+${prefix}start 7 0.5
 ${prefix}start 3 @debate-timer\`\`\``,
             },
         ],
@@ -119,6 +143,11 @@ ${prefix}start 3 @debate-timer\`\`\``,
 
     stop: {
         name: `\`${prefix}stop [id]\``,
+        value: `Functionally equivalent to \`${prefix}kill\`.`,
+    },
+
+    end: {
+        name: `\`${prefix}end [id]\``,
         value: `Functionally equivalent to \`${prefix}kill\`.`,
     },
 
@@ -398,23 +427,46 @@ ${prefix}broadcast 3 .*\`\`\``,
             },
         ],
     },
-}
 
-type Package = {
-    name?: string
-    version?: string
-    description?: string
-    main?: string
-    scripts: {[key: string]: string}
-    keywords?: string[]
-    author?: string | {name: string; url: string; email?: string}
-    license?: string
-    dependencies?: {[key: string]: string}
-    devDependencies?: {[key: string]: string}
-    engines?: {[key: string]: string}
-}
+    shuffle: {
+        name: `\`${prefix}shuffle [item1?] [item2?] ...\``,
+        value: "Shuffles the items",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[item1?]\` - optional - first item to shuffle
+- \`[item2?]\` - optional - second item to shuffle
+- and so on`,
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}shuffle a b c d e f g\``,
+            },
+        ],
+    },
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
+    changelog: {
+        name: `\`${prefix}changelog [version?]\``,
+        value:
+            "Shows the changelog of this bot. <https://github.com/Luke-zhang-04/debate-timer/blob/master/CHANGELOG.md>",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[version?]\` - optional - which changelog version to show.
+> - If no input is provided, a help message is shown.
+> - If "latest" is provided, the latest version's changelog will be shown.
+> - If "versions"
+is provided, the changelog's versions will be shown.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}changelog latest
+${prefix}changelog versions
+${prefix}changelog ${version}\`\`\``,
+            },
+        ],
+    },
+}
 
 const defaultParams = {
     title: "Debate Timer Bot",
@@ -435,14 +487,15 @@ E.g ${prefix}help getMotion`,
         },
         {
             name: ":computer: Misc",
-            value: `- based, bruh, epic
-- coinfilp, dice
-- broadcast [regex] [amt? = Infinity]`,
+            value: `${shouldAllowJokes ? "- based, bruh, epic\n" : ""}- coinfilp, dice
+- broadcast [regex] [amt? = Infinity]
+- shuffle [item1] [item2] ...
+- changelog [version?]`,
         },
         {
             name: ":timer: Timer",
-            value: `- start [@mention?] [timeControl?]
-- kill [id] [shouldMute?]
+            value: `- start [@mention?] [timeControl?] [protectedTime?]
+- kill [id]
 - resume [id]
 - pause [id]
 - list [global?]
@@ -503,7 +556,7 @@ export default (message: Message): void => {
         return
     }
 
-    if (correctedArg !== arg) {
+    if (correctedArg.toLowerCase() !== arg.toLowerCase()) {
         const shouldTypo = process.env.NODE_ENV !== "test" && Math.random() > 0.75
         const content = `Automatically corrected your entry request from \`${arg}\` to \`${correctedArg}\`. Learn to ${
             shouldTypo ? "tpe" : "type"

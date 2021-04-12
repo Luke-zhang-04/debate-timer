@@ -2,11 +2,11 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
-import type {Guild, GuildMember, Message, User} from "discord.js"
+
 import type {Timer} from "."
 import {adminRoleName} from "../../getConfig"
 import {getTimers} from "./list"
@@ -118,16 +118,24 @@ export const nextKey = (keys: number[]): number => {
  */
 export const muteUser = async (guild: Guild | null, user: User): Promise<void> => {
     const member = guild?.member(user) // Get user
+    const muteTime = 2500
 
-    if (member?.voice.connection) {
-        member?.voice.setMute(true, "Your speech is over") // Mute them
+    if (
+        guild?.me?.permissions.has(["MUTE_MEMBERS"]) &&
+        member?.voice &&
+        !member.voice.selfMute &&
+        !member.voice.selfDeaf &&
+        !member.voice.serverMute &&
+        !member.voice.serverDeaf
+    ) {
+        await member?.voice.setMute(true, "Your speech is over") // Mute them
 
         await new Promise((resolve) => {
-            // Wait one second
-            setTimeout(() => resolve(undefined), 2500)
+            // Wait 2.5 seconds
+            setTimeout(() => resolve(undefined), muteTime)
         })
 
-        member?.voice.setMute(false)
+        await member?.voice.setMute(false)
     }
 }
 

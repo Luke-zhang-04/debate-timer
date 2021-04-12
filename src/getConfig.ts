@@ -2,7 +2,7 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -59,6 +59,7 @@ type FullConfig = {
     shouldDetectProfanity: boolean
     shouldUseFuzzyStringMatch: boolean
     shouldRespondToUnknownCommand: boolean
+    shouldAllowJokes: boolean
     adminRoleName: {
         type: "name" | "permission"
         value: string
@@ -102,6 +103,7 @@ const defaultConfig: FullConfig = {
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
     shouldRespondToUnknownCommand: true,
+    shouldAllowJokes: true,
     adminRoleName: {
         type: "permission",
         value: "ADMINISTRATOR",
@@ -174,6 +176,7 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
         "shouldDetectProfanity",
         "shouldUseFuzzyStringMatch",
         "shouldRespondToUnknownCommand",
+        "shouldAllowJokes",
     ]
 
     for (const key of singleVerificationKeys) {
@@ -237,11 +240,11 @@ if (!isValidConfig(inputConfig)) {
 const fullConfig: FullConfig = {
     ...defaultConfig,
     ...inputConfig,
-} // Need to test for emojis
+}
 
-/* eslint-disable no-control-regex */ for (const [usage, info] of Object.entries(
-    fullConfig.emojis,
-)) {
+// Need to test for emojis
+/* eslint-disable no-control-regex */
+for (const [usage, info] of Object.entries(fullConfig.emojis)) {
     if (!info.id && !/[^\u0000-\u00ff]/u.test(info.name)) {
         fullConfig.emojis[usage].name = emojify(`:${info.name}:`)
     }
@@ -263,6 +266,7 @@ export const {
     shouldDetectProfanity,
     shouldUseFuzzyStringMatch,
     shouldRespondToUnknownCommand,
+    shouldAllowJokes,
     adminRoleName,
     emojis,
     whitelistedWords,

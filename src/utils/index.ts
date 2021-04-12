@@ -2,7 +2,7 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -43,6 +43,13 @@ type PermissionString =
     | "MANAGE_WEBHOOKS"
     | "MANAGE_EMOJIS"
 
+/**
+ * Checks if member has admin permissions
+ *
+ * @param member - Guild member to check
+ * @param adminRoleName Name of admin role and the information
+ * @returns If `member` has admin perms
+ */
 export const hasAdminPerms = (
     member: GuildMember | null,
     adminRoleName: {
@@ -192,3 +199,71 @@ export const count = <T>(
  * @returns If item is an array, the first item in item, otherwise the item itself
  */
 export const getFirst = <T>(item: T | T[]): T => (item instanceof Array ? item[0] : item)
+
+/**
+ * Produces a random integer between `min` and `max`, non-inclusive
+ *
+ * @param min - Smallest number, inclusive
+ * @param max - Largest number, non-inclusive
+ * @returns Random integer between `min` and `max
+ */
+export const randint = (min: number, max: number): number =>
+    Math.floor(Math.random() * ((max = Math.floor(max)) - (min = Math.ceil(min))) + min)
+
+/**
+ * Shuffles an array
+ *
+ * @param array - Array to shuffle
+ * @param cycles - Number of shuffle cycles to go through
+ * @returns Void; shuffles in-place
+ */
+export const shuffle = <T>(array: T[], cycles = 1): void => {
+    for (let _ = 0; _ < cycles; _++) {
+        for (let index = array.length - 1; index > 0; index--) {
+            const randonIndex = randint(0, index + 1)
+            const temp = array[index]
+
+            array[index] = array[randonIndex]
+            array[randonIndex] = temp
+        }
+    }
+}
+
+/**
+ * Shuffles an array
+ *
+ * @param array - Array to shuffle
+ * @param cycles - Number of shuffle cycles to go through
+ * @returns Void; shuffles in-place
+ */
+export const shuffleReturn = <T>(array: T[], cycles = 1): T[] => {
+    const arrayCopy = [...array]
+
+    for (let _ = 0; _ < cycles; _++) {
+        for (let index = arrayCopy.length - 1; index > 0; index--) {
+            const randonIndex = randint(0, index + 1)
+            const temp = arrayCopy[index]
+
+            arrayCopy[index] = arrayCopy[randonIndex]
+            arrayCopy[randonIndex] = temp
+        }
+    }
+
+    return arrayCopy
+}
+
+/**
+ * Splits an array into chunks
+ *
+ * @param arr - Array to split
+ * @param chunkSize - Size of array chunks
+ */
+export const arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
+    const chunks: T[][] = []
+
+    for (let index = 0; index < arr.length; index += chunkSize) {
+        chunks.push(arr.slice(index, index + chunkSize))
+    }
+
+    return chunks
+}

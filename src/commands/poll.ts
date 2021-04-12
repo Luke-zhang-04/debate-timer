@@ -2,12 +2,11 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {Message, User} from "discord.js"
 import {emojis} from "../getConfig"
 
 type PollData = [id: string, username: string][]

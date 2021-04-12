@@ -2,24 +2,24 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.8.0
+ * @version 1.9.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {Message, TextChannel} from "discord.js"
+import {adminRoleName, shouldAllowJokes} from "../getConfig"
 import {hasAdminPerms, inlineTry} from "../utils"
-import {adminRoleName} from "../getConfig" // Code will get messier if I try to split it
+import {TextChannel} from "discord.js"
+
+// Code will get messier if I try to split it
+/* eslint-disable max-statements */
 /**
  * Broadcasts referenced message to all channels with regex
  *
  * @param message - Message object
  * @returns {Promise<void>}
  */
-
-/* eslint-disable max-statements */ export const broadcast = async (
-    message: Message,
-): Promise<void> => {
+export const broadcast = async (message: Message): Promise<void> => {
     if (message.reference === null || message.reference.messageID === null) {
         await message.channel.send(
             "No message given. Make sure you reply to the message you want to broadcast.",
@@ -35,7 +35,7 @@ import {adminRoleName} from "../getConfig" // Code will get messier if I try to 
         const randVal = Math.random()
         let msg = `Sorry <@${author.id}>, but you're not authorized to use this command.`
 
-        if (randVal > 0.9) {
+        if (shouldAllowJokes && randVal > 0.9) {
             msg = `Sorry <@${author.id}>, but we have a strict no leftist policy here.`
         } else if (randVal > 0.7) {
             msg = `Sorry (not really) <@${author.id}>, but you're not authorized to use this command.`
