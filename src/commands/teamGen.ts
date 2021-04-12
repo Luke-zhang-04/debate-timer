@@ -7,8 +7,8 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
+import {arrayToChunks, shuffle} from "../utils"
 import type {Message} from "discord.js"
-import crypto from "crypto"
 import {getRandomMotion} from "./randomMotion"
 import {inlineTryPromise} from "../utils"
 
@@ -26,41 +26,6 @@ const basePositions: Record<Formats, string[]> = {
     worlds: ["GOV", "OPP"],
 }
 /* eslint-enable @typescript-eslint/consistent-indexed-object-style */
-
-/**
- * Shuffles an array
- *
- * @param array - Array to shuffle
- * @param cycles - Number of shuffle cycles to go through
- * @returns Void; shuffles in-place
- */
-const shuffle = <T>(array: T[], cycles = 1): void => {
-    for (let _ = 0; _ < cycles; _++) {
-        for (let index = array.length - 1; index > 0; index--) {
-            const randonIndex = crypto.randomInt(0, index + 1)
-            const temp = array[index]
-
-            array[index] = array[randonIndex]
-            array[randonIndex] = temp
-        }
-    }
-}
-
-/**
- * Splits an array into chunks
- *
- * @param arr - Array to split
- * @param chunkSize - Size of array chunks
- */
-const arrayToChunks = <T>(arr: T[], chunkSize = 2): T[][] => {
-    const chunks: T[][] = []
-
-    for (let index = 0; index < arr.length; index += chunkSize) {
-        chunks.push(arr.slice(index, index + chunkSize))
-    }
-
-    return chunks
-}
 
 /**
  * Create random partners
