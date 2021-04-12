@@ -8,7 +8,6 @@
  */
 
 import {arrayToChunks, shuffle} from "../utils"
-import type {Message} from "discord.js"
 import {getRandomMotion} from "./randomMotion"
 import {inlineTryPromise} from "../utils"
 

@@ -7,7 +7,6 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {Message, User} from "discord.js"
 import {emojis} from "../getConfig"
 
 type PollData = [id: string, username: string][]

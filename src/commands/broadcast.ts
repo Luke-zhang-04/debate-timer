@@ -7,7 +7,7 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {Message, TextChannel} from "discord.js"
+import {TextChannel} from "discord.js"
 import {hasAdminPerms, inlineTry} from "../utils"
 import {adminRoleName} from "../getConfig"
 

@@ -8,7 +8,6 @@
  */
 
 import {GoogleSpreadsheet} from "google-spreadsheet"
-import type {Message} from "discord.js"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
 import {randint} from "../utils"

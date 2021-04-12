@@ -7,7 +7,6 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {Message, User} from "discord.js"
 import {formatTime, muteUser} from "./utils"
 import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {verbosity} from "../../getConfig"

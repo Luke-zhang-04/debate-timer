@@ -13,3 +13,14 @@ declare namespace NodeJS {
         APIKEY: string // Google sheets API key
     }
 }
+
+type Client = import("discord.js").Client
+type DMChannel = import("discord.js").DMChannel
+type Guild = import("discord.js").Guild
+type GuildMember = import("discord.js").GuildMember
+type Message = import("discord.js").Message
+type NewsChannel = import("discord.js").NewsChannel
+type TextChannel = import("discord.js").TextChannel
+type User = import("discord.js").User
+
+type TextableChannel = TextChannel | DMChannel | NewsChannel

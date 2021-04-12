@@ -9,8 +9,8 @@
 
 /* eslint-disable max-lines */
 
-import {Message, MessageEmbed} from "discord.js"
 import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
+import {MessageEmbed} from "discord.js"
 import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
 import fs from "fs"

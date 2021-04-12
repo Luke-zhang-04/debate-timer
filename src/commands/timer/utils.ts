@@ -6,7 +6,7 @@
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
-import type {Guild, GuildMember, Message, User} from "discord.js"
+
 import type {Timer} from "."
 import {adminRoleName} from "../../getConfig"
 import {getTimers} from "./list"

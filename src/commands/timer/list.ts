@@ -7,7 +7,6 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {Message, User} from "discord.js"
 import {filter} from "../../utils"
 import {formatTime} from "./utils"
 import {timers} from "."

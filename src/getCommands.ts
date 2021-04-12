@@ -91,6 +91,10 @@ const pollCommands: Commands = {
     getPoll: poll.getPoll,
 }
 
+const miscCommands: Commands = {
+    broadcast,
+}
+
 /**
  * All commands
  *
@@ -101,8 +105,8 @@ const pollCommands: Commands = {
 export const commands: Readonly<Commands> = {
     help,
     man: help,
-    broadcast,
     ...microCommands,
+    ...miscCommands,
     ...timerCommands,
     ...teamGenCommands,
     ...motionCommands,

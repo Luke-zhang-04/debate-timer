@@ -9,7 +9,6 @@
 
 import {adminRoleName, verbosity} from "../../getConfig"
 import {deriveTimerId, derivedIdIsValid, isAuthorizedToModifyTimer} from "./utils"
-import type {Message} from "discord.js"
 import {timers} from "."
 
 /**

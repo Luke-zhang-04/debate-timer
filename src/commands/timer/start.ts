@@ -7,7 +7,6 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import type {DMChannel, Message, NewsChannel, TextChannel, User} from "discord.js"
 import {Timer, timers} from "."
 import {count, filterMap} from "../../utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
@@ -32,7 +31,7 @@ const maxTimersPerChannel = 5
  * @param user - User object
  * @returns {boolean} If user has exceeded the limit
  */
-const channelTimersExceeded = (channel: TextChannel | DMChannel | NewsChannel): boolean =>
+const channelTimersExceeded = (channel: TextableChannel): boolean =>
     count(
         Object.values(timers),
         (timer) => timer.message.channel.id === channel.id,

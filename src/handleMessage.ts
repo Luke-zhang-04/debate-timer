@@ -7,7 +7,6 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {Client, Message} from "discord.js"
 import config, {prefix} from "./getConfig"
 import Filter from "bad-words"
 import commands from "./getCommands"
