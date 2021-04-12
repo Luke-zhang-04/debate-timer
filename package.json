@@ -11,8 +11,7 @@
     "build": "./scripts/compile",
     "start": "./scripts/start --dev",
     "lint": "eslint_d src/\"{*,**/*}\".\"{ts,tsx}\" --max-warnings=0",
-    "lint:fix": "./lint.mjs --fix",
-    "lint:watch": "./lint.mjs --watch"
+    "lint:fix": "yarn lint --fix"
   },
   "keywords": [],
   "author": {
