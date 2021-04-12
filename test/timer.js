@@ -46,7 +46,7 @@ export default () => {
         it("Should have ticked", (done) => {
             setTimeout(() => {
                 // eslint-disable-next-line
-                id = returnMsg.split(" ")[9]
+                id = returnMsg.split(/ |\n/gu)[15]
 
                 returnMsg = message.newMessage.content
 
@@ -203,7 +203,7 @@ export default () => {
 
         await handleMessage.default(myTimer)
 
-        const id = myTimer.newMessage.content.split(" ")[9]
+        const id = myTimer.newMessage.content.split(/ |\n/gu)[15]
 
         it("Should move timer forward by 20 seconds", async () => {
             const forwardMsg = new Message(`!forward ${id} 20`, {
