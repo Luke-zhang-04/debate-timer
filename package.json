@@ -22,7 +22,9 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "@luke-zhang-04/dateplus": "^3.0.1",
+    "@types/semver": "^7.3.4",
     "bad-words": "^3.0.4",
+    "changelog-parser": "^2.8.0",
     "didyoumean": "^1.2.1",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
@@ -30,6 +32,7 @@
     "node-emoji": "^1.10.0",
     "ora": "^5.3.0",
     "prompts": "^2.4.0",
+    "semver": "^7.3.5",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
@@ -38,6 +41,7 @@
     "@rollup/plugin-replace": "^2.4.1",
     "@rollup/plugin-typescript": "^8.2.0",
     "@types/bad-words": "^3.0.0",
+    "@types/changelog-parser": "^2.7.1",
     "@types/didyoumean": "^1.2.0",
     "@types/dotenv": "^8.2.0",
     "@types/google-spreadsheet": "^3.0.2",

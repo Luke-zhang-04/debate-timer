@@ -188,6 +188,26 @@ export default () => {
         testHelpers.includes(returnMsg, "Gets data from user's current poll")
     })
 
+    it("Should have a manual entry for shuffle", () => {
+        const message = new Message("!help shuffle")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Shuffles the items")
+    })
+
+    it("Should have a manual entry for changelog", () => {
+        const message = new Message("!help changelog")
+
+        handleMessage.default(message)
+
+        const returnMsg = message.newMessage.content
+
+        testHelpers.includes(returnMsg, "Shows the changelog")
+    })
+
     it("Should not have a manual entry for unknown command", () => {
         const message = new Message("!help notACommand")
 

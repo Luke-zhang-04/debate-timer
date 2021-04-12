@@ -8,12 +8,29 @@
  */
 
 /* eslint-disable max-lines */
+// No, I don't like this file either
 
 import {botIconUrl, maxMotions, prefix, shouldUseFuzzyStringMatch} from "../getConfig"
 import {MessageEmbed} from "discord.js"
 import MockMessageEmbed from "../testUtils/mockMessageEmbed"
 import didyoumean from "didyoumean"
 import fs from "fs"
+
+type Package = {
+    name?: string
+    version?: string
+    description?: string
+    main?: string
+    scripts: {[key: string]: string}
+    keywords?: string[]
+    author?: string | {name: string; url: string; email?: string}
+    license?: string
+    dependencies?: {[key: string]: string}
+    devDependencies?: {[key: string]: string}
+    engines?: {[key: string]: string}
+}
+
+const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
 
 const makeMessageEmbed = (): MessageEmbed | MockMessageEmbed =>
     (process.env.NODE_ENV === "test" ? new MockMessageEmbed() : new MessageEmbed())
@@ -398,23 +415,46 @@ ${prefix}broadcast 3 .*\`\`\``,
             },
         ],
     },
-}
 
-type Package = {
-    name?: string
-    version?: string
-    description?: string
-    main?: string
-    scripts: {[key: string]: string}
-    keywords?: string[]
-    author?: string | {name: string; url: string; email?: string}
-    license?: string
-    dependencies?: {[key: string]: string}
-    devDependencies?: {[key: string]: string}
-    engines?: {[key: string]: string}
-}
+    shuffle: {
+        name: `\`${prefix}shuffle [item1?] [item2?] ...\``,
+        value: "Shuffles the items",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[item1?]\` - optional - first item to shuffle
+- \`[item2?]\` - optional - second item to shuffle
+- and so on`,
+            },
+            {
+                name: "Usage",
+                value: `\`${prefix}shuffle a b c d e f g\``,
+            },
+        ],
+    },
 
-const {version} = JSON.parse(fs.readFileSync("package.json").toString()) as Package
+    changelog: {
+        name: `\`${prefix}changelog [version?]\``,
+        value:
+            "Shows the changelog of this bot. <https://github.com/Luke-zhang-04/debate-timer/blob/master/CHANGELOG.md>",
+        fields: [
+            {
+                name: "Parameters",
+                value: `- \`[version?]\` - optional - which changelog version to show.
+> - If no input is provided, a help message is shown.
+> - If "latest" is provided, the latest version's changelog will be shown.
+> - If "versions"
+is provided, the changelog's versions will be shown.`,
+            },
+            {
+                name: "Usage",
+                value: `\`\`\`${prefix}changelog latest
+${prefix}changelog versions
+${prefix}changelog ${version}\`\`\``,
+            },
+        ],
+    },
+}
 
 const defaultParams = {
     title: "Debate Timer Bot",
@@ -437,7 +477,9 @@ E.g ${prefix}help getMotion`,
             name: ":computer: Misc",
             value: `- based, bruh, epic
 - coinfilp, dice
-- broadcast [regex] [amt? = Infinity]`,
+- broadcast [regex] [amt? = Infinity]
+- shuffle [item1] [item2] ...
+- changelog [version?]`,
         },
         {
             name: ":timer: Timer",

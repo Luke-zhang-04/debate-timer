@@ -12,6 +12,7 @@ import {Client, Message} from "discord.js"
 import {randint, shuffleReturn as shuffle} from "./utils"
 import broadcast from "./commands/broadcast"
 import changeTime from "./commands/timer/changeTime"
+import changelog from "./commands/changelog"
 import config from "./getConfig"
 import help from "./commands/help"
 import motion from "./commands/randomMotion"
@@ -93,6 +94,7 @@ const pollCommands: Commands = {
 
 const miscCommands: Commands = {
     broadcast,
+    changelog,
 }
 
 /**

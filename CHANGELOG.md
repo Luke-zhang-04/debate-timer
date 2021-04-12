@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   feat: add shuffle command
+-   feat(commands): add changelog command
+-   feat(commands): add shuffle command
 
 ### Changed
 
@@ -96,7 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   fix: fixed bug with DatePlus
 
-## [1.4.1] - 2021-02-17
+## [1.4.2] - 2021-02-17
 
 ### Changed
 
@@ -108,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.4.1] - 2021-01-15
 
-## Fixed
+### Fixed
 
 -   fix: false positive admin role
     -   Admin was returning true because `undefined !== null` was true
