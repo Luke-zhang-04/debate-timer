@@ -115,6 +115,7 @@ export class Timer {
         private readonly _fakeId: number,
         public readonly message: Message,
         timeCtrl: number,
+        protectedTime?: number,
     ) {
         this._mentionedUser = message.mentions.users.first() // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
@@ -125,7 +126,9 @@ export class Timer {
         // Make sure timer isn't longer than 15 mins
         this.timeCtrl = isNaN(timeCtrl) ? DatePlus.minsToSecs(5) : timeCtrl
 
-        this.protectedTime = this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30
+        console.log(protectedTime)
+
+        this.protectedTime = protectedTime ?? (this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30)
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 

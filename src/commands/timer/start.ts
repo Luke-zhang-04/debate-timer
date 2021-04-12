@@ -23,7 +23,7 @@ const userTimersExceeded = (user: User): boolean =>
     count(Object.values(timers), (timer) => timer.creator.id === user.id, maxTimersPerUser + 1) >=
     maxTimersPerUser
 
-const maxTimersPerChannel = 5
+const maxTimersPerChannel = 4
 
 /**
  * Checks if one channel has exceeded the number of timers that can be run
@@ -69,13 +69,15 @@ export const start = (message: Message): void => {
     // Fake id given to the user
     const fakeId = nextKey(Object.keys(timers).map((id) => Number(id)))
 
+    const numArgs = Array.from(
+        filterMap(message.content.split(" "), false, (content) =>
+            isNaN(Number(content)) ? false : Number(content),
+        ),
+    )
+
     // User defined time control (e.g 5 mins)
-    const timeCtrl =
-        Array.from(
-            filterMap(message.content.split(" "), false, (content) =>
-                isNaN(Number(content)) ? false : Number(content),
-            ),
-        )[0] ?? defaultTimeCtrl
+    const timeCtrl = numArgs[0] ?? defaultTimeCtrl
+    const protectedTime = numArgs[1]
 
     if (!isNaN(timeCtrl) && timeCtrl > 15) {
         message.channel.send("Sorry, the longest timer that I can allow is 15 minutes.")
@@ -83,7 +85,12 @@ export const start = (message: Message): void => {
         return
     }
 
-    const timer = new Timer(fakeId, message, DatePlus.minsToSecs(timeCtrl))
+    const timer = new Timer(
+        fakeId,
+        message,
+        DatePlus.minsToSecs(timeCtrl),
+        protectedTime ? DatePlus.minsToSecs(protectedTime) : undefined,
+    )
 
     timer.start()
 

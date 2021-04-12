@@ -89,7 +89,7 @@ But you can do more with regex.
     },
 
     start: {
-        name: `\`${prefix}start [@mention?] [timeControl? = 5]\``,
+        name: `\`${prefix}start [@mention?] [timeControl? = 5] [protectedTime? = auto]\``,
         value: `Starts a timer with a default length of 5 minutes.
         If the speech is 5 minutes, there is 30 seconds protected time at the start and end of the speech. If the speech if 7 or 8 minutes, there is a minute of proteced time.
         All lengths include 15 seconds grace time.`,
@@ -97,7 +97,8 @@ But you can do more with regex.
             {
                 name: "Parameters",
                 value: `- \`[@mention?]\` - optional - @mention for current speaker
-- \`[timeControl?: = 5]\` - optional - speech length in minutes. Default value of 5.`,
+- \`[timeControl? = 5]\` - optional - speech length in minutes. Default value of 5.
+- \`[protectedTime? = auto] - optional - protected time in minutes. Automatically determined by default.\``,
             },
             {
                 name: "Notes",
@@ -107,7 +108,7 @@ But you can do more with regex.
             {
                 name: "Usage",
                 value: `\`\`\`${prefix}start @debate-timer
-${prefix}start 7
+${prefix}start 7 0.5
 ${prefix}start 3 @debate-timer\`\`\``,
             },
         ],
@@ -483,7 +484,7 @@ E.g ${prefix}help getMotion`,
         },
         {
             name: ":timer: Timer",
-            value: `- start [@mention?] [timeControl?]
+            value: `- start [@mention?] [timeControl?] [protectedTime?]
 - kill [id]
 - resume [id]
 - pause [id]

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   feat(commands/timer): add configurable protected time
 -   feat(commands/changelog): add changelog command
 -   feat(commands/shuffle): add shuffle command
 
