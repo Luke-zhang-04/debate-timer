@@ -49,6 +49,7 @@ const timerCommands: Commands = {
     timer: timer.start,
     kill: timer.kill,
     stop: timer.kill,
+    end: timer.kill,
     list: timer.list,
     take: (message) => changeTime(message, 1),
     give: (message) => changeTime(message, -1),

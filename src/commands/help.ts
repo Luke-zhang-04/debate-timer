@@ -140,6 +140,11 @@ ${prefix}start 3 @debate-timer\`\`\``,
         value: `Functionally equivalent to \`${prefix}kill\`.`,
     },
 
+    end: {
+        name: `\`${prefix}end [id]\``,
+        value: `Functionally equivalent to \`${prefix}kill\`.`,
+    },
+
     list: {
         name: `\`${prefix}list [global?: global | undefined]\``,
         value: "Lists the currently stored timers",
