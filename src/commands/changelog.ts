@@ -2,14 +2,14 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.0
+ * @version 1.9.1
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
 import parseChangelog from "changelog-parser"
 import {prefix} from "../getConfig"
-import semverCoerce from "semver/functions/coerce"
+import semverCoerce from "semver/functions/coerce.js"
 
 type ChangelogVersion = {
     version: string
