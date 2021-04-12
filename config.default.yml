@@ -56,7 +56,7 @@ shouldUseFuzzyStringMatch: true
 shouldRespondToUnknownCommand: true
 
 # If some jokes should be allowed
-allowJokes: false
+allowJokes: true
 
 # Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default

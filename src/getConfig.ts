@@ -103,7 +103,7 @@ const defaultConfig: FullConfig = {
     shouldDetectProfanity: true,
     shouldUseFuzzyStringMatch: true,
     shouldRespondToUnknownCommand: true,
-    shouldAllowJokes: false,
+    shouldAllowJokes: true,
     adminRoleName: {
         type: "permission",
         value: "ADMINISTRATOR",
