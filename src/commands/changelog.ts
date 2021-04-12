@@ -9,7 +9,7 @@
 
 import parseChangelog from "changelog-parser"
 import {prefix} from "../getConfig"
-import semverCoerce from "semver/functions/coerce"
+import semverCoerce from "semver/functions/coerce.js"
 
 type ChangelogVersion = {
     version: string
