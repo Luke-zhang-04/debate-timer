@@ -133,15 +133,19 @@ export class Timer {
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
+        // Progress bar, with "EM DASH" character —
         const bar =
-            process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n` // Progress bar, with "EM DASH" character —
+            process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n`
+
+        const isProtectedTime =
+            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
 
         this._msg = message.channel.send(
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
                 this.time,
-            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
-                this.isPaused ? "\nPaused" : ""
-            }`,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nProtected: ${
+                isProtectedTime ? "yes" : "no"
+            }\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
     }
 
@@ -284,6 +288,8 @@ export class Timer {
         // Subtract current time from start time and round to nearest second
         this._time = Math.round((Date.now() - this._startTime) / 1000)
 
+        this._notifySpeechStatus()
+
         // Mentioned user id
         const timerTarget = this.mentionedUid ? `For: <@${this.mentionedUid}>\n` : ""
 
@@ -308,16 +314,17 @@ export class Timer {
                 ? ""
                 : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
+        const isProtectedTime =
+            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
+
         msg.edit(
             // Edit the message with required information
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
                 this.time,
-            )}\nEnd time: ${formatTime(this.timeCtrl)}\nId: ${this._fakeId ?? "unknown"}${
-                this.isPaused ? "\nPaused" : ""
-            }`,
+            )}\nEnd time: ${formatTime(this.timeCtrl)}\nProtected: ${
+                isProtectedTime ? "yes" : "no"
+            }\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
-
-        this._notifySpeechStatus()
     }
 
     /**
