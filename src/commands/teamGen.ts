@@ -7,9 +7,8 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {arrayToChunks, shuffle} from "../utils"
+import {arrayToChunks, inlineTryPromise, shuffle} from "../utils"
 import {getRandomMotion} from "./randomMotion"
-import {inlineTryPromise} from "../utils"
 
 export type Formats = "bp" | "cp" | "worlds"
 
