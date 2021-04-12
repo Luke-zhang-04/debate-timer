@@ -237,11 +237,11 @@ if (!isValidConfig(inputConfig)) {
 const fullConfig: FullConfig = {
     ...defaultConfig,
     ...inputConfig,
-} // Need to test for emojis
+}
 
-/* eslint-disable no-control-regex */ for (const [usage, info] of Object.entries(
-    fullConfig.emojis,
-)) {
+// Need to test for emojis
+/* eslint-disable no-control-regex */
+for (const [usage, info] of Object.entries(fullConfig.emojis)) {
     if (!info.id && !/[^\u0000-\u00ff]/u.test(info.name)) {
         fullConfig.emojis[usage].name = emojify(`:${info.name}:`)
     }
