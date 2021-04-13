@@ -1,6 +1,6 @@
 {
   "name": "debate-timer",
-  "version": "1.9.1",
+  "version": "1.9.2",
   "description": "BP Debate timer Discord Bot",
   "main": "./bot.mjs",
   "type": "commonjs",
@@ -9,7 +9,8 @@
     "tsc": "tsc && tsc -p tsconfig.cli.json",
     "tsc:watch": "tsc -w",
     "build": "./scripts/compile",
-    "start": "./scripts/start --dev",
+    "start": "node bot.mjs",
+    "local": "./scripts/start --dev",
     "lint": "eslint_d src/\"{*,**/*}\".\"{ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix"
   },
