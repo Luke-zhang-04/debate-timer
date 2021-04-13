@@ -9,8 +9,7 @@
     "tsc": "tsc && tsc -p tsconfig.cli.json",
     "tsc:watch": "tsc -w",
     "build": "./scripts/compile",
-    "start": "node bot.mjs",
-    "local": "./scripts/start --dev",
+    "start": "./scripts/start --dev",
     "lint": "eslint_d src/\"{*,**/*}\".\"{ts,tsx}\" --max-warnings=0",
     "lint:fix": "yarn lint --fix"
   },
@@ -72,4 +71,3 @@
     "node": ">=12.0.0"
   }
 }
-
