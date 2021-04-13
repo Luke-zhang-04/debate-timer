@@ -3,9 +3,9 @@
 # Cannot be empty, and cannot have a space
 prefix: "!" # Prefix for command. Default "!".
 
-maxTimers: 100 # Maximum number of concurrent timers. -1 for infinite. Default 10
+maxTimers: 10 # Maximum number of concurrent timers. -1 for infinite. Default 10
 maxTimersPerUser: 3 # Maximum number of concurrent timers per user. Default 3
-commandCooldown: 0 # Time gap between consecutive commands. Default 1
+commandCooldown: 0.25 # Time gap between consecutive commands. Default 1
 maxMotions: 20 # Largest number of motions that can be fetched at once. Keep this value low. Default 20
 defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 
@@ -13,72 +13,74 @@ defaultTimeCtrl: 5 # Default time control in minutes for the timer. Default 5
 # This doesn't actually set your picture. It just dictates what to display on
 # the command for !bruh
 # Defaults to the GitHub logo
-serverIconUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/github-512.png
+serverIconUrl: https://cdn.discordapp.com/icons/761650833741185055/c711044b42aba73a09d276030bb3fd0b.png?size=256
 
 # Url of your bot's icon image, or any other image works too.
 # This doesn't actually set your picture. It just dictates what to display on
 # the command for !epic
 # Defaults to the Discord logo
-botIconUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+botIconUrl: https://cdn.discordapp.com/avatars/769340249397657601/ba51e72419970f646c8d61c6624bc27b.png?size=256
 
 # Random image
 # What to display on the command for !based
 # Defaults to the Discord logo
-otherImageUrl: https://cdn0.iconfinder.com/data/icons/free-social-media-set/24/discord-512.png
+otherImageUrl: https://pbs.twimg.com/media/DDWeiW_UQAAVVF7.jpg
 
 # Profanity detection. Default true
-shouldDetectProfanity: false
+shouldDetectProfanity: true
 
 # Whitelisted words from profanity detection. Default empty.
-whitelistedWords: []
-  # you can add words like this
-  # - word
+whitelistedWords:
+  - god
+  - crap
+  - hell
+  - piss
 
-# Blacklisted words from profanity detection. Default empty.
-blacklistedWords: []
-  # you can add words like this
-  # - word
+blacklistedWords:
+  - dipshit
+  - dumbass
 
 # Welcome message to send when a new member joins
-welcomeMessage:
-  null # An empty object, false, or null signifies no welcome message
-  # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
-  # channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
+welcomeMessage: # An empty object, false, or null signifies no welcome message
+  channel: "814323208421507072" # Channel id for welcome messages. Must be quoted.
+  channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
 
   # Message contents. Use %username% for the username, %mention% to @ mention the user,
   # and %serverName% for the server name.
-  # message: ""
+  message: "Hello %mention%! Welcome to %serverName%! Please wait for a <@&761698238398988298> to approve you to gain access to the rest of the server!"
 
 # Automatically commands with near matches. Default true.
 shouldUseFuzzyStringMatch: true
 
 # If the bot should reply to an unknown command. Default true.
-shouldRespondToUnknownCommand: false
+shouldRespondToUnknownCommand: true
 
 # If some jokes should be allowed
-allowJokes: false
+allowJokes: true
 
 # Admin role in your server. Defaults to just "hasPermission:ADMINISTRATOR".
 # If you have no admin role, you can leave this value as it's default
 # You can also delegate by permission. Use "hasPermission:PERMISSIONNAME"
-# To get a list of valid permission names, see https://discord.com/developers/docs/topics/permissions
+# To get a list of valid permission names see https://discord.com/developers/docs/topics/permissions
 adminRoleName: "hasPermission:ADMINISTRATOR"
 
 # Emoji config for polls
+# You can use the emojis name (smile). Note that newer emojis are not supported using this method.
 # Do not include :colons: around the emoji name
+# You can also use the emoji itself or its unicode (😃)
 # id is only required for custom emojis
 # ID MUST BE QUOTED; if it is a number, JavaScript will round it and it won't work
 emojis:
   debating:
-    name: speaking_head
-    id: ""
+    name: emoji_1
+    id: "762110857550757888"
   spectating:
-    name: eyes
-    id: ""
+    name: emoji_2
+    id: "762112564787675156"
 
 # Configure how verbose the bot should be
 # 0: minimal - send as few messages as possible i.e avoid sending "Paused timer with id 0"
 # 1: react - same as minimal, except messages get a reaction if they're successful
 # 2: verbose - full logging of commands.
 # Default 2 (for now)
-verbosity: 1
+verbosity: 2

@@ -216,7 +216,12 @@ const isValidConfig = (obj: {[key: string]: unknown}): obj is InputConfig => {
 /* eslint-enable complexity, max-lines-per-function */
 
 // Try and get config.yml from root
-let inputConfigFile = niceTry(() => readFileSync("config.yml").toString()) || ""
+let inputConfigFile =
+    niceTry(() =>
+        readFileSync(
+            process.env.NODE_ENV === "test" ? "config.testing.yml" : "config.yml",
+        ).toString(),
+    ) || ""
 
 // If that doesn't work, try .yaml instead
 if (inputConfigFile === "") {
