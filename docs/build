@@ -1,9 +1,0 @@
-#!/bin/sh
-
-../node_modules/.bin/tsc -p ./tsconfig.json || exit 1
-
-if [ ! "$1" = "--dev" ]; then
-    ../node_modules/.bin/babel ./js --out-dir ./js --config-file ../.babelrc.js || exit 1
-fi
-
-./node_modules/.bin/sass ./style.scss ./style.css --style=compressed --embed-source-map
