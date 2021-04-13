@@ -1,1 +1,1 @@
-cmd: ./bot.mjs
+web: ./bot.mjs
