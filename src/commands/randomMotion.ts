@@ -7,10 +7,12 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import {GoogleSpreadsheet} from "google-spreadsheet"
+import {GoogleSpreadsheet, GoogleSpreadsheetWorksheet} from "google-spreadsheet"
+import {niceTryPromise, randint} from "../utils"
 import dotenv from "dotenv"
 import {maxMotions} from "../getConfig"
-import {randint} from "../utils"
+
+type Motion = [motion: string, infoSlide: string]
 
 if (!process.env.APIKEY) {
     dotenv.config()
@@ -19,17 +21,37 @@ if (!process.env.APIKEY) {
 // Google spreadsheet from hellomotions
 const doc = new GoogleSpreadsheet("1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY")
 
-// We use this promise so we can tell when the document is loaded
-const docDidLoad = (async (): Promise<void> => {
-    try {
-        doc.useApiKey(process.env.APIKEY)
-        await doc.loadInfo()
+let sheet: GoogleSpreadsheetWorksheet | undefined
 
-        return
-    } catch (err) {
-        console.error(err)
+const loadSheet = async (): Promise<GoogleSpreadsheetWorksheet> => {
+    doc.useApiKey(process.env.APIKEY)
+    await doc.loadInfo()
+
+    return doc.sheetsById["2007846678"]
+}
+
+/**
+ * Gets a motion from a row by checking the cache first
+ *
+ * @param row - Row to get motion from
+ * @returns Motion and infoslide
+ */
+const getMotionFromRow = async (row: number): Promise<Motion> => {
+    let motion = await niceTryPromise(
+        async () => (sheet ??= await loadSheet()).getCellByA1(`S${row}`).value?.toString() ?? "",
+    )
+
+    if (motion === undefined) {
+        await (sheet ??= await loadSheet()).loadCells(`S${row}:T${row}`) // Load cell from random row
     }
-})()
+
+    console.log(sheet?.cellStats)
+
+    return [
+        motion ?? (sheet ??= await loadSheet()).getCellByA1(`S${row}`).value?.toString() ?? "",
+        (sheet ??= await loadSheet()).getCellByA1(`T${row}`).value?.toString() ?? "",
+    ]
+}
 
 /**
  * Gets a random motion from the hellomotions motions spreadsheet
@@ -38,35 +60,26 @@ const docDidLoad = (async (): Promise<void> => {
  * @see {@link https://docs.google.com/spreadsheets/d/1qQlqFeJ3iYbzXYrLBMgbmT6LcJLj6JcG3LJyZSbkAJY/edit#gid=2007846678}
  */
 export const getRandomMotion = async (): Promise<string> => {
-    await docDidLoad // Make sure doc was properly loaded
-
     // Final motion
-    let motion: string | number | boolean | null = null
+    let motion: string | null = null
 
     // Info slide if provided
     let infoSlide = ""
 
     while (motion === null) {
-        // Motions sheet
-        const sheet = doc.sheetsById["2007846678"]
-
         // Random row
-        const row = randint(2, sheet.rowCount)
+        const row = randint(2, (sheet ??= await loadSheet()).rowCount)
+        const cell = await getMotionFromRow(row)
 
-        /* eslint-disable no-await-in-loop */
-        // OK in this situation b/c the loop usually will run once
-        await sheet.loadCells(`S${row}:T${row}`) // Load cell from random row
-        /* eslint-enable no-await-in-loop */
-
-        motion = sheet.getCellByA1(`S${row}`).value // Get motion from column
-        infoSlide = sheet.getCellByA1(`T${row}`).value?.toString() ?? "" // Get the infoslide (if any)
+        motion = cell[0]
+        infoSlide = cell[1]
     }
 
     if (infoSlide) {
         infoSlide += "\n\nMotion: "
     }
 
-    return `${infoSlide}${motion.toString()}`
+    return `${infoSlide}${motion}`
 }
 
 /**
@@ -75,7 +88,7 @@ export const getRandomMotion = async (): Promise<string> => {
  * @param motions - Array of motions
  * @returns Chunked motions
  */
-const motionsToChumks = (motions: string[]): string[] => {
+const motionsToChunks = (motions: string[]): string[] => {
     const splitMotions = [":speaking_head: **Got random motions**:"]
     const maxMessageLength = 2_000 // Discord's max message length
     let index = 0
@@ -105,16 +118,11 @@ const motionsToChumks = (motions: string[]): string[] => {
  */
 export const sendRandomMotions = async (message: Message): Promise<void> => {
     try {
-        await docDidLoad
-
         // Array of motions
-        const motions: Promise<[motion: string | null, infoSlide: string | null]>[] = []
+        const motions: Promise<Motion>[] = []
 
         // Keep track of rows used to prevent duplicates
         const rowsUsed: number[] = []
-
-        // Motions sheet
-        const sheet = doc.sheetsById["2007846678"]
 
         // Final message that will be sent
         const motionsStrings: string[] = []
@@ -144,7 +152,7 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
         }
 
         for (let _ = 0; _ < amt; _++) {
-            let row = randint(2, sheet.rowCount)
+            let row = randint(2, (sheet ??= await loadSheet()).rowCount)
 
             while (rowsUsed.includes(row)) {
                 // Make sure random row hasn't already been used
@@ -154,18 +162,11 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
             rowsUsed.push(row)
 
             // Push a Promise with a random motion to motions
-            motions.push(
-                sheet
-                    .loadCells(`S${row}:T${row}`)
-                    .then(() => [
-                        sheet.getCellByA1(`S${row}`).value?.toString(),
-                        sheet.getCellByA1(`T${row}`).value?.toString(),
-                    ]),
-            )
+            motions.push(getMotionFromRow(row))
         }
 
         // Wait for Promises to resolve, then add them to motionsString
-        await Promise.all(motions)
+        const err = await Promise.all(motions)
             .then(async (_motions) => {
                 for (const [index, [motion, infoSlide]] of _motions.entries()) {
                     let formattedMotion: string = infoSlide
@@ -180,9 +181,26 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
                     motionsStrings.push(`**${index + 1}.** ${formattedMotion}`)
                 }
             })
-            .catch(() => "***Error :sweat_smile:***")
+            .catch(
+                (err) =>
+                    `An error occured:\n\`\`\`\n${
+                        err instanceof Error ? err.toString() : err
+                    }\n\`\`\``,
+            )
 
-        for (const motion of motionsToChumks(motionsStrings)) {
+        if (err) {
+            await message.channel.send(err)
+
+            return
+        } else if (motionsStrings.length === 0) {
+            await message.channel.send(
+                "Couldn't get your motions. We might've surpassed Google API limits, please try again in a few seconds",
+            )
+
+            return
+        }
+
+        for (const motion of motionsToChunks(motionsStrings)) {
             /* eslint-disable no-await-in-loop */
             // OK in this situation b/c the loop usually will run once or twice
             await message.channel
@@ -197,7 +215,7 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
     } catch (err: unknown) {
         const error = err instanceof Error ? err : new Error(String(err))
 
-        message.channel.send(`An error occured:\n\n\`\`\`${error.name}\n${error.message}\`\`\``)
+        message.channel.send(`An error occured:\n\`\`\`${error.name}\n${error.message}\n\`\`\``)
     }
 }
 

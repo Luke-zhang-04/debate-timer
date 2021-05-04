@@ -67,7 +67,15 @@ export const hasAdminPerms = (
 export const niceTry = <T>(func: () => T): T | undefined => {
     try {
         return func()
-    } catch (_) {
+    } catch {
+        return
+    }
+}
+
+export const niceTryPromise = async <T>(func: () => Promise<T>): Promise<T | undefined> => {
+    try {
+        return await func()
+    } catch {
         return
     }
 }
