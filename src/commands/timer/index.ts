@@ -38,7 +38,7 @@ export class Timer {
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
-    public shouldMute = true
+    public shouldMute = false
 
     /**
      * If timer is currently paused
