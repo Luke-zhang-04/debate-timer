@@ -1,4 +1,6 @@
 {
+  "name": "docs",
+  "version": "1.10.0",
   "devDependencies": {
     "destagnate": "^2.0.0",
     "sass": "^1.29.0"

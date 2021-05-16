@@ -2,7 +2,6 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.3
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -131,8 +130,7 @@ ${prefix}start 3 @debate-timer\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value:
-                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -157,8 +155,7 @@ ${prefix}start 3 @debate-timer\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value:
-                    '- [global?] - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.',
+                value: '- [global?] - optional - if "global" is passed in, it will display all timers regardless of ownership. Otherwise, it will show all the timers that you were tagged with, or you created.',
             },
             {
                 name: "Usage",
@@ -326,8 +323,7 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
 
     newMotion: {
         name: `\`${prefix}newMotion\``,
-        value:
-            "Reply to a generated round, and change the motion. Use this if the motion is bad, but you want to keep the teams.",
+        value: "Reply to a generated round, and change the motion. Use this if the motion is bad, but you want to keep the teams.",
         fields: [
             {
                 name: "Usage",
@@ -355,8 +351,7 @@ ${prefix}makeDraw @debate-timer debater2 debater3 debater4 debater5 debater6 deb
 
     getPoll: {
         name: `\`${prefix}getPoll [option?] [raw?]\``,
-        value:
-            "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
+        value: "Gets data from user's current poll. If `[option]` is specified, it will fetch the poll data for the specific poll option.",
         fields: [
             {
                 name: "Parameters",
@@ -379,8 +374,7 @@ ${prefix}getPoll spectating raw\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value:
-                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -395,8 +389,7 @@ ${prefix}getPoll spectating raw\`\`\``,
         fields: [
             {
                 name: "Parameters",
-                value:
-                    "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
+                value: "`[id]` - required - integer value for timer id. Will be displayed under a timer.",
             },
             {
                 name: "Usage",
@@ -407,8 +400,7 @@ ${prefix}getPoll spectating raw\`\`\``,
 
     broadcast: {
         name: `\`${prefix}broadcast [regex] [amt? = Infinity]\``,
-        value:
-            "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
+        value: "Broadcasts replied message to `[amt]` number of channels which satisfy the regex restraint `[regex]`. You can learn about regex here <https://developer.mozilla.org/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet>.",
         fields: [
             {
                 name: "Parameters",
@@ -447,8 +439,7 @@ ${prefix}broadcast 3 .*\`\`\``,
 
     changelog: {
         name: `\`${prefix}changelog [version?]\``,
-        value:
-            "Shows the changelog of this bot. <https://github.com/Luke-zhang-04/debate-timer/blob/master/CHANGELOG.md>",
+        value: "Shows the changelog of this bot. <https://github.com/Luke-zhang-04/debate-timer/blob/master/CHANGELOG.md>",
         fields: [
             {
                 name: "Parameters",

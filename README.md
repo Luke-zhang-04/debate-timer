@@ -101,7 +101,8 @@ Note that these values are sensitive and should not be shown publicly
 ./bot.mjs
 
 # To run it in the background
-./bot.mjs & disown
+./bot.mjs &
+disown
 
 # Other ways you can run
 node .
