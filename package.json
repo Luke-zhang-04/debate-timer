@@ -1,13 +1,11 @@
 {
   "name": "debate-timer",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "description": "BP Debate timer Discord Bot",
   "main": "./bot.mjs",
   "type": "commonjs",
   "scripts": {
     "test": "NODE_ENV=test mocha --timeout 30000 --exit",
-    "tsc": "tsc && tsc -p tsconfig.cli.json",
-    "tsc:watch": "tsc -w",
     "build": "./scripts/compile",
     "start": "./scripts/start --dev",
     "lint": "eslint_d src/\"{*,**/*}\".\"{ts,tsx}\" --max-warnings=0",
@@ -19,6 +17,7 @@
     "url": "https://luke-zhang-04.github.io/"
   },
   "license": "BSD-3-Clause",
+  "private": true,
   "dependencies": {
     "@luke-zhang-04/dateplus": "^3.0.1",
     "@types/semver": "^7.3.4",
@@ -29,8 +28,6 @@
     "dotenv": "^8.2.0",
     "google-spreadsheet": "^3.1.15",
     "node-emoji": "^1.10.0",
-    "ora": "^5.3.0",
-    "prompts": "^2.4.0",
     "re2": "^1.16.0",
     "semver": "^7.3.5",
     "yaml": "^1.10.0"
@@ -47,7 +44,6 @@
     "@types/google-spreadsheet": "^3.0.2",
     "@types/node": "^14.14.33",
     "@types/node-emoji": "^1.8.1",
-    "@types/prompts": "^2.0.9",
     "@types/ws": "^7.4.1",
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^4.17.0",
@@ -70,5 +66,9 @@
   },
   "engines": {
     "node": ">=12.0.0"
-  }
+  },
+  "workspaces": [
+    "docs",
+    "cli"
+  ]
 }
