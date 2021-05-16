@@ -36,7 +36,7 @@ const loadSheet = async (): Promise<GoogleSpreadsheetWorksheet> => {
  * @returns Motion and infoslide
  */
 const getMotionFromRow = async (row: number): Promise<Motion> => {
-    let motion = await niceTryPromise(
+    const motion = await niceTryPromise(
         async () => (sheet ??= await loadSheet()).getCellByA1(`S${row}`).value?.toString() ?? "",
     )
 
@@ -181,9 +181,9 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
                 }
             })
             .catch(
-                (err) =>
+                (_err) =>
                     `An error occured:\n\`\`\`\n${
-                        err instanceof Error ? err.toString() : err
+                        _err instanceof Error ? _err.toString() : _err
                     }\n\`\`\``,
             )
 
@@ -204,10 +204,12 @@ export const sendRandomMotions = async (message: Message): Promise<void> => {
             // OK in this situation b/c the loop usually will run once or twice
             await message.channel
                 .send(motion)
-                .catch((err) =>
-                    err instanceof Error
-                        ? message.channel.send(`${err.name}: ${err.message} Solution: try again.`)
-                        : message.channel.send(JSON.stringify(err)),
+                .catch((_err) =>
+                    _err instanceof Error
+                        ? message.channel.send(
+                              `${_err.name}: ${_err.message} Solution: try again.`,
+                          )
+                        : message.channel.send(JSON.stringify(_err)),
                 )
             /* eslint-enable no-await-in-loop */
         }
