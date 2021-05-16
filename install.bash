@@ -76,7 +76,7 @@ cleanIntall() {
     fi
 
     if [[ "$removeDevDependencies" == "y" ]]; then
-        if [[ "$pkgMan" == "yarn" ]]; then # DO NOT QUOTE SUBSHELLS BELOW
+        if [[ "$pkgMan" == "yarn" ]]; then               # DO NOT QUOTE SUBSHELLS BELOW
             yarn remove $(./scripts/listDevDependencies) # Have to do it like this for some reason
         else
             npm uninstall $(./scripts/listDevDependencies)
@@ -88,7 +88,7 @@ cleanIntall() {
     fi
 }
 
-if [ ! -f bot.mjs ]||[ ! -f cli/index.js ]; then
+if [ ! -f bot.mjs ] || [ ! -f cli/index.js ]; then
     cleanIntall || exit 1
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
