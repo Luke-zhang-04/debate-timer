@@ -3238,17 +3238,17 @@ prettier-plugin-jsdoc@^0.3.18:
     linguist-languages "^7.13.0"
     mdast-util-from-markdown "^0.8.5"
 
-prettier-plugin-sh@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.6.1.tgz#094d1d190f0d8a53bfd522a68f17a95ca741047d"
-  integrity sha512-Weelg53FBb1Z5Q1/GpQIb4s//BdhmPAABjJfe6VTQ3m8upQjM36sVVboNOUVvYn3K+LMwzW4vkxhqLQ+vvfBKQ==
+prettier-plugin-sh@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-sh/-/prettier-plugin-sh-0.5.0.tgz#84fc56242b3fcd54c06250479c0a8f5cb35f04aa"
+  integrity sha512-i06bh7jINWXLcVjiJTnJtBmTbrA/S1waFhbtG0YFLbTIxnvI7cDWM2pAqfNf8SEsT+yB6sTkJDaPGT4ip2lFWw==
   dependencies:
     mvdan-sh "^0.5.0"
 
-prettier@^2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.2.1.tgz#795a1a78dd52f073da0cd42b21f9c91381923ff5"
-  integrity sha512-PqyhM2yCjg/oKkFPtTGUojv7gnZAoG80ttl45O6x2Ug/rMJw4wcc9k6aaf2hibP7BGVCCM33gZoGjyvt9mm16Q==
+prettier@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.3.0.tgz#b6a5bf1284026ae640f17f7ff5658a7567fc0d18"
+  integrity sha512-kXtO4s0Lz/DW/IJ9QdWhAf7/NmPWQXkFr/r/WkR3vyI+0v8amTDxiaQSLzs8NBlytfLWX/7uQUMIW677yLKl4w==
 
 prism-media@^1.2.2:
   version "1.2.7"
