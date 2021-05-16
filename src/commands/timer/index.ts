@@ -38,7 +38,7 @@ export class Timer {
     /**
      * If user should be muted after their speech temporarily (experimental)
      */
-    public shouldMute = true
+    public shouldMute: boolean
 
     /**
      * If timer is currently paused
@@ -117,7 +117,9 @@ export class Timer {
         timeCtrl: number,
         protectedTime?: number,
     ) {
-        this._mentionedUser = message.mentions.users.first() // Mentioned user
+        const mentionedMember = message.mentions.members?.first()
+
+        this._mentionedUser = mentionedMember?.user // Mentioned user
         this.mentionedUid = this._mentionedUser?.id // Id of aforementioned user
         this.creator = message.author
 
@@ -147,6 +149,14 @@ export class Timer {
                 isProtectedTime ? "yes" : "no"
             }\nId: ${this._fakeId ?? "unknown"}${this.isPaused ? "\nPaused" : ""}`,
         )
+
+        // A bunch of checks to make sure someone doesn't mute someone else on another server
+        this.shouldMute =
+            this._mentionedUser !== undefined &&
+            message.member !== null && // Make sure the message was sent from a server
+            message.guild !== null &&
+            message.member.permissions.has(["MUTE_MEMBERS"], true) && // Make sure this user has permissions to mute people
+            mentionedMember?.voice?.guild?.id === message.guild.id // Make sure the mentioned user is in a voice call in the same server
     }
 
     public get time(): number {
