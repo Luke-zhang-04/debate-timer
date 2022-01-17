@@ -11,7 +11,7 @@ git add --force bot.mjs
 git add --force cli/
 
 # Remove unecessary files
-rm -rfv .github assets cli/*.ts docs lib src test .babelrc.js .editorconfig .eslintignore .eslitnrc.json .gitattributes config.yml lint.mjs rollup.config.js tsconfig.cli.json tsconfig.json yarn.lock
+rm -rfv .github assets cli/*.ts docs lib src test .babelrc.js .editorconfig .eslintignore .eslitnrc.json .gitattributes config.yml lint.mjs rollup.config.js tsconfig.cli.json tsconfig.json pnpm-lock.yaml
 
 # Commit
 git commit -am "Release for version $version"
