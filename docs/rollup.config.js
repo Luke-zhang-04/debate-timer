@@ -1,3 +1,5 @@
+import {babel} from "@rollup/plugin-babel"
+import commonjs from "@rollup/plugin-commonjs"
 import {dirname} from "path"
 import {fileURLToPath} from "url"
 import progress from "rollup-plugin-progress"
@@ -29,19 +31,38 @@ const config = {
     },
     plugins: [
         progress(),
+        resolve(),
+        commonjs(),
         typescript({
             tsconfig: `${__dirname}/tsconfig.json`,
         }),
-        resolve(),
-        process.env.NODE_ENV === "dev"
-            ? undefined
-            : terser({
-                  mangle: {
-                      properties: {
-                          regex: /^_/u, // Mangle private properties
+        ...(process.env.NODE_ENV === "dev"
+            ? []
+            : [
+                  babel({
+                      babelrc: false,
+                      babelHelpers: "bundled",
+                      exclude: [/\bcore-js\b/],
+                      presets: [
+                          [
+                              "@babel/preset-env",
+                              {
+                                  corejs: 3,
+                                  useBuiltIns: "usage",
+                              },
+                          ],
+                      ],
+                      minified: false,
+                      comments: true,
+                  }),
+                  terser({
+                      mangle: {
+                          properties: {
+                              regex: /^_/u, // Mangle private properties
+                          },
                       },
-                  },
-              }),
+                  }),
+              ]),
     ],
 }
 
