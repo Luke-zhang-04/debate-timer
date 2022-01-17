@@ -6,10 +6,10 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
+import * as dateplus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {Timer, timers} from "."
 import {count, filterMap} from "../../utils"
 import {defaultTimeCtrl, maxTimers, maxTimersPerUser} from "../../getConfig"
-import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {nextKey} from "./utils"
 
 /**
@@ -87,8 +87,8 @@ export const start = (message: Message): void => {
     const timer = new Timer(
         fakeId,
         message,
-        DatePlus.minsToSecs(timeCtrl),
-        protectedTime ? DatePlus.minsToSecs(protectedTime) : undefined,
+        dateplus.minsToSecs(timeCtrl),
+        protectedTime ? dateplus.minsToSecs(protectedTime) : undefined,
     )
 
     timer.start()

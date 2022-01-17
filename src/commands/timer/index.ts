@@ -6,8 +6,8 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
+import * as dateplus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {formatTime, muteUser} from "./utils"
-import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {verbosity} from "../../getConfig"
 
 /* eslint-disable no-use-before-define */
@@ -125,11 +125,11 @@ export class Timer {
         const uid = this.mentionedUid
 
         // Make sure timer isn't longer than 15 mins
-        this.timeCtrl = isNaN(timeCtrl) ? DatePlus.minsToSecs(5) : timeCtrl
+        this.timeCtrl = isNaN(timeCtrl) ? dateplus.minsToSecs(5) : timeCtrl
 
         console.log(protectedTime)
 
-        this.protectedTime = protectedTime ?? (this.timeCtrl >= DatePlus.minsToSecs(7) ? 60 : 30)
+        this.protectedTime = protectedTime ?? (this.timeCtrl >= dateplus.minsToSecs(7) ? 60 : 30)
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)
 
@@ -139,7 +139,7 @@ export class Timer {
             process.env.NODE_ENV === "test" ? "" : `\`[${"\u2014".repeat(this._barWidth)}]\` 0%\n`
 
         const isProtectedTime =
-            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
+            this.timeCtrl <= dateplus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
 
         this._msg = message.channel.send(
             `${bar}${timerTarget}Started by: ${this.creator}\nCurrent time: ${formatTime(
@@ -223,7 +223,7 @@ export class Timer {
             if (this.isPaused) {
                 this._startTime += Values.Interval * 1000
 
-                if (Date.now() - this._trueStartTime > DatePlus.minsToMs(20)) {
+                if (Date.now() - this._trueStartTime > dateplus.minsToMs(20)) {
                     this.message.channel.send(
                         `Timer with id ${this._fakeId} has been paused for more than 20 minutes. This timer is now being killed.`,
                     )
@@ -240,7 +240,7 @@ export class Timer {
             // If speech surpasses time
             if (
                 this.time >= this.timeCtrl + Values.GraceTime ||
-                this.time > DatePlus.minsToSecs(20)
+                this.time > dateplus.minsToSecs(20)
             ) {
                 this.kill(false)
             }
@@ -324,7 +324,7 @@ export class Timer {
                 : `\`[${blocks}${dashes}]\` ${percentage}%\n`
 
         const isProtectedTime =
-            this.timeCtrl <= DatePlus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
+            this.timeCtrl <= dateplus.minsToSecs(3) || (!this._stages[1] && !this._stages[4])
 
         msg.edit(
             // Edit the message with required information
@@ -347,7 +347,7 @@ export class Timer {
         const {time, timeCtrl} = this
 
         // 3 minute speechs are all protected
-        const hasProtectedTime = this.timeCtrl > DatePlus.minsToSecs(3)
+        const hasProtectedTime = this.timeCtrl > dateplus.minsToSecs(3)
 
         // The messages can be used as comments they're kinda self explanatory
         if (!this._stages[1] && hasProtectedTime && time >= this.protectedTime) {

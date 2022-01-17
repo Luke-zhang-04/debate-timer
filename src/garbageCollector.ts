@@ -6,16 +6,16 @@
  * @copyright 2020 - 2021 Luke Zhang
  */
 
-import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
+import * as dateplus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 
-const collectionInterval = DatePlus.minsToMs(30)
+const collectionInterval = dateplus.minsToMs(30)
 
 const collect = async (): Promise<void> => {
     const {polls} = await import("./commands/poll")
     const now = Date.now()
 
     for (const [key, poll] of Object.entries(polls)) {
-        if (now - poll.createdAt > DatePlus.hrsToMs(1)) {
+        if (now - poll.createdAt > dateplus.hrsToMs(1)) {
             Reflect.deleteProperty(polls, key)
         }
     }
