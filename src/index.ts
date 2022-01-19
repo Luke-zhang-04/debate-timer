@@ -100,7 +100,6 @@ client.on("guildMemberAdd", (member) => {
     if (
         welcomeMessage !== undefined &&
         welcomeMessage !== null &&
-        welcomeMessage !== false &&
         Object.keys(welcomeMessage).length >= 2
     ) {
         const {channel: channelId, message} = welcomeMessage
