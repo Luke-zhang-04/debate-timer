@@ -2,12 +2,15 @@
 /* eslint-disable */
 
 const fs = require("fs")
+const path = require("path")
 
-const {devDependencies} = JSON.parse(fs.readFileSync("package.json").toString())
+const {devDependencies} = JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "package.json")).toString(),
+)
 let output = ""
 
 for (const dep of Object.keys(devDependencies)) {
     output += `${dep.replace(/'/giu, "")} `
 }
 
-console.log(output)
+console.log(output.trim())

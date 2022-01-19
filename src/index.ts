@@ -2,18 +2,19 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.3
+ * @version 1.10.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
 
+import * as dateplus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import {hostname, userInfo} from "os"
 import {prefix, welcomeMessage} from "./getConfig"
-import DatePlus from "@luke-zhang-04/dateplus/dist/cjs/dateplus.cjs"
 import Discord from "discord.js"
 import dotenv from "dotenv"
 import fs from "fs"
 import handleMessage from "./handleMessage"
+import {onVoiceStateUpdate} from "./events"
 
 dotenv.config()
 
@@ -43,7 +44,7 @@ const writeFile = (path: string, content: string): Promise<void> =>
 
 const uncaughtException = async (err: Error): Promise<void> => {
     const date = new Date()
-    const formattedDate = DatePlus.addZeros(
+    const formattedDate = dateplus.addZeros(
         `${date.getDay() + 1}/${date.getMonth() + 1}/${date.getFullYear()}`,
     )
     const seconds = date.getSeconds() < 10 ? `0${date.getSeconds()}` : date.getSeconds()
@@ -100,7 +101,6 @@ client.on("guildMemberAdd", (member) => {
     if (
         welcomeMessage !== undefined &&
         welcomeMessage !== null &&
-        welcomeMessage !== false &&
         Object.keys(welcomeMessage).length >= 2
     ) {
         const {channel: channelId, message} = welcomeMessage
@@ -136,6 +136,12 @@ client.on("message", async (message) => {
             uncaughtException(err)
         }
     }
+})
+
+client.on("voiceStateUpdate", async (...args) => {
+    try {
+        await onVoiceStateUpdate(...args)
+    } catch {}
 })
 
 process.on("uncaughtException", uncaughtException)

@@ -25,14 +25,14 @@ jsdocSingleLineComment: false
 tsdoc: true
 
 # Sh plugin
-keepComments: true
-indent: 4
-binaryNextLine: true
-switchCaseIndent: true
-spaceRedirects: true
-keepPadding: false
-minify: false
-functionNextLine: true
+# keepComments: true
+# indent: 4
+# binaryNextLine: true
+# switchCaseIndent: true
+# spaceRedirects: true
+# keepPadding: false
+# minify: false
+# functionNextLine: true
 
 overrides:
   - files:

@@ -2,7 +2,6 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.3
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -10,6 +9,7 @@
 import {adminRoleName, shouldAllowJokes} from "../getConfig"
 import {hasAdminPerms, inlineTry} from "../utils"
 import {TextChannel} from "discord.js"
+import re2 from "re2"
 
 // Code will get messier if I try to split it
 /* eslint-disable max-statements */
@@ -60,7 +60,7 @@ export const broadcast = async (message: Message): Promise<void> => {
     }
 
     const maxBroadcasts = Number(args.find((val) => !isNaN(Number(val))) ?? Infinity)
-    const regex = inlineTry(() => new RegExp(givenRegex, "u"))
+    const regex = inlineTry(() => re2(givenRegex, "u"))
 
     if (regex instanceof Error) {
         await message.channel.send(

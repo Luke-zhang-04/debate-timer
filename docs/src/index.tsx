@@ -2,7 +2,7 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.3
+ * @version 1.10.0
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -154,7 +154,7 @@ class Timer extends DeStagnate.Component<{}, State> {
     public onKeyDown = (event: KeyboardEvent) => {
         if (event.key === " " || event.code == "Enter") {
             this.spacebar()
-        } else if (event.key === "r") {
+        } else if (event.key === "r" || event.key === "Escape") {
             this.reset()
         }
     }
@@ -181,7 +181,7 @@ class Timer extends DeStagnate.Component<{}, State> {
             return (
                 <div class="container">
                     <h1 class="header">Debate Timer</h1>
-                    <p class="subheader">Space to pause/start. r to restart.</p>
+                    <p class="subheader">Space to pause/start. r/esc to restart.</p>
                     <form
                         class="form"
                         onSubmit={(event: Event) => {

@@ -41,7 +41,7 @@ blacklistedWords:
 
 # Welcome message to send when a new member joins
 welcomeMessage:
-  null # An empty object, false, or null signifies no welcome message
+  null # Null signifies no welcome message
   # channel: "000000000000000000" # Channel id for welcome messages. Must be quoted.
   # channelName: "^welcome$" # Backup channel in case channel with id isn't found. Regex is enabled.
 
@@ -75,6 +75,24 @@ emojis:
   spectating:
     name: eyes
     id: ""
+
+# Choose what channel names should give users a prepping role
+# You can use both regex or the array, they will be matched with or
+# Set null if you don't want roles for prepping
+prepping:
+  null # Null signifies prepping feature is disabled. Alternatively, you may specify "defaults"
+  # channelNamesRegex: "^([OC][GO]|GOV|OPP)$" # Regexp for prepping channels, matched WITHOUT case sensitivity
+  # Array of prepping channels, case sensitive. Default shown below, which may be disabled if set to null
+  # channelNames:
+  #   - OG
+  #   - OO
+  #   - CG
+  #   - CO
+  #   - gov
+  #   - opp
+
+  # roleId: "000000000000000000" # ID of the prepping role
+  # roleName: "^prep(p|ar)ing$" # Backup role in case role with id isn't found. Regex is enabled.
 
 # Configure how verbose the bot should be
 # 0: minimal - send as few messages as possible i.e avoid sending "Paused timer with id 0"

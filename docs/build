@@ -1,9 +1,8 @@
 #!/bin/sh
 
-../node_modules/.bin/tsc -p ./tsconfig.json || exit 1
+__dirname="$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)"
+bin="${__dirname}/node_modules/.bin"
 
-if [ ! "$1" = "--dev" ]; then
-    ../node_modules/.bin/babel ./js --out-dir ./js --config-file ../.babelrc.js || exit 1
-fi
+"$bin/rollup" -c
 
-./node_modules/.bin/sass ./style.scss ./style.css --style=compressed --embed-source-map
+"$bin/sass" ./style.scss ./style.css --style=compressed --embed-source-map

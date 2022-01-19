@@ -12,14 +12,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        name: Setup Nodejs
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          node-version: 12.x
+          version: 6.24.3
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14.x"
           registry-url: "https://registry.npmjs.org"
+          cache: pnpm
 
       - name: install deps
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: build bot
         run: ./scripts/compile

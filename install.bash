@@ -1,7 +1,7 @@
 #!/bin/bash
 
-pkgInstall="yarn"
-pkgMan="yarn"
+pkgInstall="pnpm install"
+pkgMan="pnpm"
 removeDevDependencies="y"
 removeSources="y"
 removeOthers="y"
@@ -9,25 +9,19 @@ validResponseValues=("y" "N")
 
 echo "Performing checks . . ."
 
-if [[ ! "$(yarn -v)" ]]; then
+if [[ ! "$(pnpm -v)" ]]; then
     pkgInstall="npm i"
     pkgMan="npm"
 fi
 
 if [[ ! "$(npm -v)" ]]; then
-    echo "Neither yarn nor npm package managers were found. Make sure you install NodeJS https://nodejs.org/en/ and NPM"
+    echo "Neither pnpm nor npm package managers were found. Make sure you install NodeJS https://nodejs.org/en/ and NPM"
 
     exit 1
 fi
 
 if [[ ! "$(node -v)" ]]; then
     echo "NodeJS not found. Installing will be useless. Make sure the node command is in PATH and you have NodeJS https://nodejs.org/en/ installed"
-
-    exit 1
-fi
-
-if [[ ! "$(npx -v)" ]]; then
-    echo "NPX not found. Installing will not be successful. Make sure the node command is in PATH and you have NodeJS https://nodejs.org/en/ installed"
 
     exit 1
 fi
@@ -76,19 +70,19 @@ cleanIntall() {
     fi
 
     if [[ "$removeDevDependencies" == "y" ]]; then
-        if [[ "$pkgMan" == "yarn" ]]; then # DO NOT QUOTE SUBSHELLS BELOW
-            yarn remove $(./scripts/listDevDependencies) # Have to do it like this for some reason
+        if [[ "$pkgMan" == "pnpm" ]]; then               # DO NOT QUOTE SUBSHELLS BELOW
+            pnpm remove -- $(./scripts/listDevDependencies) # Have to do it like this for some reason
         else
             npm uninstall $(./scripts/listDevDependencies)
         fi
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json pnpm-lock.yaml .git lib rollup.config.js lint.mjs
     fi
 }
 
-if [ ! -f bot.mjs ]||[ ! -f cli/index.js ]; then
+if [ ! -f bot.mjs ] || [ ! -f cli/index.js ]; then
     cleanIntall || exit 1
 else
     echo "Compiled JavaScript found. Installing production dependencies only."
@@ -120,7 +114,7 @@ else
     fi
 
     if [[ "$removeOthers" == "y" ]]; then
-        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json yarn.lock .git lib rollup.config.js lint.mjs
+        rm -rfv .github assets docs scripts test .babelrc.js .editorconfig .eslintignore .eslintrc.json .gitattributes .gitignore install.bash tsconfig.cli.json tsconfig.json pnpm-lock.yaml .git lib rollup.config.js lint.mjs
     fi
 fi
 

@@ -2,7 +2,6 @@
  * Discord Debate Timer
  *
  * @license BSD-3-Clause
- * @version 1.9.3
  * @author Luke Zhang luke-zhang-04.github.io/
  * @copyright 2020 - 2021 Luke Zhang
  */
@@ -67,7 +66,15 @@ export const hasAdminPerms = (
 export const niceTry = <T>(func: () => T): T | undefined => {
     try {
         return func()
-    } catch (_) {
+    } catch {
+        return
+    }
+}
+
+export const niceTryPromise = async <T>(func: () => Promise<T>): Promise<T | undefined> => {
+    try {
+        return await func()
+    } catch {
         return
     }
 }
