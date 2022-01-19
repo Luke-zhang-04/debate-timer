@@ -127,8 +127,6 @@ export class Timer {
         // Make sure timer isn't longer than 15 mins
         this.timeCtrl = isNaN(timeCtrl) ? dateplus.minsToSecs(5) : timeCtrl
 
-        console.log(protectedTime)
-
         this.protectedTime = protectedTime ?? (this.timeCtrl >= dateplus.minsToSecs(7) ? 60 : 30)
 
         message.channel.send(`:timer: Starting timer${uid ? ` for debater <@${uid}>` : ""}!`)

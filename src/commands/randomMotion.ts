@@ -44,8 +44,6 @@ const getMotionFromRow = async (row: number): Promise<Motion> => {
         await (sheet ??= await loadSheet()).loadCells(`S${row}:T${row}`) // Load cell from random row
     }
 
-    console.log(sheet?.cellStats)
-
     return [
         motion ?? (sheet ??= await loadSheet()).getCellByA1(`S${row}`).value?.toString() ?? "",
         (sheet ??= await loadSheet()).getCellByA1(`T${row}`).value?.toString() ?? "",
