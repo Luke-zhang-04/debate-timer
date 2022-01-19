@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.11.0]
 
+### Added
+
+-   feat: add voice channel roles for prepping
+
 ### Changed
 
 -   feat(config): use zod to validate config

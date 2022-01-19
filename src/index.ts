@@ -14,6 +14,7 @@ import Discord from "discord.js"
 import dotenv from "dotenv"
 import fs from "fs"
 import handleMessage from "./handleMessage"
+import {onVoiceStateUpdate} from "./events"
 
 dotenv.config()
 
@@ -135,6 +136,12 @@ client.on("message", async (message) => {
             uncaughtException(err)
         }
     }
+})
+
+client.on("voiceStateUpdate", async (...args) => {
+    try {
+        await onVoiceStateUpdate(...args)
+    } catch {}
 })
 
 process.on("uncaughtException", uncaughtException)

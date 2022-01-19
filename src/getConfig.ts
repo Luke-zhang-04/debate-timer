@@ -167,6 +167,32 @@ const configSchema = zod.object({
         .optional()
         .transform(defaultTo<string[]>([])),
     verbosity: zod.number().int().min(0).max(2),
+    prepping: zod
+        .union([
+            zod.string().regex(/^defaults$/u),
+            zod.object({
+                channelNamesRegex: zod.string().nullable().optional(),
+                channelNames: zod
+                    .array(zod.string())
+                    .nullable()
+                    .optional()
+                    .default(["OG", "OO", "CG", "CO", "gov", "opp"]),
+                roleId: zod.string().nullable().optional(),
+                roleName: zod.string().nullable().optional().default("^prep(p|ar)ing$"),
+            }),
+        ])
+        .nullable()
+        .optional()
+        .transform((val) =>
+            typeof val === "string"
+                ? {
+                      channelNamesRegex: "^([OC][GO]|GOV|OPP)$",
+                      channelNames: ["OG", "OO", "CG", "CO", "gov", "opp"],
+                      roleId: undefined,
+                      roleName: "^prep(p|ar)ing$",
+                  }
+                : val,
+        ),
     welcomeMessage: zod
         .object({
             channel: zod.string().nullable().optional(),
@@ -221,6 +247,7 @@ export const {
     whitelistedWords,
     blacklistedWords,
     welcomeMessage,
+    prepping,
     verbosity,
 } = inputConfig
 
